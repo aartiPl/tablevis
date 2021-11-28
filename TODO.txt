@@ -1,0 +1,10 @@
+- Justify text (both sides)
+- Cross chars in crossing lines
+- indent Top/Bottom
+- alignment top/bottom
+- crossing character
+- errors
+
+-dodać plik README.txt: 
+      sposób uzyskania UTF-8 w konsoli Eclipse: -Dfile.encoding=UTF-8 + czcionka
+      http://paranoid-engineering.blogspot.com/2008/05/getting-unicode-output-in-eclipse.html
