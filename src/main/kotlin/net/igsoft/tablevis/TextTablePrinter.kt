@@ -7,60 +7,54 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
     override fun print(table: Table<out TextTableStyle>): String {
         val sb = StringBuilder()
 
+        //Headers
         if (table.headers.isNotEmpty()) {
-            drawHorizontalLine(sb, table.style.headerHorizontalLineChar, table.width)
-            table.headers.forEach {
-                drawRow(sb, table.style, it)
+            drawHorizontalLine(sb, table.style.headerSectionStyle, table.width, table.style.lineSeparator)
+            drawInBetween(sb, table.headers, table.style.headerSectionStyle, table.style.lineSeparator, table.width)
+            drawHorizontalLine(sb, table.style.headerSectionStyle, table.width, table.style.lineSeparator)
+        }
+
+        //Rows
+        if (table.rows.isNotEmpty()) {
+            if (table.headers.isEmpty()) {
+                drawHorizontalLine(sb, table.style.rowSectionStyle, table.width, table.style.lineSeparator)
             }
-            drawHorizontalLine(sb, table.style.headerHorizontalLineChar, table.width)
-        } else {
-            if (table.rows.isNotEmpty()) {
-                drawHorizontalLine(sb, table.style.horizontalLineChar, table.width)
+
+            drawInBetween(sb, table.rows, table.style.rowSectionStyle, table.style.lineSeparator, table.width)
+
+            if (table.footers.isEmpty()) {
+                drawHorizontalLine(sb, table.style.rowSectionStyle, table.width, table.style.lineSeparator)
             }
         }
 
-        for (row in table.rows) {
-            drawRow(sb, table.style, row)
-            drawHorizontalLine(sb, table.style.horizontalLineChar, table.width)
-        }
-
-        for (row in table.footers) {
-            drawRow(sb, table.style, row)
-            drawHorizontalLine(sb, table.style.horizontalLineChar, table.width)
+        //Footers
+        if (table.footers.isNotEmpty()) {
+            drawHorizontalLine(sb, table.style.footerSectionStyle, table.width, table.style.lineSeparator)
+            drawInBetween(sb, table.footers, table.style.footerSectionStyle, table.style.lineSeparator, table.width)
+            drawHorizontalLine(sb, table.style.footerSectionStyle, table.width, table.style.lineSeparator)
         }
 
         return sb.toString()
     }
 
-    //    override fun print(table: TextTable): String {
-//        val sb = StringBuilder()
-//
-//        if (table.header != null) {
-//            sb.append(drawHorizontalLine(headerHorizontalLineChar, table.width))
-//            sb.append(drawRow(table.header.get))
-//            sb.append(drawHorizontalLine(headerHorizontalLineChar, table.width))
-//        } else {
-//            if (table.rows.isNotEmpty()) {
-//                sb.append(drawHorizontalLine(horizontalLineChar, table.width))
-//            }
-//        }
-//
-//        for (row in table.rows) {
-//            sb.append(drawRow(row))
-//            sb.append(drawHorizontalLine(horizontalLineChar, table.width))
-//        }
-//
-//        return sb.toString()
-//    }
-//
-    private fun drawHorizontalLine(sb: StringBuilder, character: String, width: Int) {
-        val line = character.repeat(width).substring(0, width) + "\n"
+    private fun drawInBetween(sb: StringBuilder, rows: List<Row>, style: TextSectionStyle, lineSeparator: String, width: Int) {
+        for (row in rows.dropLast(1)) {
+            drawRow(sb, style, row, lineSeparator)
+            drawHorizontalLine(sb, style, width, lineSeparator)
+        }
+        drawRow(sb, style, rows.last(), lineSeparator)
+    }
+
+    private fun drawHorizontalLine(
+        sb: StringBuilder, textSectionStyle: TextSectionStyle, width: Int, tableLineSeparator: String
+    ) {
+        val line = textSectionStyle.horizontalLine.repeat(width).substring(0, width) + tableLineSeparator
         sb.append(line)
     }
 
-    private fun drawRow(sb: StringBuilder, style: TextTableStyle, row: Row) {
+    private fun drawRow(sb: StringBuilder, textSectionStyle: TextSectionStyle, row: Row, tableLineSeparator: String) {
         for (line in 0..row.height) {
-            sb.append(style.verticalLineChar)
+            sb.append(textSectionStyle.verticalLine)
 
             for (cell in row.cells) {
                 sb.append(" ".repeat(cell.leftIndent))
@@ -68,17 +62,17 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
                 val text = if (line < cell.lines.size) cell.lines[line] else ""
 
                 sb.append(alignHorizontally(cell.horizontal, text, cell.width))
-                sb.append(" ".repeat(cell.rightIndent)).append(style.verticalLineChar)
+                sb.append(" ".repeat(cell.rightIndent)).append(textSectionStyle.verticalLine)
             }
 
-            sb.append(style.tableLineSeparator)
+            sb.append(tableLineSeparator)
         }
     }
 
-    private fun alignHorizontally(horizontalAlignment: HorizontalAlignment, text: String, width: Int): String {
-        return when (horizontalAlignment) {
-            HorizontalAlignment.Center -> StringUtils.center(text, width)
-            HorizontalAlignment.Right -> StringUtils.leftPad(text, width)
+    private fun alignHorizontally(horizontal: Horizontal, text: String, width: Int): String {
+        return when (horizontal) {
+            Horizontal.Center -> StringUtils.center(text, width)
+            Horizontal.Right -> StringUtils.leftPad(text, width)
             else -> StringUtils.rightPad(text, width)
         }
     }

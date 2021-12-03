@@ -1,23 +1,23 @@
 package net.igsoft.tablevis
 
-abstract class TextTableStyle(
-    override val leftIndent: Int = 1,
-    override val topIndent: Int = 0,
-    override val rightIndent: Int = 1,
-    override val bottomIndent: Int = 0,
+data class TextSectionStyle(
+    val horizontalLine: String,
+    val verticalLine: String,
+    val leftTopCorner: String,
+    val rightTopCorner: String,
+    val rightBottomCorner: String,
+    val leftBottomCorner: String,
+) : SectionStyle {
+    override val horizontalLineWidth: Int get() = horizontalLine.length
+    override val horizontalLineHeight: Int get() = 1
+    override val verticalLineWidth: Int get() = verticalLine.length
+    override val verticalLineHeight: Int get() = 1
+}
 
-    override val verticalAlignment: VerticalAlignment = VerticalAlignment.Middle,
-    override val horizontalAlignment: HorizontalAlignment = HorizontalAlignment.Left,
+interface TextTableStyle : TableStyle {
+    val lineSeparator: String
 
-    open val headerHorizontalLineChar: String = "=",
-    open val horizontalLineChar: String = "-",
-    open val verticalLineChar: String = "|",
-    open val tableLineSeparator: String = System.lineSeparator()
-) : TableStyle {
-    override val headerHorizontalLineMeasure = 1
-    override val headerVerticalLineMeasure = 1
-    override val rowHorizontalLineMeasure = 1
-    override val rowVerticalLineMeasure = 1
-    override val footerHorizontalLineMeasure = 1
-    override val footerVerticalLineMeasure = 1
+    override val headerSectionStyle: TextSectionStyle
+    override val rowSectionStyle: TextSectionStyle
+    override val footerSectionStyle: TextSectionStyle
 }

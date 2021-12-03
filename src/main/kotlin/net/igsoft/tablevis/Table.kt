@@ -5,6 +5,6 @@ class Table<T : TableStyle> internal constructor(
 ) {
     companion object {
         fun <T : TableStyle> using(style: T, block: TableBuilder<T>.() -> Unit = {}) =
-            TableBuilder<T>(style).apply(block).build()
+            TableBuilder(style).apply(block).build()
     }
 }

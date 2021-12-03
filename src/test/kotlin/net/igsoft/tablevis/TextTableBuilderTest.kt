@@ -34,21 +34,25 @@ class TextTableBuilderTest {
     "The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a line in section 1.10.32."
   //@formatter:on
 
-    private val style = SimpleTextTableStyle(tableLineSeparator = "\n")
+    private val style = SimpleTextTableStyle(lineSeparator = "\n")
     private val printer = TextTablePrinter()
 
     @Test
     fun `Nothing defined`() {
         val table = Table.using(style)
+
+        println(printer.print(table))
+
         assertThat(printer.print(table)).isEqualTo("")
     }
 
     @Test
     fun `Nothing defined, but empty header`() {
         val table = Table.using(style) {
-            addHeader {
-            }
+            addHeader {}
         }
+
+        println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
             """|====
@@ -59,16 +63,20 @@ class TextTableBuilderTest {
     }
 
     @Test
-    fun `Header and some rows`() {
+    fun `Header and few rows`() {
         val table = Table.using(style) {
+            width = 100
+
             addHeader {
                 addCell {
-                    text = "This is header"
+                    horizontalAlignment = Horizontal.Center
+                    text = "This is header of some example table"
                 }
             }
 
             addRow {
                 addCell {
+                    id("firstCol", "firstRow")
                     text = "Row 1 Cell 1"
                 }
 
@@ -79,6 +87,7 @@ class TextTableBuilderTest {
 
             addRow {
                 addCell {
+                    id("firstCol")
                     text = "Row 2 Cell 1"
                 }
 
@@ -86,7 +95,25 @@ class TextTableBuilderTest {
                     text = "Row 2 Cell 2"
                 }
             }
+
+            addFooter {
+                addCell {
+                    horizontalAlignment = Horizontal.Center
+                    text = "Simple table"
+                }
+
+                addCell {
+                    horizontalAlignment = Horizontal.Center
+                    width = 20
+                    text = "page 1/1"
+                }
+            }
+
+            forId("firstCol").setMinimalWidth()
+            forId("firstRow").setHeight(5)
         }
+
+        println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
             """|===============================

@@ -1,6 +1,8 @@
 package net.igsoft.tablevis
 
 class CellBuilder<T : TableStyle>(internal val rowBuilder: RowBuilder<T>) {
+    private var ids: List<Any> = emptyList()
+
     var width: Int? = null
     var height: Int? = null
 
@@ -9,10 +11,14 @@ class CellBuilder<T : TableStyle>(internal val rowBuilder: RowBuilder<T>) {
     var rightIndent = rowBuilder.rightIndent
     var bottomIndent = rowBuilder.bottomIndent
 
-    var verticalAlignment = rowBuilder.verticalAlignment
-    var horizontalAlignment = rowBuilder.horizontalAlignment
+    var horizontalAlignment = rowBuilder.horizontal
+    var verticalAlignment = rowBuilder.vertical
 
     var text = ""
+
+    fun id(vararg ids: Any) {
+        this.ids = ids.toList()
+    }
 
     fun build(): Cell {
         val lines = text.lines()

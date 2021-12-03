@@ -1,6 +1,6 @@
 package net.igsoft.tablevis
 
-class SimpleTextTableStyle(
+class BoxTextTableStyle(
     override val lineSeparator: String = System.lineSeparator(),
 
     override val leftIndent: Int = 1,
@@ -11,7 +11,7 @@ class SimpleTextTableStyle(
     override val vertical: Vertical = Vertical.Middle,
     override val horizontal: Horizontal = Horizontal.Left,
 
-    override val headerSectionStyle: TextSectionStyle = TextSectionStyle("=", "*", "", "", "", ""),
-    override val rowSectionStyle: TextSectionStyle = TextSectionStyle("-", "|", "", "", "", ""),
-    override val footerSectionStyle: TextSectionStyle = TextSectionStyle("~", "|", "", "", "", ""),
+    override val headerSectionStyle: TextSectionStyle = TextSectionStyle("─", "│", "", "┐", "", ""),
+    override val rowSectionStyle: TextSectionStyle = TextSectionStyle("─", "│", "", "┐", "", ""),
+    override val footerSectionStyle: TextSectionStyle = TextSectionStyle("─", "│", "", "┐", "", ""),
 ) : TextTableStyle

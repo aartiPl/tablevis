@@ -1,20 +1,22 @@
 package net.igsoft.tablevis
 
+interface SectionStyle {
+    val horizontalLineWidth: Int
+    val horizontalLineHeight: Int
+    val verticalLineWidth: Int
+    val verticalLineHeight: Int
+}
+
 interface TableStyle {
     val leftIndent: Int
     val topIndent: Int
     val rightIndent: Int
     val bottomIndent: Int
 
-    val verticalAlignment: VerticalAlignment
-    val horizontalAlignment: HorizontalAlignment
+    val vertical: Vertical
+    val horizontal: Horizontal
 
-    val headerHorizontalLineMeasure: Int
-    val headerVerticalLineMeasure: Int
-
-    val rowHorizontalLineMeasure: Int
-    val rowVerticalLineMeasure: Int
-
-    val footerHorizontalLineMeasure: Int
-    val footerVerticalLineMeasure: Int
+    val headerSectionStyle: SectionStyle
+    val rowSectionStyle: SectionStyle
+    val footerSectionStyle: SectionStyle
 }
