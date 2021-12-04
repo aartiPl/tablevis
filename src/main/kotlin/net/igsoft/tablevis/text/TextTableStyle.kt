@@ -1,4 +1,7 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.text
+
+import net.igsoft.tablevis.SectionStyle
+import net.igsoft.tablevis.TableStyle
 
 data class TextSectionStyle(
     val horizontalLine: String,

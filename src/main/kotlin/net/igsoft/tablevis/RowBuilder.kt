@@ -89,7 +89,7 @@ class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, int
                     cell.width = width
                 }
             } else {
-                //Distribute remaining space to cells with width assigned
+                //Distribute remaining space to cells with width already assigned
                 val weights = cells.map { c -> c.width!! }
                 val widths = Utils.distributeProportionally(assignedWidth, weights, remainingSpace)
 

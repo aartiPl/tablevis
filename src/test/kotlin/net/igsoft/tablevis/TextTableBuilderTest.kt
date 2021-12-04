@@ -68,7 +68,7 @@ class TextTableBuilderTest {
     @Test
     fun `Header and few rows`() {
         val table = Table.using(style) {
-            width = 28
+            width = 100
             //alignRight()
 
             addHeader {
