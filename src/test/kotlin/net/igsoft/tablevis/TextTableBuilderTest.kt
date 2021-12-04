@@ -2,6 +2,8 @@ package net.igsoft.tablevis
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import net.igsoft.tablevis.text.TextTablePrinter
+import net.igsoft.tablevis.text.SimpleTextTableStyle
 import org.junit.jupiter.api.Test
 
 class TextTableBuilderTest {
@@ -65,12 +67,12 @@ class TextTableBuilderTest {
     @Test
     fun `Header and few rows`() {
         val table = Table.using(style) {
-            width = 100
+            //width = 5
 
             addHeader {
                 addCell {
-                    horizontalAlignment = Horizontal.Center
-                    text = "This is header of some example table"
+                    alignCenter()
+                    text = "Header"
                 }
             }
 
@@ -98,12 +100,13 @@ class TextTableBuilderTest {
 
             addFooter {
                 addCell {
-                    horizontalAlignment = Horizontal.Center
-                    text = "Simple table"
+                    alignCenter()
+                    text = "Footer"
                 }
 
                 addCell {
-                    horizontalAlignment = Horizontal.Center
+                    alignCenter()
+                    alignMiddle()
                     width = 20
                     text = "page 1/1"
                 }

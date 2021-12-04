@@ -1,9 +1,9 @@
 package net.igsoft.tablevis
 
-enum class Vertical {
+enum class VerticalAlignment {
     Top, Middle, Bottom;
 }
 
-enum class Horizontal {
+enum class HorizontalAlignment {
     Left, Center, Right, Justified;
 }

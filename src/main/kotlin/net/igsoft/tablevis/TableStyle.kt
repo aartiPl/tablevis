@@ -13,8 +13,8 @@ interface TableStyle {
     val rightIndent: Int
     val bottomIndent: Int
 
-    val vertical: Vertical
-    val horizontal: Horizontal
+    val verticalAlignment: VerticalAlignment
+    val horizontalAlignment: HorizontalAlignment
 
     val headerSectionStyle: SectionStyle
     val rowSectionStyle: SectionStyle

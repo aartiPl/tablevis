@@ -9,8 +9,8 @@ data class Cell(
     val rightIndent: Int,
     val bottomIndent: Int,
 
-    val horizontal: Horizontal,
-    val vertical: Vertical,
+    val horizontalAlignment: HorizontalAlignment,
+    val verticalAlignment: VerticalAlignment,
 
     val lines: List<String>
 )

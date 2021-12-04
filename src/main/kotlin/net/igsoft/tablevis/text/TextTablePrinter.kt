@@ -1,5 +1,6 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.text
 
+import net.igsoft.tablevis.*
 import org.apache.commons.lang3.StringUtils
 
 class TextTablePrinter : Printer<Table<out TextTableStyle>> {
@@ -61,7 +62,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
 
                 val text = if (line < cell.lines.size) cell.lines[line] else ""
 
-                sb.append(alignHorizontally(cell.horizontal, text, cell.width))
+                sb.append(alignHorizontally(cell.horizontalAlignment, text, cell.width - cell.leftIndent - cell.rightIndent))
                 sb.append(" ".repeat(cell.rightIndent)).append(textSectionStyle.verticalLine)
             }
 
@@ -69,10 +70,10 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
         }
     }
 
-    private fun alignHorizontally(horizontal: Horizontal, text: String, width: Int): String {
-        return when (horizontal) {
-            Horizontal.Center -> StringUtils.center(text, width)
-            Horizontal.Right -> StringUtils.leftPad(text, width)
+    private fun alignHorizontally(horizontalAlignment: HorizontalAlignment, text: String, width: Int): String {
+        return when (horizontalAlignment) {
+            HorizontalAlignment.Center -> StringUtils.center(text, width)
+            HorizontalAlignment.Right -> StringUtils.leftPad(text, width)
             else -> StringUtils.rightPad(text, width)
         }
     }

@@ -1,11 +1,15 @@
 package net.igsoft.tablevis
 
+import kotlin.math.max
+
 class TableBuilder<T : TableStyle>(private val style: T) {
     private val functions = mutableMapOf<Any, MutableSet<(Set<CellBuilder<T>>) -> Unit>>()
 
     private val headers = mutableListOf<RowBuilder<T>>()
     private val rows = mutableListOf<RowBuilder<T>>()
     private val footers = mutableListOf<RowBuilder<T>>()
+
+    var minimalTextWidth = 1
 
     var width: Int? = null
     var height: Int? = null
@@ -14,9 +18,6 @@ class TableBuilder<T : TableStyle>(private val style: T) {
     var topIndent: Int = style.topIndent
     var rightIndent: Int = style.rightIndent
     var bottomIndent: Int = style.bottomIndent
-
-    var vertical: Vertical = style.vertical
-    var horizontal: Horizontal = style.horizontal
 
     fun addHeader(block: RowBuilder<T>.() -> Unit = {}) {
         headers.add(RowBuilder(this, style.headerSectionStyle).apply(block))
@@ -28,6 +29,34 @@ class TableBuilder<T : TableStyle>(private val style: T) {
 
     fun addFooter(block: RowBuilder<T>.() -> Unit = {}) {
         footers.add(RowBuilder(this, style.footerSectionStyle).apply(block))
+    }
+
+    fun alignCenter() = apply {
+        this.horizontalAlignment = HorizontalAlignment.Center
+    }
+
+    fun alignLeft() = apply {
+        this.horizontalAlignment = HorizontalAlignment.Left
+    }
+
+    fun alignRight() = apply {
+        this.horizontalAlignment = HorizontalAlignment.Right
+    }
+
+    fun justify() = apply {
+        this.horizontalAlignment = HorizontalAlignment.Justified
+    }
+
+    fun alignTop() = apply {
+        this.verticalAlignment = VerticalAlignment.Top
+    }
+
+    fun alignMiddle() = apply {
+        this.verticalAlignment = VerticalAlignment.Middle
+    }
+
+    fun alignBottom() = apply {
+        this.verticalAlignment = VerticalAlignment.Bottom
     }
 
     fun forId(vararg id: Any): IdOperation<T> = IdOperation(this, id.toList())
@@ -42,104 +71,51 @@ class TableBuilder<T : TableStyle>(private val style: T) {
 //            operations.forEach(operation => operation (set))
 //        }
 
-        //Make sure there is at least one cell in a row...
+        var naturalWidth = 0
+        var minimalWidth = 0
+
         for (row in allRows) {
-            if (row.cells.isEmpty()) {
-                row.addCell()
-            }
+            row.resolveMissingDimensions()
+
+            naturalWidth = max(row.naturalWidth, naturalWidth)
+            minimalWidth = max(row.minimalWidth, minimalWidth)
         }
 
-        //Calculate width...
-        if (width == null) {
-            var maxRowSize = 0
+        //If the overall width is not set, set it to naturalWidth...
+        val calculatedWidth = width ?: naturalWidth
 
-            for (row in allRows) {
-                val rowSize = calculateMaximumRowWidth(row)
-                maxRowSize = if (rowSize > maxRowSize) rowSize else maxRowSize
-            }
+        println("Calculated values: width=$calculatedWidth, naturalWidth=$naturalWidth, minimalWidth=$minimalWidth")
 
-            width = maxRowSize
+        if (calculatedWidth < minimalWidth) {
+            // TODO: Should we throw in case of constraints error? constraint violation mean that it is not possible to layout table with those constraints
+            println("Constraint violation: width=${calculatedWidth} < minimalWidth=${minimalWidth}")
         }
 
         //Calculate cell sizes so that they match table size
         for (row in allRows) {
-            val cellsWithNoWidth = mutableListOf<CellBuilder<*>>()
-            var assignedSize = 0
-
-            for (cell in row.cells) {
-                assignedSize += cell.leftIndent + cell.rightIndent + row.style.verticalLineWidth
-
-                if (cell.width == null) {
-                    cellsWithNoWidth += cell
-                } else {
-                    assignedSize += cell.width!!
-                }
-            }
-
-            assignedSize += row.style.verticalLineWidth
-
-            val remainingSpace = width!! - assignedSize
-
-            if (remainingSpace > 0) {
-                if (cellsWithNoWidth.isNotEmpty()) {
-                    //Distribute remaining space to cells with no width
-                    val widths = Utils.distributeEvenly(cellsWithNoWidth.size, remainingSpace)
-
-                    for ((cell, width) in cellsWithNoWidth.zip(widths)) {
-                        cell.width = width
-                    }
-                } else {
-                    //Distribute remaining space to cells with width assigned
-                    val weights = row.cells.map { c -> c.width!! }
-                    val widths = Utils.distributeProportionally(assignedSize, weights, remainingSpace)
-
-                    for ((cell, width) in row.cells.zip(widths)) {
-                        cell.width = cell.width!! + width
-                    }
-                }
-            }
+            val remainingSpace = calculatedWidth - row.assignedWidth
+            row.distributeRemainingSpace(remainingSpace)
         }
 
         height = height ?: 0
 
         return Table(style,
-                     width!!,
+                     calculatedWidth,
                      height!!,
                      headers.map { it.build() },
                      rows.map { it.build() },
                      footers.map { it.build() })
     }
 
+    internal var verticalAlignment: VerticalAlignment = style.verticalAlignment
+    internal var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
+
     internal fun addOperation(id: Any, fn: (Set<CellBuilder<T>>) -> Unit) {
-    }
-
-    private fun calculateMaximumRowWidth(row: RowBuilder<T>): Int {
-        var rowSize = 0
-
-        for (cell in row.cells) {
-
-            if (cell.width == null) {
-                cell.width = Utils.maxLineSizeBasedOnText(cell.text)
-            }
-
-            rowSize += cell.width!! + cell.leftIndent + cell.rightIndent + row.style.verticalLineWidth
-        }
-
-        rowSize += row.style.verticalLineWidth
-
-        return rowSize
     }
 
     //
 //    private val idRegistry = mutable.MultiDict.empty[Any, TextCellBuilder]
 //    private val operationRegistry = mutable.MultiDict.empty[Any, Function[Set[TextCellBuilder], Unit]]
-
-//    fun noBorders(): TextTableBuilder = apply {
-//        this.headerHorizontalLineChar = ""
-//        this.horizontalLineChar = ""
-//        this.verticalLineChar = ""
-//        this.defaultIndent = Indent(leftIndent = 0, topIndent = 0, rightIndent = 1, bottomIndent = 0)
-//    }
 //
 //    fun forId(id: Any): IdOperationHelper = apply {
 //        new IdOperationHelper (this, id)

@@ -1,4 +1,9 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.text
+
+import net.igsoft.tablevis.HorizontalAlignment
+import net.igsoft.tablevis.TextSectionStyle
+import net.igsoft.tablevis.TextTableStyle
+import net.igsoft.tablevis.VerticalAlignment
 
 class BoxTextTableStyle(
     override val lineSeparator: String = System.lineSeparator(),
@@ -8,8 +13,8 @@ class BoxTextTableStyle(
     override val rightIndent: Int = 1,
     override val bottomIndent: Int = 0,
 
-    override val vertical: Vertical = Vertical.Middle,
-    override val horizontal: Horizontal = Horizontal.Left,
+    override val verticalAlignment: VerticalAlignment = VerticalAlignment.Middle,
+    override val horizontalAlignment: HorizontalAlignment = HorizontalAlignment.Left,
 
     override val headerSectionStyle: TextSectionStyle = TextSectionStyle("─", "│", "", "┐", "", ""),
     override val rowSectionStyle: TextSectionStyle = TextSectionStyle("─", "│", "", "┐", "", ""),

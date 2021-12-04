@@ -48,8 +48,4 @@ object Utils {
 
         return values
     }
-
-    fun maxLineSizeBasedOnText(text: String): Int {
-        return text.lines().maxOf { it.length }
-    }
 }
