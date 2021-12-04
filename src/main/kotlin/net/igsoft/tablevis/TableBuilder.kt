@@ -61,7 +61,7 @@ class TableBuilder<T : TableStyle>(private val style: T) {
 
     fun forId(vararg id: Any): IdOperation<T> = IdOperation(this, id.toList())
 
-    fun build(): Table<T> {
+    internal fun build(): Table<T> {
         val allRows = headers + rows + footers
 
         //Execute deferred functions...
@@ -87,14 +87,14 @@ class TableBuilder<T : TableStyle>(private val style: T) {
         println("Calculated values: width=$calculatedWidth, naturalWidth=$naturalWidth, minimalWidth=$minimalWidth")
 
         if (calculatedWidth < minimalWidth) {
-            // TODO: Should we throw in case of constraints error? constraint violation mean that it is not possible to layout table with those constraints
-            println("Constraint violation: width=${calculatedWidth} < minimalWidth=${minimalWidth}")
+            throw IllegalArgumentException("Constraint violation: table width [$calculatedWidth] is less than minimal table width [$minimalWidth]")
         }
 
         //Calculate cell sizes so that they match table size
         for (row in allRows) {
             val remainingSpace = calculatedWidth - row.assignedWidth
             row.distributeRemainingSpace(remainingSpace)
+            row.adjustTexts()
         }
 
         height = height ?: 0

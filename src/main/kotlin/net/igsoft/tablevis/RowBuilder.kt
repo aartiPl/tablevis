@@ -42,7 +42,7 @@ class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, int
         this.verticalAlignment = VerticalAlignment.Bottom
     }
 
-    fun build(): Row {
+    internal fun build(): Row {
         return Row(0, 0, cells.map { it.build() })
     }
 
@@ -98,5 +98,13 @@ class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, int
                 }
             }
         }
+    }
+
+    internal fun adjustTexts() {
+        //Split text so that it can be put in one cell
+        for (cell in cells) {
+            cell.adjustTexts()
+        }
+
     }
 }

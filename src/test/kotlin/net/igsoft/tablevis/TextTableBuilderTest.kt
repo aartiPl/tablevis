@@ -2,6 +2,7 @@ package net.igsoft.tablevis
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import net.igsoft.tablevis.text.BoxTextTableStyle
 import net.igsoft.tablevis.text.TextTablePrinter
 import net.igsoft.tablevis.text.SimpleTextTableStyle
 import org.junit.jupiter.api.Test
@@ -36,7 +37,7 @@ class TextTableBuilderTest {
     "The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a line in section 1.10.32."
   //@formatter:on
 
-    private val style = SimpleTextTableStyle(lineSeparator = "\n")
+    private val style = BoxTextTableStyle(lineSeparator = "\n")
     private val printer = TextTablePrinter()
 
     @Test
@@ -67,7 +68,8 @@ class TextTableBuilderTest {
     @Test
     fun `Header and few rows`() {
         val table = Table.using(style) {
-            //width = 5
+            width = 28
+            //alignRight()
 
             addHeader {
                 addCell {
@@ -98,6 +100,17 @@ class TextTableBuilderTest {
                 }
             }
 
+            addRow {
+                addCell {
+                    id("firstCol")
+                    text = "Row 3 Cell 1"
+                }
+
+                addCell {
+                    text = "Row 3 Cell 2"
+                }
+            }
+
             addFooter {
                 addCell {
                     alignCenter()
@@ -105,8 +118,7 @@ class TextTableBuilderTest {
                 }
 
                 addCell {
-                    alignCenter()
-                    alignMiddle()
+                    alignCenter().alignMiddle()
                     width = 20
                     text = "page 1/1"
                 }
