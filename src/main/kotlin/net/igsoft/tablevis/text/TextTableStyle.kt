@@ -1,5 +1,6 @@
 package net.igsoft.tablevis.text
 
+import net.igsoft.tablevis.Section
 import net.igsoft.tablevis.SectionStyle
 import net.igsoft.tablevis.TableStyle
 
@@ -10,6 +11,7 @@ data class TextSectionStyle(
     val rightTopCorner: String,
     val rightBottomCorner: String,
     val leftBottomCorner: String,
+    override val layer: Int,
 ) : SectionStyle {
     override val horizontalLineWidth: Int get() = horizontalLine.length
     override val horizontalLineHeight: Int get() = 1
@@ -19,8 +21,5 @@ data class TextSectionStyle(
 
 interface TextTableStyle : TableStyle {
     val lineSeparator: String
-
-    override val headerSectionStyle: TextSectionStyle
-    override val rowSectionStyle: TextSectionStyle
-    override val footerSectionStyle: TextSectionStyle
+    override val sections: Map<Section, TextSectionStyle>
 }

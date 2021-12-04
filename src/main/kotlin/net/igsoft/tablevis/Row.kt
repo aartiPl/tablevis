@@ -1,5 +1,5 @@
 package net.igsoft.tablevis
 
 data class Row(
-    val width: Int, val height: Int, val cells: List<Cell>
+    val width: Int, val height: Int, val style: SectionStyle, val cells: List<Cell>
 )

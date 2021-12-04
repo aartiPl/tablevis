@@ -1,6 +1,6 @@
 package net.igsoft.tablevis
 
-class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, internal val style: SectionStyle) {
+class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, internal val section: Section) {
     var height: Int? = null
 
     var minimalTextWidth = tableBuilder.minimalTextWidth
@@ -42,8 +42,10 @@ class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, int
         this.verticalAlignment = VerticalAlignment.Bottom
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     internal fun build(): Row {
-        return Row(0, 0, cells.map { it.build() })
+        return Row(0, 0, tableBuilder.style.sections.getValue(section), cells.map { it.build() })
     }
 
     internal var naturalWidth = 0
@@ -61,6 +63,8 @@ class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, int
         if (cells.isEmpty()) {
             addCell()
         }
+
+        val style = tableBuilder.style.sections.getValue(section)
 
         for (cell in cells) {
             cell.resolveMissingDimensions()

@@ -2,12 +2,10 @@ package net.igsoft.tablevis
 
 import kotlin.math.max
 
-class TableBuilder<T : TableStyle>(private val style: T) {
+class TableBuilder<T : TableStyle>(internal val style: T) {
     private val functions = mutableMapOf<Any, MutableSet<(Set<CellBuilder<T>>) -> Unit>>()
 
-    private val headers = mutableListOf<RowBuilder<T>>()
     private val rows = mutableListOf<RowBuilder<T>>()
-    private val footers = mutableListOf<RowBuilder<T>>()
 
     var minimalTextWidth = 1
 
@@ -20,15 +18,15 @@ class TableBuilder<T : TableStyle>(private val style: T) {
     var bottomIndent: Int = style.bottomIndent
 
     fun addHeader(block: RowBuilder<T>.() -> Unit = {}) {
-        headers.add(RowBuilder(this, style.headerSectionStyle).apply(block))
+        rows.add(RowBuilder(this, Section.Header).apply(block))
     }
 
     fun addRow(block: RowBuilder<T>.() -> Unit = {}) {
-        rows.add(RowBuilder(this, style.rowSectionStyle).apply(block))
+        rows.add(RowBuilder(this, Section.Row).apply(block))
     }
 
     fun addFooter(block: RowBuilder<T>.() -> Unit = {}) {
-        footers.add(RowBuilder(this, style.footerSectionStyle).apply(block))
+        rows.add(RowBuilder(this, Section.Footer).apply(block))
     }
 
     fun alignCenter() = apply {
@@ -62,7 +60,7 @@ class TableBuilder<T : TableStyle>(private val style: T) {
     fun forId(vararg id: Any): IdOperation<T> = IdOperation(this, id.toList())
 
     internal fun build(): Table<T> {
-        val allRows = headers + rows + footers
+        val allRows = rows
 
         //Execute deferred functions...
 //        for (id  in operationRegistry.keySet) {
@@ -102,9 +100,8 @@ class TableBuilder<T : TableStyle>(private val style: T) {
         return Table(style,
                      calculatedWidth,
                      height!!,
-                     headers.map { it.build() },
-                     rows.map { it.build() },
-                     footers.map { it.build() })
+                     rows.map { it.build() }
+        )
     }
 
     internal var verticalAlignment: VerticalAlignment = style.verticalAlignment

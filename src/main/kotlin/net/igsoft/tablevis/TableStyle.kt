@@ -5,6 +5,7 @@ interface SectionStyle {
     val horizontalLineHeight: Int
     val verticalLineWidth: Int
     val verticalLineHeight: Int
+    val layer: Int
 }
 
 interface TableStyle {
@@ -16,7 +17,5 @@ interface TableStyle {
     val verticalAlignment: VerticalAlignment
     val horizontalAlignment: HorizontalAlignment
 
-    val headerSectionStyle: SectionStyle
-    val rowSectionStyle: SectionStyle
-    val footerSectionStyle: SectionStyle
+    val sections: Map<Section, SectionStyle>
 }

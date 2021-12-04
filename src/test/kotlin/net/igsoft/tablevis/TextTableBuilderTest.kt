@@ -37,7 +37,7 @@ class TextTableBuilderTest {
     "The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a line in section 1.10.32."
   //@formatter:on
 
-    private val style = BoxTextTableStyle(lineSeparator = "\n")
+    private val style = SimpleTextTableStyle(lineSeparator = "\n")
     private val printer = TextTablePrinter()
 
     @Test
@@ -66,7 +66,7 @@ class TextTableBuilderTest {
     }
 
     @Test
-    fun `Header and few rows`() {
+    fun `Header and some rows`() {
         val table = Table.using(style) {
             width = 100
             //alignRight()
