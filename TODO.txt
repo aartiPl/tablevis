@@ -5,6 +5,56 @@
 - crossing character
 - errors
 
--dodać plik README.txt: 
+-dodać plik README.txt:
       sposób uzyskania UTF-8 w konsoli Eclipse: -Dfile.encoding=UTF-8 + czcionka
       http://paranoid-engineering.blogspot.com/2008/05/getting-unicode-output-in-eclipse.html
+
+
+class CrossMatrix {
+        private var hash = "         ".toCharArray()
+
+        fun set(x: Int, y: Int, c: Char) {
+            require(x in 0..2 && y in 0..2)
+            hash[x + y * 3] = c
+        }
+
+        fun setRow(y: Int, c: Char) {
+            require(y in 0..2)
+            for (i in 0..2) {
+                set(i, y, c)
+            }
+        }
+
+        fun setCol(x: Int, c: Char) {
+            require(x in 0..2)
+            for (i in 0..2) {
+                set(x, i, c)
+            }
+        }
+
+        override fun toString(): String {
+            return hash.toString()
+        }
+    }
+
+
+val map = mutableMapOf<String, Char>()
+
+    init {
+        //@formatter:off
+        addEntry("   ",
+                 " --",
+                 " | ")
+
+        addEntry(" | ",
+                 " ==",
+                 " | ")
+
+        //@formatter:on
+    }
+
+    private fun addEntry(r1: String, r2: String, r3: String) {
+        val value = r2[1]
+        val key = r1 + r2[0] + ' ' + r2[1] + r3
+        map[key] = value
+    }

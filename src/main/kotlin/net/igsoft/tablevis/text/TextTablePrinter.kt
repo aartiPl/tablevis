@@ -17,7 +17,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
                 //line
                 val previousRow = if (i == 0) null else table.rows[(i - 1) / 2]
                 val nextRow = if (i == maxSize - 1) null else table.rows[(i + 1) / 2]
-                drawHorizontalLine(sb, previousRow, nextRow, table.width, table.style.lineSeparator)
+                drawHorizontalLine(sb, previousRow, nextRow, table.width, table.style)
             } else {
                 //row content
                 val row = table.rows[i / 2]
@@ -28,14 +28,62 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
     }
 
     private fun drawHorizontalLine(
-        sb: StringBuilder, previousRow: Row?, nextRow: Row?, width: Int, tableLineSeparator: String
+        sb: StringBuilder, previousRow: Row?, nextRow: Row?, width: Int, tableStyle: TextTableStyle
     ) {
         require(previousRow != null || nextRow != null)
 
         val style = calculateStyle(previousRow, nextRow)
+        val line = style.horizontalLine.repeat(width).substring(0, width).toCharArray()
 
-        val line = style.horizontalLine.repeat(width).substring(0, width) + tableLineSeparator
-        sb.append(line)
+        val matrices = mutableMapOf<Int, IntersectionMatrix>()
+
+        if (previousRow != null) {
+            val previousRowStyle = previousRow.style as TextSectionStyle
+            var position = 0
+            matrices.getOrPut(position) { IntersectionMatrix() }
+                .set(2, 1, style.horizontalLine[0])
+                .set(1, 0, previousRowStyle.verticalLine[0])
+
+            for (cell in previousRow.cells.dropLast(1)) {
+                position += cell.width + style.verticalLineWidth
+                matrices.getOrPut(position) { IntersectionMatrix() }
+                    .set(0, 1, style.horizontalLine[0])
+                    .set(2, 1, style.horizontalLine[0])
+                    .set(1, 0, previousRowStyle.verticalLine[0])
+            }
+
+            position += previousRow.cells.last().width + previousRowStyle.verticalLineWidth
+            matrices.getOrPut(position) { IntersectionMatrix() }
+                .set(0, 1, style.horizontalLine[0])
+                .set(1, 0, previousRowStyle.verticalLine[0])
+        }
+
+        if (nextRow != null) {
+            val nextRowStyle = nextRow.style as TextSectionStyle
+            var position = 0
+            matrices.getOrPut(position) { IntersectionMatrix() }
+                .set(2, 1, style.horizontalLine[0])
+                .set(1, 2, nextRowStyle.verticalLine[0])
+
+            for (cell in nextRow.cells.dropLast(1)) {
+                position += cell.width + style.verticalLineWidth
+                matrices.getOrPut(position) { IntersectionMatrix() }
+                    .set(0, 1, style.horizontalLine[0])
+                    .set(2, 1, style.horizontalLine[0])
+                    .set(1, 2, nextRowStyle.verticalLine[0])
+            }
+
+            position += nextRow.cells.last().width + nextRowStyle.verticalLineWidth
+            matrices.getOrPut(position) { IntersectionMatrix() }
+                .set(0, 1, style.horizontalLine[0])
+                .set(1, 2, nextRowStyle.verticalLine[0])
+        }
+
+        for (entry in matrices.entries) {
+            line[entry.key] = tableStyle.resolveCrossSection(entry.value)
+        }
+
+        sb.append(String(line) + tableStyle.lineSeparator)
     }
 
     private fun calculateStyle(previousRow: Row?, nextRow: Row?): TextSectionStyle {
@@ -59,9 +107,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
 
                 sb.append(
                     alignHorizontally(
-                        cell.horizontalAlignment,
-                        text,
-                        cell.width - cell.leftIndent - cell.rightIndent
+                        cell.horizontalAlignment, text, cell.width - cell.leftIndent - cell.rightIndent
                     )
                 )
                 sb.append(" ".repeat(cell.rightIndent)).append(textSectionStyle.verticalLine)

@@ -7,10 +7,6 @@ import net.igsoft.tablevis.TableStyle
 data class TextSectionStyle(
     val horizontalLine: String,
     val verticalLine: String,
-    val leftTopCorner: String,
-    val rightTopCorner: String,
-    val rightBottomCorner: String,
-    val leftBottomCorner: String,
     override val layer: Int,
 ) : SectionStyle {
     override val horizontalLineWidth: Int get() = horizontalLine.length
@@ -20,6 +16,7 @@ data class TextSectionStyle(
 }
 
 interface TextTableStyle : TableStyle {
+    fun resolveCrossSection(value: IntersectionMatrix): Char
     val lineSeparator: String
     override val sections: Map<Section, TextSectionStyle>
 }
