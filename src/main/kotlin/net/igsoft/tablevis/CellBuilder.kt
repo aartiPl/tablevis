@@ -58,21 +58,19 @@ class CellBuilder<T : TableStyle>(internal val rowBuilder: RowBuilder<T>) {
 
     internal fun resolveMissingDimensions() {
         naturalWidth = leftIndent + text.lines().maxOf { it.length } + rightIndent
-        minimalWidth = width ?: (leftIndent + minimalTextWidth + rightIndent)
+        minimalWidth = width ?: (leftIndent + (if (text.isEmpty()) 0 else minimalTextWidth) + rightIndent)
     }
 
     internal fun adjustTexts() {
         textWidth = (width ?: minimalWidth) - leftIndent - rightIndent
 
-        lines = text.lines().flatMap { it.chunked(textWidth) }
+        lines = if (text.isNotEmpty()) text.lines().flatMap { it.chunked(textWidth) } else listOf()
 
 //        if (cell.horizontalAlignment.contains(HorizontalAlignment.Justified)) {
 //            val justificationThreshold = cell.cellTextWidth.get * 4 / 5)
 //            cell.lines =
 //                cell.lines map (line => Text.justifyLine(line, cell.cellTextWidth.get, justificationThreshold))
 //        }
-
-
     }
 
     internal fun build(): Cell {

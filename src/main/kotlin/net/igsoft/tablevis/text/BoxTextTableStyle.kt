@@ -15,64 +15,65 @@ class BoxTextTableStyle(
     override val verticalAlignment: VerticalAlignment = VerticalAlignment.Middle,
     override val horizontalAlignment: HorizontalAlignment = HorizontalAlignment.Left,
 
-    headerSectionStyle: TextSectionStyle = TextSectionStyle("─", "│", 100),
+    headerSectionStyle: TextSectionStyle = TextSectionStyle("━", "┃", 100),
     rowSectionStyle: TextSectionStyle = TextSectionStyle("─", "│", 50),
-    footerSectionStyle: TextSectionStyle = TextSectionStyle("─", "│", 75),
+    footerSectionStyle: TextSectionStyle = TextSectionStyle("━", "┃", 75),
 ) : TextTableStyle {
-    private val map = mutableMapOf<String, Char>()
 
-    init {
-        //@formatter:off
-        addEntry("   ",
-                 " ┌─",
-                 " │ ")
+    //Encoding of intersections:
+    //  .T.             T - Top Char
+    //  LIR             L - Left Char, I - Intersection Char, R - Right Char
+    //  .B.             B - Bottom Char
+    //Intersections are encoded as follows: LTRB -> I
+    private val intersections = buildMap<String, Char> {
+        //   LTRB    I
+        put("  ─│", '┌')
+        put("─  │", '┐')
+        put(" │─│", '├')
+        put("─│ │", '┤')
+        put("─ ─│", '┬')
+        put("─│─ ", '┴')
+        put("─│─│", '┼')
+        put("─│  ", '┘')
+        put(" │─ ", '└')
 
-        addEntry("   ",
-                 "─┐ ",
-                 " │ ")
+        put("  ━┃", '┏')
+        put("━  ┃", '┓')
+        put(" ┃━┃", '┣')
+        put("━┃ ┃", '┫')
+        put("━ ━┃", '┳')
+        put("━┃━ ", '┻')
+        put("━┃━┃", '╋')
+        put("━┃  ", '┛')
+        put(" ┃━ ", '┗')
 
-        addEntry(" │ ",
-                 " ├─",
-                 " │ ")
+        put("  ═║", '╔')
+        put("═  ║", '╗')
+        put(" ║═║", '╠')
+        put("═║ ║", '╣')
+        put("═ ═║", '╦')
+        put("═║═ ", '╩')
+        put("═║═║", '╬')
+        put("═║  ", '╝')
+        put(" ║═ ", '╚')
 
-        addEntry(" │ ",
-                 "─┤ ",
-                 " │ ")
+        put(" ║═│", '╠')
+        put("═║ │", '╣')
+        put("═ ═│", '╤')
 
-        addEntry("   ",
-                 "─┬─",
-                 " │ ")
-
-        addEntry(" │ ",
-                 "─┴─",
-                 "   ")
-
-        addEntry(" │ ",
-                 "─┼─",
-                 " │ ")
-
-        addEntry(" │ ",
-                 "─┘ ",
-                 "   ")
-
-        addEntry(" │ ",
-                 " └─",
-                 "   ")
-
-        //@formatter:on
+        put(" │━┃", '┢')
+        put(" ┃━│", '┡')
+        put("━┃ │", '┩')
+        put("━│━ ", '┷')
+        put("━ ━│", '┯')
+        put("━│ ┃", '┪')
     }
 
     override fun resolveCrossSection(value: IntersectionMatrix): Char {
-        return map[value.toString()] ?: '?'
+        return intersections[value.toString()] ?: '?'
     }
 
     override val sections: Map<Section, TextSectionStyle> = mapOf(
         Section.Header to headerSectionStyle, Section.Row to rowSectionStyle, Section.Footer to footerSectionStyle
     )
-
-    private fun addEntry(r1: String, r2: String, r3: String) {
-        val value = r2[1]
-        val key = r1 + r2[0] + ' ' + r2[2] + r3
-        map[key] = value
-    }
 }

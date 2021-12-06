@@ -9,6 +9,10 @@ import org.apache.commons.lang3.StringUtils
 class TextTablePrinter : Printer<Table<out TextTableStyle>> {
 
     override fun print(table: Table<out TextTableStyle>): String {
+        if (table.rows.isEmpty()) {
+            return ""
+        }
+
         val sb = StringBuilder()
 
         val maxSize = 2 * table.rows.size + 1
@@ -41,42 +45,42 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
             val previousRowStyle = previousRow.style as TextSectionStyle
             var position = 0
             matrices.getOrPut(position) { IntersectionMatrix() }
-                .set(2, 1, style.horizontalLine[0])
-                .set(1, 0, previousRowStyle.verticalLine[0])
+                .setRight(style.horizontalLine[0])
+                .setTop(previousRowStyle.verticalLine[0])
 
             for (cell in previousRow.cells.dropLast(1)) {
                 position += cell.width + style.verticalLineWidth
                 matrices.getOrPut(position) { IntersectionMatrix() }
-                    .set(0, 1, style.horizontalLine[0])
-                    .set(2, 1, style.horizontalLine[0])
-                    .set(1, 0, previousRowStyle.verticalLine[0])
+                    .setLeft(style.horizontalLine[0])
+                    .setRight(style.horizontalLine[0])
+                    .setTop(previousRowStyle.verticalLine[0])
             }
 
             position += previousRow.cells.last().width + previousRowStyle.verticalLineWidth
             matrices.getOrPut(position) { IntersectionMatrix() }
-                .set(0, 1, style.horizontalLine[0])
-                .set(1, 0, previousRowStyle.verticalLine[0])
+                .setLeft(style.horizontalLine[0])
+                .setTop(previousRowStyle.verticalLine[0])
         }
 
         if (nextRow != null) {
             val nextRowStyle = nextRow.style as TextSectionStyle
             var position = 0
             matrices.getOrPut(position) { IntersectionMatrix() }
-                .set(2, 1, style.horizontalLine[0])
-                .set(1, 2, nextRowStyle.verticalLine[0])
+                .setRight(style.horizontalLine[0])
+                .setBottom(nextRowStyle.verticalLine[0])
 
             for (cell in nextRow.cells.dropLast(1)) {
                 position += cell.width + style.verticalLineWidth
                 matrices.getOrPut(position) { IntersectionMatrix() }
-                    .set(0, 1, style.horizontalLine[0])
-                    .set(2, 1, style.horizontalLine[0])
-                    .set(1, 2, nextRowStyle.verticalLine[0])
+                    .setLeft(style.horizontalLine[0])
+                    .setRight(style.horizontalLine[0])
+                    .setBottom(nextRowStyle.verticalLine[0])
             }
 
             position += nextRow.cells.last().width + nextRowStyle.verticalLineWidth
             matrices.getOrPut(position) { IntersectionMatrix() }
-                .set(0, 1, style.horizontalLine[0])
-                .set(1, 2, nextRowStyle.verticalLine[0])
+                .setLeft(style.horizontalLine[0])
+                .setBottom(nextRowStyle.verticalLine[0])
         }
 
         for (entry in matrices.entries) {
