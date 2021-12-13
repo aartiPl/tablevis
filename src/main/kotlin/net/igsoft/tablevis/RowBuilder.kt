@@ -1,7 +1,10 @@
 package net.igsoft.tablevis
 
-class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, internal val section: Section) {
-    var height: Int? = null
+import kotlin.math.max
+
+class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, private val section: Section) {
+    private var width: Int? = null
+    private var height: Int? = null
 
     var minimalTextWidth = tableBuilder.minimalTextWidth
 
@@ -45,7 +48,7 @@ class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, int
     //------------------------------------------------------------------------------------------------------------------
 
     internal fun build(): Row {
-        return Row(0, 0, tableBuilder.style.sections.getValue(section), cells.map { it.build() })
+        return Row(width!!, height!!, tableBuilder.style.sections.getValue(section), cells.map { it.build() })
     }
 
     internal var naturalWidth = 0
@@ -106,9 +109,16 @@ class RowBuilder<T : TableStyle>(internal val tableBuilder: TableBuilder<T>, int
 
     internal fun adjustTexts() {
         //Split text so that it can be put in one cell
+        var maxHeight = 0
+        var calculatedWidth = 0
+        val style = tableBuilder.style.sections.getValue(section)
         for (cell in cells) {
             cell.adjustTexts()
+            maxHeight = max(maxHeight, cell.height!!)
+            calculatedWidth += cell.width!! + style.verticalLineWidth
         }
 
+        height = height?: maxHeight
+        width = calculatedWidth
     }
 }

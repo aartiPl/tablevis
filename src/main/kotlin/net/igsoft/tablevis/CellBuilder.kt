@@ -1,6 +1,6 @@
 package net.igsoft.tablevis
 
-class CellBuilder<T : TableStyle>(internal val rowBuilder: RowBuilder<T>) {
+class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
     var width: Int? = null
     var height: Int? = null
 
@@ -52,19 +52,34 @@ class CellBuilder<T : TableStyle>(internal val rowBuilder: RowBuilder<T>) {
     private lateinit var lines: List<String>
     private var horizontalAlignment = rowBuilder.horizontalAlignment
     private var verticalAlignment = rowBuilder.verticalAlignment
+    private var naturalTextWidth: Int = 0
     internal var naturalWidth = 0
     internal var minimalWidth = 0
     internal var textWidth = 0
 
     internal fun resolveMissingDimensions() {
-        naturalWidth = leftIndent + text.lines().maxOf { it.length } + rightIndent
+        text = text.replace("\t", "    ")
+        lines = if (text.isEmpty()) listOf() else  text.lines()
+        naturalTextWidth = lines.maxOf { it.length }
+        naturalWidth = leftIndent + naturalTextWidth + rightIndent
         minimalWidth = width ?: (leftIndent + (if (text.isEmpty()) 0 else minimalTextWidth) + rightIndent)
     }
 
     internal fun adjustTexts() {
         textWidth = (width ?: minimalWidth) - leftIndent - rightIndent
 
-        lines = if (text.isNotEmpty()) text.lines().flatMap { it.chunked(textWidth) } else listOf()
+        //Choose strategy of splitting text
+        if (textWidth < 5) {
+            //Cell is too small to do anything fancy...
+            lines = lines.flatMap { it.chunked(textWidth) }
+        } else {
+            //Split using whitespaces and potentially dashes "-";
+            //TODO:
+            lines = lines.flatMap { it.chunked(textWidth) }
+        }
+
+        width = width ?: (leftIndent + naturalTextWidth + rightIndent)
+        height = height ?: lines.size
 
 //        if (cell.horizontalAlignment.contains(HorizontalAlignment.Justified)) {
 //            val justificationThreshold = cell.cellTextWidth.get * 4 / 5)
@@ -74,8 +89,6 @@ class CellBuilder<T : TableStyle>(internal val rowBuilder: RowBuilder<T>) {
     }
 
     internal fun build(): Cell {
-        width = width ?: lines.maxOf { it.length }
-        height = height ?: lines.size
 
         return Cell(
             width!!,

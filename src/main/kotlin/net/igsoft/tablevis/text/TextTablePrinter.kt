@@ -101,7 +101,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
     }
 
     private fun drawRow(sb: StringBuilder, textSectionStyle: TextSectionStyle, row: Row, tableLineSeparator: String) {
-        for (line in 0..row.height) {
+        for (line in 0 until row.height) {
             sb.append(textSectionStyle.verticalLine)
 
             for (cell in row.cells) {

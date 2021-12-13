@@ -4,10 +4,9 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import net.igsoft.tablevis.text.BoxTextTableStyle
 import net.igsoft.tablevis.text.TextTablePrinter
-import net.igsoft.tablevis.text.SimpleTextTableStyle
 import org.junit.jupiter.api.Test
 
-class TextTableBuilderTest {
+class IntegrationTest {
     //@formatter:off
   private val BANK_ACCOUNT_TEXT = "Rachunek bankowy:\nCRK ProEcclesia SCh - \"ProCracovia\"\nul. Puławska 114\n" +
     "02-620 Warszawa\n\nPLN 78 1240 1112 1111 0010 0909 5620\nBank Pekao SA\nVIII odział w Warszawie"
@@ -58,9 +57,74 @@ class TextTableBuilderTest {
         println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
-            """|====
-               ||  |
-               |====
+            """|┏━━┓
+               |┃  ┃
+               |┗━━┛
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Header, row and footer`() {
+        val table = Table.using(style) {
+            width = 40
+            //alignRight()
+
+            addHeader {
+                addCell {
+                    alignCenter()
+                    text = "Header"
+                }
+            }
+
+            addRow {
+                addCell {
+                    text = "Row 1 Cell 1"
+                }
+
+                addCell {
+                    alignRight()
+                    text = "Row 1 Cell 2"
+                }
+            }
+
+            addRow {
+                addCell {
+                    text = "Row 2 Cell 1"
+                }
+
+                addCell {
+                    alignRight()
+                    text = "Row 2 Cell 2"
+                }
+            }
+
+            addFooter {
+                addCell {
+                    alignCenter()
+                    text = "Footer"
+                }
+
+                addCell {
+                    alignCenter().alignMiddle()
+                    width = 15
+                    text = "page 1/1"
+                }
+            }
+        }
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+               |┃                Header                ┃
+               |┡━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━┩
+               |│ Row 1 Cell 1     │      Row 1 Cell 2 │
+               |├──────────────────┼───────────────────┤
+               |│ Row 2 Cell 1     │      Row 2 Cell 2 │
+               |┢━━━━━━━━━━━━━━━━━━┷━━━┳━━━━━━━━━━━━━━━┪
+               |┃        Footer        ┃   page 1/1    ┃
+               |┗━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┛
                |""".trimMargin()
         )
     }
@@ -68,7 +132,7 @@ class TextTableBuilderTest {
     @Test
     fun `Header and some rows`() {
         val table = Table.using(style) {
-            width = 28
+            //width = 35
             //alignRight()
 
             addHeader {
@@ -132,16 +196,30 @@ class TextTableBuilderTest {
 
         assertThat(printer.print(table)).isEqualTo(
             """|===============================
-         || This is header              |
-         |===============================
-         || Row 1 Cell 1 | Row 1 Cell 2 |
-         |-------------------------------
-         || Row 2 Cell 1 | Row 2 Cell 2 |
-         |-------------------------------
-         |""".trimMargin()
+               || This is header              |
+               |===============================
+               || Row 1 Cell 1 | Row 1 Cell 2 |
+               |-------------------------------
+               || Row 2 Cell 1 | Row 2 Cell 2 |
+               |-------------------------------
+               |""".trimMargin()
         )
     }
-}
+
+    @Test
+    fun `Splitting text into rows`() {
+        val table = Table.using(style) {
+            width = 30
+
+            addRow {
+                addCell {
+                    text = LOREM_IPSUM_TEXT
+                }
+            }
+        }
+
+        println(printer.print(table))
+    }
 
 //    fun `Nothing defined, but empty header with windows lineSeparator`() {
 //        val table = TextTable.builder().lineSeparator("\r\n").withHeader().build()
@@ -441,3 +519,4 @@ class TextTableBuilderTest {
 //
 //        println(table)
 //    }
+}

@@ -60,8 +60,6 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
     fun forId(vararg id: Any): IdOperation<T> = IdOperation(this, id.toList())
 
     internal fun build(): Table<T> {
-        val allRows = rows
-
         //Execute deferred functions...
 //        for (id  in operationRegistry.keySet) {
 //            val operations = operationRegistry.get(id)
@@ -72,7 +70,7 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
         var naturalWidth = 0
         var minimalWidth = 0
 
-        for (row in allRows) {
+        for (row in rows) {
             row.resolveMissingDimensions()
 
             naturalWidth = max(row.naturalWidth, naturalWidth)
@@ -89,7 +87,7 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
         }
 
         //Calculate cell sizes so that they match table size
-        for (row in allRows) {
+        for (row in rows) {
             val remainingSpace = calculatedWidth - row.assignedWidth
             row.distributeRemainingSpace(remainingSpace)
             row.adjustTexts()
@@ -100,7 +98,7 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
         return Table(style,
                      calculatedWidth,
                      height!!,
-                     rows.map { it.build() }
+                     this.rows.map { it.build() }
         )
     }
 
