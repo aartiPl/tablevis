@@ -12,10 +12,10 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
     var width: Int? = null
     var height: Int? = null
 
-    var leftIndent: Int = style.leftIndent
-    var topIndent: Int = style.topIndent
-    var rightIndent: Int = style.rightIndent
-    var bottomIndent: Int = style.bottomIndent
+    var leftMargin: Int = style.leftMargin
+    var topMargin: Int = style.topMargin
+    var rightMargin: Int = style.rightMargin
+    var bottomMargin: Int = style.bottomMagin
 
     fun addHeader(block: RowBuilder<T>.() -> Unit = {}) {
         rows.add(RowBuilder(this, Section.Header).apply(block))
@@ -71,7 +71,7 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
         var minimalWidth = 0
 
         for (row in rows) {
-            row.resolveMissingDimensions()
+            row.resolveWidth()
 
             naturalWidth = max(row.naturalWidth, naturalWidth)
             minimalWidth = max(row.minimalWidth, minimalWidth)

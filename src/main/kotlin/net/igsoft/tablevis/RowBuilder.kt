@@ -8,10 +8,10 @@ class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, priv
 
     var minimalTextWidth = tableBuilder.minimalTextWidth
 
-    var leftIndent: Int = tableBuilder.leftIndent
-    var topIndent: Int = tableBuilder.topIndent
-    var rightIndent: Int = tableBuilder.rightIndent
-    var bottomIndent: Int = tableBuilder.bottomIndent
+    var leftMargin: Int = tableBuilder.leftMargin
+    var topMargin: Int = tableBuilder.topMargin
+    var rightMargin: Int = tableBuilder.rightMargin
+    var bottomMargin: Int = tableBuilder.bottomMargin
 
     fun addCell(block: CellBuilder<T>.() -> Unit = {}) {
         cells.add(CellBuilder(this).apply(block))
@@ -61,7 +61,7 @@ class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, priv
     private val cellsWithNoWidth = mutableListOf<CellBuilder<T>>()
     private val cells = mutableListOf<CellBuilder<T>>()
 
-    internal fun resolveMissingDimensions() {
+    internal fun resolveWidth() {
         //Make sure there is at least one cell in a row...
         if (cells.isEmpty()) {
             addCell()
@@ -70,7 +70,7 @@ class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, priv
         val style = tableBuilder.style.sections.getValue(section)
 
         for (cell in cells) {
-            cell.resolveMissingDimensions()
+            cell.resolveWidth()
 
             naturalWidth += (cell.width ?: cell.naturalWidth) + style.verticalLineWidth
             assignedWidth += (cell.width ?: 0) + style.verticalLineWidth

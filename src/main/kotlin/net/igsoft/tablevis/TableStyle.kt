@@ -9,10 +9,10 @@ interface SectionStyle {
 }
 
 interface TableStyle {
-    val leftIndent: Int
-    val topIndent: Int
-    val rightIndent: Int
-    val bottomIndent: Int
+    val leftMargin: Int
+    val topMargin: Int
+    val rightMargin: Int
+    val bottomMagin: Int
 
     val verticalAlignment: VerticalAlignment
     val horizontalAlignment: HorizontalAlignment

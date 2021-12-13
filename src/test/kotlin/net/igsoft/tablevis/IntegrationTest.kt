@@ -132,7 +132,7 @@ class IntegrationTest {
     @Test
     fun `Header and some rows`() {
         val table = Table.using(style) {
-            //width = 35
+            width = 21
             //alignRight()
 
             addHeader {
@@ -183,7 +183,7 @@ class IntegrationTest {
 
                 addCell {
                     alignCenter().alignMiddle()
-                    width = 20
+                    width = 15
                     text = "page 1/1"
                 }
             }

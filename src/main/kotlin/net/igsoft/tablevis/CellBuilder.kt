@@ -6,10 +6,10 @@ class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
 
     var minimalTextWidth = rowBuilder.minimalTextWidth
 
-    var leftIndent = rowBuilder.leftIndent
-    var topIndent = rowBuilder.topIndent
-    var rightIndent = rowBuilder.rightIndent
-    var bottomIndent = rowBuilder.bottomIndent
+    var leftMargin = rowBuilder.leftMargin
+    var topMargin = rowBuilder.topMargin
+    var rightMargin = rowBuilder.rightMargin
+    var bottomMargin = rowBuilder.bottomMargin
 
     var text = ""
 
@@ -57,28 +57,27 @@ class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
     internal var minimalWidth = 0
     internal var textWidth = 0
 
-    internal fun resolveMissingDimensions() {
-        text = text.replace("\t", "    ")
-        lines = if (text.isEmpty()) listOf() else  text.lines()
+    internal fun resolveWidth() {
+        text = text.replace("\t", "    ") //Resolve tabulator characters to spaces
+        lines = if (text.isEmpty()) listOf() else text.lines()
         naturalTextWidth = lines.maxOf { it.length }
-        naturalWidth = leftIndent + naturalTextWidth + rightIndent
-        minimalWidth = width ?: (leftIndent + (if (text.isEmpty()) 0 else minimalTextWidth) + rightIndent)
+        naturalWidth = leftMargin + naturalTextWidth + rightMargin
+        minimalWidth = width ?: (leftMargin + (if (text.isEmpty()) 0 else minimalTextWidth) + rightMargin)
     }
 
     internal fun adjustTexts() {
-        textWidth = (width ?: minimalWidth) - leftIndent - rightIndent
+        textWidth = (width ?: minimalWidth) - leftMargin - rightMargin
 
         //Choose strategy of splitting text
-        if (textWidth < 5) {
+        lines = if (textWidth < 5) {
             //Cell is too small to do anything fancy...
-            lines = lines.flatMap { it.chunked(textWidth) }
+            lines.flatMap { it.chunked(textWidth) }
         } else {
-            //Split using whitespaces and potentially dashes "-";
-            //TODO:
-            lines = lines.flatMap { it.chunked(textWidth) }
+            //Split textually
+            lines.flatMap { Text.splitLineTextually(it, textWidth) }
         }
 
-        width = width ?: (leftIndent + naturalTextWidth + rightIndent)
+        width = width ?: (leftMargin + naturalTextWidth + rightMargin)
         height = height ?: lines.size
 
 //        if (cell.horizontalAlignment.contains(HorizontalAlignment.Justified)) {
@@ -93,10 +92,10 @@ class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
         return Cell(
             width!!,
             height!!,
-            leftIndent,
-            topIndent,
-            rightIndent,
-            bottomIndent,
+            leftMargin,
+            topMargin,
+            rightMargin,
+            bottomMargin,
             horizontalAlignment,
             verticalAlignment,
             lines
