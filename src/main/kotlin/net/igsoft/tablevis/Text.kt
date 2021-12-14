@@ -23,7 +23,7 @@ object Text {
 
         val newLines = mutableListOf<String>()
 
-        var rest = resolveTabs(line)
+        var rest = line
         loop@ while (rest.isNotEmpty()) {
             if (rest.length <= width) {
                 newLines += rest
@@ -32,8 +32,8 @@ object Text {
             }
 
             //2. split position is whitespace
-            if (rest[width - 1].isWhitespace()) {
-                newLines += rest.substring(0, width - 1).trimEnd()
+            if (rest[width].isWhitespace()) {
+                newLines += rest.substring(0, width).trimEnd()
                 rest = rest.substring(width).trimStart()
                 continue
             }
@@ -55,5 +55,5 @@ object Text {
         return newLines
     }
 
-    fun resolveTabs(line: String, tabSize: Int = 4): String = line.replace("\t", " ".repeat(tabSize))
+    fun resolveTabs(text: String, tabSize: Int = 4): String = text.replace("\t", " ".repeat(tabSize))
 }

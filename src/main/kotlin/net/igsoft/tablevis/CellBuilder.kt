@@ -1,5 +1,7 @@
 package net.igsoft.tablevis
 
+import kotlin.math.max
+
 class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
     var width: Int? = null
     var height: Int? = null
@@ -58,9 +60,15 @@ class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
     internal var textWidth = 0
 
     internal fun resolveWidth() {
-        text = text.replace("\t", "    ") //Resolve tabulator characters to spaces
-        lines = if (text.isEmpty()) listOf() else text.lines()
-        naturalTextWidth = lines.maxOf { it.length }
+        if (text.isEmpty()) {
+            lines = listOf()
+            naturalTextWidth = 0
+        } else {
+            text = Text.resolveTabs(text)
+            lines = text.lines()
+            naturalTextWidth = lines.maxOf { it.length }
+        }
+
         naturalWidth = leftMargin + naturalTextWidth + rightMargin
         minimalWidth = width ?: (leftMargin + (if (text.isEmpty()) 0 else minimalTextWidth) + rightMargin)
     }
@@ -78,7 +86,7 @@ class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
         }
 
         width = width ?: (leftMargin + naturalTextWidth + rightMargin)
-        height = height ?: lines.size
+        height = height ?: max(lines.size, 1)
 
 //        if (cell.horizontalAlignment.contains(HorizontalAlignment.Justified)) {
 //            val justificationThreshold = cell.cellTextWidth.get * 4 / 5)

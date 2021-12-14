@@ -195,13 +195,25 @@ class IntegrationTest {
         println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
-            """|===============================
-               || This is header              |
-               |===============================
-               || Row 1 Cell 1 | Row 1 Cell 2 |
-               |-------------------------------
-               || Row 2 Cell 1 | Row 2 Cell 2 |
-               |-------------------------------
+            """|┏━━━━━━━━━━━━━━━━━━━┓
+               |┃      Header       ┃
+               |┡━━━━━━━━━┯━━━━━━━━━┩
+               |│ Row 1   │ Row 1   │
+               |│ Cell 1  │ Cell 2  │
+               |├─────────┼─────────┤
+               |│ Row 2   │ Row 2   │
+               |│ Cell 1  │ Cell 2  │
+               |├─────────┼─────────┤
+               |│ Row 3   │ Row 3   │
+               |│ Cell 1  │ Cell 2  │
+               |┢━━━┳━━━━━┷━━━━━━━━━┪
+               |┃ F ┃   page 1/1    ┃
+               |┃ o ┃               ┃
+               |┃ o ┃               ┃
+               |┃ t ┃               ┃
+               |┃ e ┃               ┃
+               |┃ r ┃               ┃
+               |┗━━━┻━━━━━━━━━━━━━━━┛
                |""".trimMargin()
         )
     }
@@ -209,7 +221,7 @@ class IntegrationTest {
     @Test
     fun `Splitting text into rows`() {
         val table = Table.using(style) {
-            width = 30
+            width = 29
 
             addRow {
                 addCell {
@@ -219,6 +231,38 @@ class IntegrationTest {
         }
 
         println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌───────────────────────────┐
+               |│ Lorem Ipsum is simply     │
+               |│ dummy text of the printi- │
+               |│ ng and typesetting indus- │
+               |│ try.                      │
+               |│                           │
+               |│     Lorem Ipsum has been  │
+               |│ the industry's standard   │
+               |│ dummy text ever since the │
+               |│ 1500s, when an unknown    │
+               |│ printer took a galley of  │
+               |│ type and scrambled it to  │
+               |│ make a type specimen      │
+               |│ book. It has survived not │
+               |│ only five centuries, but  │
+               |│ also the leap into elect- │
+               |│ ronic typesetting, remai- │
+               |│ ning essentially unchang- │
+               |│ ed. It was popularised in │
+               |│ the 1960s with the relea- │
+               |│ se of Letraset sheets     │
+               |│ containing Lorem Ipsum    │
+               |│ passages, and more recen- │
+               |│ tly with desktop publish- │
+               |│ ing software like Aldus   │
+               |│ PageMaker including vers- │
+               |│ ions of Lorem Ipsum.      │
+               |└───────────────────────────┘
+               |""".trimMargin()
+        )
     }
 
 //    fun `Nothing defined, but empty header with windows lineSeparator`() {
