@@ -130,7 +130,7 @@ class IntegrationTest {
     }
 
     @Test
-    fun `Header and some rows`() {
+    fun `Header, rows and footer - narrow`() {
         val table = Table.using(style) {
             width = 21
             //alignRight()
