@@ -15,7 +15,7 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
     var leftMargin: Int = style.leftMargin
     var topMargin: Int = style.topMargin
     var rightMargin: Int = style.rightMargin
-    var bottomMargin: Int = style.bottomMagin
+    var bottomMargin: Int = style.bottomMargin
 
     fun addHeader(block: RowBuilder<T>.() -> Unit = {}) {
         rows.add(RowBuilder(this, Section.Header).apply(block))

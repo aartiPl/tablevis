@@ -10,7 +10,7 @@ class BoxTextTableStyle(
     override val leftMargin: Int = 1,
     override val topMargin: Int = 0,
     override val rightMargin: Int = 1,
-    override val bottomMagin: Int = 0,
+    override val bottomMargin: Int = 0,
 
     override val verticalAlignment: VerticalAlignment = VerticalAlignment.Middle,
     override val horizontalAlignment: HorizontalAlignment = HorizontalAlignment.Left,

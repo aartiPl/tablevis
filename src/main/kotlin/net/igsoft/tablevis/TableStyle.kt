@@ -12,7 +12,7 @@ interface TableStyle {
     val leftMargin: Int
     val topMargin: Int
     val rightMargin: Int
-    val bottomMagin: Int
+    val bottomMargin: Int
 
     val verticalAlignment: VerticalAlignment
     val horizontalAlignment: HorizontalAlignment
