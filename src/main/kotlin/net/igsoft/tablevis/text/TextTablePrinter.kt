@@ -6,9 +6,9 @@ import net.igsoft.tablevis.Row
 import net.igsoft.tablevis.Table
 import org.apache.commons.lang3.StringUtils
 
-class TextTablePrinter : Printer<Table<out TextTableStyle>> {
+class TextTablePrinter : Printer<Table<TextStyle, out TextStyleSet<TextStyle>>> {
 
-    override fun print(table: Table<out TextTableStyle>): String {
+    override fun print(table: Table<TextStyle, out TextStyleSet<TextStyle>>): String {
         if (table.rows.isEmpty()) {
             return ""
         }
@@ -25,14 +25,14 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
             } else {
                 //row content
                 val row = table.rows[i / 2]
-                drawRow(sb, row.style as TextSectionStyle, row, table.style.lineSeparator)
+                drawRow(sb, row.style as TextStyle, row, table.style.lineSeparator)
             }
         }
         return sb.toString()
     }
 
     private fun drawHorizontalLine(
-        sb: StringBuilder, previousRow: Row?, nextRow: Row?, width: Int, tableStyle: TextTableStyle
+        sb: StringBuilder, previousRow: Row?, nextRow: Row?, width: Int, tableStyle: TextStyleSet<TextStyle>
     ) {
         require(previousRow != null || nextRow != null)
 
@@ -42,7 +42,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
         val matrices = mutableMapOf<Int, IntersectionMatrix>()
 
         if (previousRow != null) {
-            val previousRowStyle = previousRow.style as TextSectionStyle
+            val previousRowStyle = previousRow.style as TextStyle
             var position = 0
             matrices.getOrPut(position) { IntersectionMatrix() }
                 .setRight(style.horizontalLine[0])
@@ -63,7 +63,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
         }
 
         if (nextRow != null) {
-            val nextRowStyle = nextRow.style as TextSectionStyle
+            val nextRowStyle = nextRow.style as TextStyle
             var position = 0
             matrices.getOrPut(position) { IntersectionMatrix() }
                 .setRight(style.horizontalLine[0])
@@ -90,17 +90,17 @@ class TextTablePrinter : Printer<Table<out TextTableStyle>> {
         sb.append(String(line) + tableStyle.lineSeparator)
     }
 
-    private fun calculateStyle(previousRow: Row?, nextRow: Row?): TextSectionStyle {
+    private fun calculateStyle(previousRow: Row?, nextRow: Row?): TextStyle {
         require(previousRow != null || nextRow != null)
 
         if (previousRow == null || nextRow == null) {
-            return (previousRow ?: nextRow)!!.style as TextSectionStyle
+            return (previousRow ?: nextRow)!!.style as TextStyle
         }
 
-        return (if (previousRow.style.layer > nextRow.style.layer) previousRow.style else nextRow.style) as TextSectionStyle
+        return (if (previousRow.style.layer > nextRow.style.layer) previousRow.style else nextRow.style) as TextStyle
     }
 
-    private fun drawRow(sb: StringBuilder, textSectionStyle: TextSectionStyle, row: Row, tableLineSeparator: String) {
+    private fun drawRow(sb: StringBuilder, textSectionStyle: TextStyle, row: Row, tableLineSeparator: String) {
         for (line in 0 until row.height) {
             sb.append(textSectionStyle.verticalLine)
 

@@ -31,15 +31,8 @@ object Text {
                 continue
             }
 
-            //2. split position is whitespace
-            if (rest[width].isWhitespace()) {
-                newLines += rest.substring(0, width).trimEnd()
-                rest = rest.substring(width).trimStart()
-                continue
-            }
-
             //3. between cell's textWidth and 4/5 of line length (lastIndexOf) is whitespace
-            for (i in width - 1 downTo (4 * width / 5)) {
+            for (i in width downTo (4 * width / 5)) {
                 if (rest[i].isWhitespace()) {
                     newLines += rest.substring(0, i).trimEnd()
                     rest = rest.substring(i).trimStart()

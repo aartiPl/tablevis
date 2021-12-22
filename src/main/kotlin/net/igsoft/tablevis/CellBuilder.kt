@@ -2,7 +2,7 @@ package net.igsoft.tablevis
 
 import kotlin.math.max
 
-class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
+class CellBuilder<S: Style, T : StyleSet<S>>(private val rowBuilder: RowBuilder<S, T>) {
     var width: Int? = null
     var height: Int? = null
 
@@ -16,6 +16,7 @@ class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
     var text = ""
 
     fun id(vararg ids: Any) {
+        ids.forEach { rowBuilder.tableBuilder.registerId(it, this) }
         this.ids = ids.toList()
     }
 
@@ -54,12 +55,12 @@ class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
     private lateinit var lines: List<String>
     private var horizontalAlignment = rowBuilder.horizontalAlignment
     private var verticalAlignment = rowBuilder.verticalAlignment
-    private var naturalTextWidth: Int = 0
+    internal var naturalTextWidth: Int = 0
     internal var naturalWidth = 0
     internal var minimalWidth = 0
     internal var textWidth = 0
 
-    internal fun resolveWidth() {
+    internal fun resolveTexts() {
         if (text.isEmpty()) {
             lines = listOf()
             naturalTextWidth = 0
@@ -70,6 +71,9 @@ class CellBuilder<T : TableStyle>(private val rowBuilder: RowBuilder<T>) {
         }
 
         naturalWidth = leftMargin + naturalTextWidth + rightMargin
+    }
+
+    internal fun resolveWidth() {
         minimalWidth = width ?: (leftMargin + (if (text.isEmpty()) 0 else minimalTextWidth) + rightMargin)
     }
 

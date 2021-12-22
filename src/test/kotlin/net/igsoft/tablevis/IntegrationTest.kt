@@ -2,9 +2,13 @@ package net.igsoft.tablevis
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import net.igsoft.tablevis.text.BoxTextTableStyle
+import assertk.assertions.isFailure
+import assertk.assertions.isInstanceOf
+import net.igsoft.tablevis.text.BoxTextStyleSet
+import net.igsoft.tablevis.text.SimpleTextStyleSet
 import net.igsoft.tablevis.text.TextTablePrinter
 import org.junit.jupiter.api.Test
+import java.lang.IllegalArgumentException
 
 class IntegrationTest {
     //@formatter:off
@@ -36,7 +40,7 @@ class IntegrationTest {
     "The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a line in section 1.10.32."
   //@formatter:on
 
-    private val style = BoxTextTableStyle(lineSeparator = "\n")
+    private val style = BoxTextStyleSet(lineSeparator = "\n")
     private val printer = TextTablePrinter()
 
     @Test
@@ -51,7 +55,7 @@ class IntegrationTest {
     @Test
     fun `Nothing defined, but empty header`() {
         val table = Table.using(style) {
-            addHeader {}
+            row(style.header) {}
         }
 
         println(printer.print(table))
@@ -70,42 +74,42 @@ class IntegrationTest {
             width = 40
             //alignRight()
 
-            addHeader {
-                addCell {
+            row(style.header) {
+                cell {
                     alignCenter()
                     text = "Header"
                 }
             }
 
-            addRow {
-                addCell {
+            row {
+                cell {
                     text = "Row 1 Cell 1"
                 }
 
-                addCell {
+                cell {
                     alignRight()
                     text = "Row 1 Cell 2"
                 }
             }
 
-            addRow {
-                addCell {
+            row {
+                cell {
                     text = "Row 2 Cell 1"
                 }
 
-                addCell {
+                cell {
                     alignRight()
                     text = "Row 2 Cell 2"
                 }
             }
 
-            addFooter {
-                addCell {
+            row(style.footer) {
+                cell {
                     alignCenter()
                     text = "Footer"
                 }
 
-                addCell {
+                cell {
                     alignCenter().alignMiddle()
                     width = 15
                     text = "page 1/1"
@@ -135,60 +139,59 @@ class IntegrationTest {
             width = 21
             //alignRight()
 
-            addHeader {
-                addCell {
+            row(style.header) {
+                cell {
                     alignCenter()
                     text = "Header"
                 }
             }
 
-            addRow {
-                addCell {
+            row {
+                cell {
                     id("firstCol", "firstRow")
                     text = "Row 1 Cell 1"
                 }
 
-                addCell {
+                cell {
                     text = "Row 1 Cell 2"
                 }
             }
 
-            addRow {
-                addCell {
+            row {
+                cell {
                     id("firstCol")
                     text = "Row 2 Cell 1"
                 }
 
-                addCell {
+                cell {
                     text = "Row 2 Cell 2"
                 }
             }
 
-            addRow {
-                addCell {
+            row {
+                cell {
                     id("firstCol")
                     text = "Row 3 Cell 1"
                 }
 
-                addCell {
+                cell {
                     text = "Row 3 Cell 2"
                 }
             }
 
-            addFooter {
-                addCell {
+            row(style.footer) {
+                cell {
                     alignCenter()
                     text = "Footer"
                 }
 
-                addCell {
+                cell {
                     alignCenter().alignMiddle()
                     width = 15
                     text = "page 1/1"
                 }
             }
 
-            forId("firstCol").setMinimalWidth()
             forId("firstRow").setHeight(5)
         }
 
@@ -200,6 +203,9 @@ class IntegrationTest {
                |┡━━━━━━━━━┯━━━━━━━━━┩
                |│ Row 1   │ Row 1   │
                |│ Cell 1  │ Cell 2  │
+               |│         │         │
+               |│         │         │
+               |│         │         │
                |├─────────┼─────────┤
                |│ Row 2   │ Row 2   │
                |│ Cell 1  │ Cell 2  │
@@ -223,8 +229,8 @@ class IntegrationTest {
         val table = Table.using(style) {
             width = 29
 
-            addRow {
-                addCell {
+            row {
+                cell {
                     text = LOREM_IPSUM_TEXT
                 }
             }
@@ -265,173 +271,244 @@ class IntegrationTest {
         )
     }
 
-//    fun `Nothing defined, but empty header with windows lineSeparator`() {
-//        val table = TextTable.builder().lineSeparator("\r\n").withHeader().build()
-//        assertThat(printer.print(table)).isEqualTo("====\r\n|  |\r\n====\r\n")
-//    }
-//
-//    fun `Id on table with empty header`() {
-//        val table =
-//            TextTable.builder().lineSeparator("\n").withHeader().addCell()
-//                .id("headerCell")
-//                .forId("headerCell")
-//                .setMinimalWidth().build
-//
-//        assertThat(printer.print(table)).isEqualTo(
-//            """|====
-//               ||  |
-//               |====
-//               |""".trimMargin()
-//        )
-//    }
-//
+    @Test
+    fun `Nothing defined, but empty header with windows lineSeparator`() {
+        val style = SimpleTextStyleSet(lineSeparator = "\r\n")
+        val table = Table.using(style) {
+            row(style.header) { }
+        }
 
-//
-//    fun `Set min width on header and rows`() {
-//        val table =
-//            TextTable.builder.lineSeparator("\n").withHeader.addCell()
-//                .id("col1")
-//                .text("Header - col 1")
-//                .addCell()
-//                .text("Col 2")
-//                .addCell()
-//                .text("Col 3")
-//                .addRow()
-//                .addCell()
-//                .id("col1")
-//                .text("12")
-//                .addCell()
-//                .text("12")
-//                .addCell()
-//                .text("12345678")
-//                .addRow()
-//                .addCell()
-//                .id("col1")
-//                .text("1234")
-//                .addCell()
-//                .text("123")
-//                .addCell()
-//                .text("32")
-//                .forId("col1")
-//                .setMinimalWidth().build
-//
-//        assertThat(printer.print(table)).isEqualTo(
-//            """|==================================
-//         || Header - col 1 | Col 2 | Col 3 |
-//         |==================================
-//         || 12             | 12 | 12345678 |
-//         |----------------------------------
-//         || 1234           | 123 | 32      |
-//         |----------------------------------
-//         |""".trimMargin()
-//        )
-//    }
-//
-//    fun `Width shorter than it is possible to put texts`() {
-//
-//        val table =
-//            TextTable.builder.tableWidth(6)
-//                .addRow()
-//                .addCell()
-//                .text("Tekst pierwszy")
-//                .addCell()
-//                .text("Tekst drugi")
-//                .addCell()
-//                .text("Tekst trzeci")
-//                .addRow()
-//                .addCell()
-//                .text("Dolny wiersz").build
-//
-//        println(table)
-//
-//        //TODO: it hangs up!
-//    }
-//
-//    fun `Simple table with width set`() {
-//        val table =
-//            TextTable.builder.tableWidth(40)
-//                .lineSeparator("\n")
-//                .addRow()
-//                .addCell()
-//                .text("Tekst pierwszy")
-//                .addCell()
-//                .text("Tekst drugi")
-//                .addCell()
-//                .text("Tekst trzeci")
-//                .addRow()
-//                .addCell()
-//                .text("Dolny wiersz").build
-//
-//        assertThat(printer.print(table)).isEqualTo(
-//            """|----------------------------------------
-//         || Tekst      | Tekst      | Tekst      |
-//         || pierwszy   | drugi      | trzeci     |
-//         |----------------------------------------
-//         || Dolny wiersz                         |
-//         |----------------------------------------
-//         |""".trimMargin()
-//        )
-//    }
-//
-//    fun `Simple table without width set`() {
-//
-//        val table =
-//            TextTable.builder()
-//                .lineSeparator("\n")
-//                .addRow()
-//                .addCell()
-//                .text("Tekst pierwszy")
-//                .addCell()
-//                .text("Tekst drugi")
-//                .addCell()
-//                .text("Text trzeci")
-//                .addRow()
-//                .addCell()
-//                .text("Dolny wiersz").build
-//
-//        println(table.toString)
-//
-//        assertThat(printer.print(table)).isEqualTo(
-//            """|----------------------------------------------
-//         || Tekst pierwszy | Tekst drugi | Text trzeci |
-//         |----------------------------------------------
-//         || Dolny wiersz                               |
-//         |----------------------------------------------
-//         |""".trimMargin()
-//        )
-//    }
-//
-//    fun `Simple table without width set and with multiline text`() {
-//
-//        val table =
-//            TextTable.builder()
-//                .lineSeparator("\n")
-//                .addRow()
-//                .addCell()
-//                .text("Tekst pierwszy")
-//                .addCell()
-//                .text("Tekst drugi\nLine 1\nLine2\nBardzo długi line3")
-//                .addCell()
-//                .text("Tekst trzeci")
-//                .addRow()
-//                .addCell()
-//                .text("Dolny wiersz").build
-//
-//        println(table.toString)
-//
-//        assertThat(printer.print(table)).isEqualTo(
-//            """------------------------------------------------------
-//        || Tekst pierwszy | Tekst drugi        | Tekst trzeci |
-//        ||                | Line 1             |              |
-//        ||                | Line2              |              |
-//        ||                | Bardzo długi line3 |              |
-//        |------------------------------------------------------
-//        || Dolny wiersz                                       |
-//        |------------------------------------------------------
-//        |""".trimMargin()
-//        )
-//    }
-//
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo("+~=+\r\n*  *\r\n+~=+\r\n")
+    }
+
+    @Test
+    fun `Id on table with empty header`() {
+        val table = Table.using(style) {
+            row(style.header) {
+                cell() {
+                    id("headerCell")
+                }
+
+                forId("headerCell").setWidth(5)
+            }
+        }
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏━━━━━━━┓
+               |┃       ┃
+               |┗━━━━━━━┛
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Set min width on header and rows`() {
+        val table = Table.using(style) {
+            row(style.header) {
+                cell {
+                    id("col1")
+                    text = "Col 1"
+                }
+
+                cell {
+                    text = "Col 2"
+                }
+
+                cell {
+                    text = "Col 3"
+                }
+            }
+
+            row {
+                cell {
+                    id("col1")
+                    text = "12"
+                }
+
+                cell {
+                    text = "12345678"
+                }
+            }
+
+            row {
+                cell {
+                    id("col1")
+                    text = "12345678"
+                }
+
+                cell {
+                    text = "32"
+                }
+            }
+
+            forId("col1").setMinimalWidth()
+        }
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏━━━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+               |┃ Col 1    ┃ Col 2 ┃ Col 3 ┃
+               |┡━━━━━━━━━━╇━━━━━━━┻━━━━━━━┩
+               |│ 12       │ 12345678      │
+               |├──────────┼───────────────┤
+               |│ 12345678 │ 32            │
+               |└──────────┴───────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Width shorter than it is possible to put texts`() {
+        assertThat {
+            Table.using(style) {
+                width = 6
+
+                row {
+                    cell {
+                        text = "Tekst pierwszy"
+                    }
+
+                    cell {
+                        text = "Tekst drugi"
+                    }
+
+                    cell {
+                        text = "Tekst trzeci"
+                    }
+                }
+
+                row {
+                    cell {
+                        text = "Dolny wiersz"
+                    }
+                }
+            }
+        }.isFailure().isInstanceOf(IllegalArgumentException::class.java)
+    }
+
+    @Test
+    fun `Simple table with width set`() {
+        val table = Table.using(style) {
+            width = 35
+
+            row {
+                cell {
+                    text = "Tekst pierwszy"
+                }
+
+                cell {
+                    text = "Tekst drugi"
+                }
+
+                cell {
+                    text = "Tekst trzeci"
+                }
+            }
+
+            row {
+                cell {
+                    alignCenter()
+                    text = "Dolny wiersz"
+                }
+            }
+        }
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|----------------------------------------
+                 || Tekst      | Tekst      | Tekst      |
+                 || pierwszy   | drugi      | trzeci     |
+                 |----------------------------------------
+                 || Dolny wiersz                         |
+                 |----------------------------------------
+                 |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Simple table without width set`() {
+        val table = Table.using(style) {
+            row {
+                cell {
+                    text = "Tekst pierwszy"
+                }
+
+                cell {
+                    text = "Tekst drugi"
+                }
+
+                cell {
+                    text = "Tekst trzeci"
+                }
+            }
+
+            row {
+                cell {
+                    alignCenter()
+                    text = "Dolny wiersz"
+                }
+            }
+        }
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌────────────────┬──────────────┬───────────────┐
+               |│ Tekst pierwszy │ Tekst drugi  │ Tekst trzeci  │
+               |├────────────────┴──────────────┴───────────────┤
+               |│                  Dolny wiersz                 │
+               |└───────────────────────────────────────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Simple table without width set and with multiline text`() {
+        val table = Table.using(style) {
+            row {
+                cell {
+                    text = "Tekst pierwszy"
+                }
+
+                cell {
+                    text = "Tekst drugi\nLinia 1\nLinia2\nBardzo długi tekst"
+                }
+
+                cell {
+                    text = "Tekst trzeci"
+                }
+            }
+
+            row {
+                cell {
+                    alignCenter()
+                    text = "Dolny wiersz"
+                }
+            }
+        }
+
+        println(printer.print(table))
+
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌────────────────┬────────────────────┬───────────────┐
+               |│ Tekst pierwszy │ Tekst drugi        │ Tekst trzeci  │
+               |│                │ Linia 1            │               │
+               |│                │ Linia2             │               │
+               |│                │ Bardzo długi tekst │               │
+               |├────────────────┴────────────────────┴───────────────┤
+               |│                  Dolny wiersz                       │
+               |└─────────────────────────────────────────────────────┘
+               |""".trimMargin()
+        )
+    }
+
 //    fun `Simple table without width set and with multiline text1`() {
 //        val table =
 //            TextTable.builder()

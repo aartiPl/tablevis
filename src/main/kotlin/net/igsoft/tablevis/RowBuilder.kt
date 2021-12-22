@@ -2,7 +2,7 @@ package net.igsoft.tablevis
 
 import kotlin.math.max
 
-class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, private val section: Section) {
+class RowBuilder<S: Style, T : StyleSet<S>>(internal val tableBuilder: TableBuilder<S, T>, private val style: S) {
     private var width: Int? = null
     private var height: Int? = null
 
@@ -13,7 +13,7 @@ class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, priv
     var rightMargin: Int = tableBuilder.rightMargin
     var bottomMargin: Int = tableBuilder.bottomMargin
 
-    fun addCell(block: CellBuilder<T>.() -> Unit = {}) {
+    fun cell(block: CellBuilder<S, T>.() -> Unit = {}) {
         cells.add(CellBuilder(this).apply(block))
     }
 
@@ -48,7 +48,7 @@ class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, priv
     //------------------------------------------------------------------------------------------------------------------
 
     internal fun build(): Row {
-        return Row(width!!, height!!, tableBuilder.style.sections.getValue(section), cells.map { it.build() })
+        return Row(width!!, height!!, style, cells.map { it.build() })
     }
 
     internal var naturalWidth = 0
@@ -58,17 +58,21 @@ class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, priv
     internal var verticalAlignment: VerticalAlignment = tableBuilder.verticalAlignment
     internal var horizontalAlignment: HorizontalAlignment = tableBuilder.horizontalAlignment
 
-    private val cellsWithNoWidth = mutableListOf<CellBuilder<T>>()
-    private val cells = mutableListOf<CellBuilder<T>>()
+    private val cellsWithNoWidth = mutableListOf<CellBuilder<S, T>>()
+    private val cells = mutableListOf<CellBuilder<S, T>>()
 
-    internal fun resolveWidth() {
+    internal fun resolveTexts() {
         //Make sure there is at least one cell in a row...
         if (cells.isEmpty()) {
-            addCell()
+            cell()
         }
 
-        val style = tableBuilder.style.sections.getValue(section)
+        for (cell in cells) {
+            cell.resolveTexts()
+        }
+    }
 
+    internal fun resolveWidth() {
         for (cell in cells) {
             cell.resolveWidth()
 
@@ -111,7 +115,7 @@ class RowBuilder<T : TableStyle>(private val tableBuilder: TableBuilder<T>, priv
         //Split text so that it can be put in one cell
         var maxHeight = 0
         var calculatedWidth = 0
-        val style = tableBuilder.style.sections.getValue(section)
+
         for (cell in cells) {
             cell.adjustTexts()
             maxHeight = max(maxHeight, cell.height!!)

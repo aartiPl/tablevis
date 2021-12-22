@@ -2,31 +2,24 @@ package net.igsoft.tablevis
 
 import kotlin.math.max
 
-class TableBuilder<T : TableStyle>(internal val style: T) {
-    private val functions = mutableMapOf<Any, MutableSet<(Set<CellBuilder<T>>) -> Unit>>()
+class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val styleSet: STYLE_SET) {
+    private val functions = mutableMapOf<Any, MutableSet<(Set<CellBuilder<STYLE, STYLE_SET>>) -> Unit>>()
+    private val cells = mutableMapOf<Any, MutableSet<CellBuilder<STYLE, STYLE_SET>>>()
 
-    private val rows = mutableListOf<RowBuilder<T>>()
+    private val rows = mutableListOf<RowBuilder<STYLE, STYLE_SET>>()
 
     var minimalTextWidth = 1
 
     var width: Int? = null
     var height: Int? = null
 
-    var leftMargin: Int = style.leftMargin
-    var topMargin: Int = style.topMargin
-    var rightMargin: Int = style.rightMargin
-    var bottomMargin: Int = style.bottomMargin
+    var leftMargin: Int = styleSet.leftMargin
+    var topMargin: Int = styleSet.topMargin
+    var rightMargin: Int = styleSet.rightMargin
+    var bottomMargin: Int = styleSet.bottomMargin
 
-    fun addHeader(block: RowBuilder<T>.() -> Unit = {}) {
-        rows.add(RowBuilder(this, Section.Header).apply(block))
-    }
-
-    fun addRow(block: RowBuilder<T>.() -> Unit = {}) {
-        rows.add(RowBuilder(this, Section.Row).apply(block))
-    }
-
-    fun addFooter(block: RowBuilder<T>.() -> Unit = {}) {
-        rows.add(RowBuilder(this, Section.Footer).apply(block))
+    fun row(style: STYLE = styleSet.baseStyle, block: RowBuilder<STYLE, STYLE_SET>.() -> Unit = {}) {
+        rows.add(RowBuilder(this, style).apply(block))
     }
 
     fun alignCenter() = apply {
@@ -57,15 +50,20 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
         this.verticalAlignment = VerticalAlignment.Bottom
     }
 
-    fun forId(vararg id: Any): IdOperation<T> = IdOperation(this, id.toList())
+    fun forId(vararg id: Any): IdOperation<STYLE, STYLE_SET> = IdOperation(this, id.toList())
 
-    internal fun build(): Table<T> {
+    internal fun build(): Table<STYLE, STYLE_SET> {
+        //Do minimal calculations on texts...
+        for (row in rows) {
+            row.resolveTexts()
+        }
+
         //Execute deferred functions...
-//        for (id  in operationRegistry.keySet) {
-//            val operations = operationRegistry.get(id)
-//            val set: Set<TextCellBuilder> = Set.from(idRegistry.get(id))
-//            operations.forEach(operation => operation (set))
-//        }
+        for (entry in cells.entries) {
+            val cellsToApply = entry.value
+            val functionsToExecute = functions[entry.key] ?: emptySet()
+            functionsToExecute.forEach { it(cellsToApply) }
+        }
 
         var naturalWidth = 0
         var minimalWidth = 0
@@ -95,27 +93,26 @@ class TableBuilder<T : TableStyle>(internal val style: T) {
 
         height = height ?: 0
 
-        return Table(style,
-                     calculatedWidth,
-                     height!!,
-                     this.rows.map { it.build() }
-        )
+        return Table(styleSet, calculatedWidth, height!!, this.rows.map { it.build() })
     }
 
-    internal var verticalAlignment: VerticalAlignment = style.verticalAlignment
-    internal var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
+    internal var verticalAlignment: VerticalAlignment = styleSet.verticalAlignment
+    internal var horizontalAlignment: HorizontalAlignment = styleSet.horizontalAlignment
 
-    internal fun addOperation(id: Any, fn: (Set<CellBuilder<T>>) -> Unit) {
+    internal fun addOperation(id: Any, fn: (Set<CellBuilder<STYLE, STYLE_SET>>) -> Unit) {
+        val functionsSet = functions.getOrPut(id) { mutableSetOf() }
+        functionsSet.add(fn)
+    }
+
+    internal fun registerId(id: Any, cell: CellBuilder<STYLE, STYLE_SET>) {
+        val cellsSet = cells.getOrPut(id) { mutableSetOf() }
+        cellsSet.add(cell)
     }
 
     //
 //    private val idRegistry = mutable.MultiDict.empty[Any, TextCellBuilder]
 //    private val operationRegistry = mutable.MultiDict.empty[Any, Function[Set[TextCellBuilder], Unit]]
-//
-//    fun forId(id: Any): IdOperationHelper = apply {
-//        new IdOperationHelper (this, id)
-//    }
-//
+
 //    fun build(): TextTable {
 //        // Set default values if necessary...
 //        val headerWithRows: mutable.Buffer[TextRowBuilder] = if (header.isDefined) header.get+: rows else rows
