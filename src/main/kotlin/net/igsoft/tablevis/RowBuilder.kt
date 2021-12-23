@@ -8,10 +8,10 @@ class RowBuilder<S: Style, T : StyleSet<S>>(internal val tableBuilder: TableBuil
 
     var minimalTextWidth = tableBuilder.minimalTextWidth
 
-    var leftMargin: Int = tableBuilder.leftMargin
-    var topMargin: Int = tableBuilder.topMargin
-    var rightMargin: Int = tableBuilder.rightMargin
-    var bottomMargin: Int = tableBuilder.bottomMargin
+    var leftMargin: Int = style.leftMargin
+    var topMargin: Int = style.topMargin
+    var rightMargin: Int = style.rightMargin
+    var bottomMargin: Int = style.bottomMargin
 
     fun cell(block: CellBuilder<S, T>.() -> Unit = {}) {
         cells.add(CellBuilder(this).apply(block))

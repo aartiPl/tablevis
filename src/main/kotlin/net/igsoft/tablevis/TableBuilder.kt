@@ -3,6 +3,7 @@ package net.igsoft.tablevis
 import kotlin.math.max
 
 class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val styleSet: STYLE_SET) {
+    private val baseStyle : STYLE = styleSet.baseStyle
     private val functions = mutableMapOf<Any, MutableSet<(Set<CellBuilder<STYLE, STYLE_SET>>) -> Unit>>()
     private val cells = mutableMapOf<Any, MutableSet<CellBuilder<STYLE, STYLE_SET>>>()
 
@@ -13,12 +14,12 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val style
     var width: Int? = null
     var height: Int? = null
 
-    var leftMargin: Int = styleSet.leftMargin
-    var topMargin: Int = styleSet.topMargin
-    var rightMargin: Int = styleSet.rightMargin
-    var bottomMargin: Int = styleSet.bottomMargin
+    var leftMargin: Int = baseStyle.leftMargin
+    var topMargin: Int = baseStyle.topMargin
+    var rightMargin: Int = baseStyle.rightMargin
+    var bottomMargin: Int = baseStyle.bottomMargin
 
-    fun row(style: STYLE = styleSet.baseStyle, block: RowBuilder<STYLE, STYLE_SET>.() -> Unit = {}) {
+    fun row(style: STYLE = baseStyle, block: RowBuilder<STYLE, STYLE_SET>.() -> Unit = {}) {
         rows.add(RowBuilder(this, style).apply(block))
     }
 
@@ -96,8 +97,8 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val style
         return Table(styleSet, calculatedWidth, height!!, this.rows.map { it.build() })
     }
 
-    internal var verticalAlignment: VerticalAlignment = styleSet.verticalAlignment
-    internal var horizontalAlignment: HorizontalAlignment = styleSet.horizontalAlignment
+    internal var verticalAlignment: VerticalAlignment = baseStyle.verticalAlignment
+    internal var horizontalAlignment: HorizontalAlignment = baseStyle.horizontalAlignment
 
     internal fun addOperation(id: Any, fn: (Set<CellBuilder<STYLE, STYLE_SET>>) -> Unit) {
         val functionsSet = functions.getOrPut(id) { mutableSetOf() }
