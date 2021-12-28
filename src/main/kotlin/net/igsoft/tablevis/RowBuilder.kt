@@ -2,19 +2,19 @@ package net.igsoft.tablevis
 
 import kotlin.math.max
 
-class RowBuilder<S: Style, T : StyleSet<S>>(internal val tableBuilder: TableBuilder<S, T>, private val style: S) {
+class RowBuilder<STYLE: Style>(private val style: STYLE) {
     private var width: Int? = null
     private var height: Int? = null
 
-    var minimalTextWidth = tableBuilder.minimalTextWidth
+    var minimalTextWidth = style.minimalTextWidth
 
     var leftMargin: Int = style.leftMargin
     var topMargin: Int = style.topMargin
     var rightMargin: Int = style.rightMargin
     var bottomMargin: Int = style.bottomMargin
 
-    fun cell(block: CellBuilder<S, T>.() -> Unit = {}) {
-        cells.add(CellBuilder(this).apply(block))
+    fun cell(cellStyle: STYLE = style, block: CellBuilder<STYLE>.() -> Unit = {}) {
+        cells.add(CellBuilder(cellStyle).apply(block))
     }
 
     fun alignCenter() = apply {
@@ -55,20 +55,20 @@ class RowBuilder<S: Style, T : StyleSet<S>>(internal val tableBuilder: TableBuil
     internal var assignedWidth = 0
     internal var minimalWidth = 0
 
-    internal var verticalAlignment: VerticalAlignment = tableBuilder.verticalAlignment
-    internal var horizontalAlignment: HorizontalAlignment = tableBuilder.horizontalAlignment
+    internal var verticalAlignment: VerticalAlignment = style.verticalAlignment
+    internal var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
 
-    private val cellsWithNoWidth = mutableListOf<CellBuilder<S, T>>()
-    private val cells = mutableListOf<CellBuilder<S, T>>()
+    private val cellsWithNoWidth = mutableListOf<CellBuilder<STYLE>>()
+    private val cells = mutableListOf<CellBuilder<STYLE>>()
 
-    internal fun resolveTexts() {
+    internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellBuilder<STYLE>>>) {
         //Make sure there is at least one cell in a row...
-        if (cells.isEmpty()) {
+        if (this.cells.isEmpty()) {
             cell()
         }
 
-        for (cell in cells) {
-            cell.resolveTexts()
+        for (cell in this.cells) {
+            cell.resolveTexts(cells)
         }
     }
 

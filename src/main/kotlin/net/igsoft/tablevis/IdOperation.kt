@@ -1,7 +1,9 @@
 package net.igsoft.tablevis
 
-class IdOperation<S : Style, T : StyleSet<S>>(private val table: TableBuilder<S, T>, private val ids: List<Any>) {
-    private val setMinimalWidthFn: (Set<CellBuilder<S, T>>) -> Unit = { cells ->
+class IdOperation<STYLE : Style>(
+    private val ids: List<Any>, private val functions: MutableMap<Any, MutableSet<(Set<CellBuilder<STYLE>>) -> Unit>>
+) {
+    private val setMinimalWidthFn: (Set<CellBuilder<STYLE>>) -> Unit = { cells ->
         val maxWidth = cells.maxOf { it.naturalTextWidth }
 
         cells.forEach {
@@ -9,13 +11,17 @@ class IdOperation<S : Style, T : StyleSet<S>>(private val table: TableBuilder<S,
         }
     }
 
-    fun setMinimalWidth(): IdOperation<S, T> = apply {
-        ids.forEach { table.addOperation(it, setMinimalWidthFn) }
+    fun setMinimalWidth(): IdOperation<STYLE> = apply {
+        ids.forEach {id ->
+            val functionsSet = functions.getOrPut(id) { mutableSetOf() }
+            functionsSet.add(setMinimalWidthFn)
+        }
     }
 
-    fun setWidth(width: Int): IdOperation<S, T> = apply {
+    fun setWidth(width: Int): IdOperation<STYLE> = apply {
         ids.forEach { id ->
-            table.addOperation(id) { cells ->
+            val functionsSet = functions.getOrPut(id) { mutableSetOf() }
+            functionsSet.add { cells ->
                 cells.forEach {
                     it.width = it.leftMargin + width + it.rightMargin
                 }
@@ -23,9 +29,10 @@ class IdOperation<S : Style, T : StyleSet<S>>(private val table: TableBuilder<S,
         }
     }
 
-    fun setHeight(height: Int): IdOperation<S, T> = apply {
+    fun setHeight(height: Int): IdOperation<STYLE> = apply {
         ids.forEach { id ->
-            table.addOperation(id) { cells ->
+            val functionsSet = functions.getOrPut(id) { mutableSetOf() }
+            functionsSet.add { cells ->
                 cells.forEach {
                     it.height = it.topMargin + height + it.bottomMargin
                 }

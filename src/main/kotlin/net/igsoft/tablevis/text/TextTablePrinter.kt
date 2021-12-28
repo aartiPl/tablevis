@@ -6,9 +6,9 @@ import net.igsoft.tablevis.Row
 import net.igsoft.tablevis.Table
 import org.apache.commons.lang3.StringUtils
 
-class TextTablePrinter : Printer<Table<TextStyle, out TextStyleSet<TextStyle>>> {
+class TextTablePrinter : Printer<Table<out TextStyleSet<TextStyle>>> {
 
-    override fun print(table: Table<TextStyle, out TextStyleSet<TextStyle>>): String {
+    override fun print(table: Table<out TextStyleSet<TextStyle>>): String {
         if (table.rows.isEmpty()) {
             return ""
         }
@@ -21,11 +21,11 @@ class TextTablePrinter : Printer<Table<TextStyle, out TextStyleSet<TextStyle>>> 
                 //line
                 val previousRow = if (i == 0) null else table.rows[(i - 1) / 2]
                 val nextRow = if (i == maxSize - 1) null else table.rows[(i + 1) / 2]
-                drawHorizontalLine(sb, previousRow, nextRow, table.width, table.style)
+                drawHorizontalLine(sb, previousRow, nextRow, table.width, table.styleSet)
             } else {
                 //row content
                 val row = table.rows[i / 2]
-                drawRow(sb, row.style as TextStyle, row, table.style.lineSeparator)
+                drawRow(sb, row.style as TextStyle, row, table.styleSet.lineSeparator)
             }
         }
         return sb.toString()

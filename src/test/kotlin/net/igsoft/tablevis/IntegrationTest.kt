@@ -56,7 +56,6 @@ class IntegrationTest {
                 cell {
                     text = "Row 1 Cell 1"
                 }
-
                 cell {
                     alignRight()
                     text = "Row 1 Cell 2"
@@ -67,7 +66,6 @@ class IntegrationTest {
                 cell {
                     text = "Row 2 Cell 1"
                 }
-
                 cell {
                     alignRight()
                     text = "Row 2 Cell 2"
@@ -79,7 +77,6 @@ class IntegrationTest {
                     alignCenter()
                     text = "Footer"
                 }
-
                 cell {
                     alignCenter().alignMiddle()
                     width = 15
@@ -122,7 +119,6 @@ class IntegrationTest {
                     id("firstCol", "firstRow")
                     text = "Row 1 Cell 1"
                 }
-
                 cell {
                     text = "Row 1 Cell 2"
                 }
@@ -133,7 +129,6 @@ class IntegrationTest {
                     id("firstCol")
                     text = "Row 2 Cell 1"
                 }
-
                 cell {
                     text = "Row 2 Cell 2"
                 }
@@ -144,7 +139,6 @@ class IntegrationTest {
                     id("firstCol")
                     text = "Row 3 Cell 1"
                 }
-
                 cell {
                     text = "Row 3 Cell 2"
                 }
@@ -155,7 +149,6 @@ class IntegrationTest {
                     alignCenter()
                     text = "Footer"
                 }
-
                 cell {
                     alignCenter().alignMiddle()
                     width = 15
@@ -258,12 +251,12 @@ class IntegrationTest {
     fun `Id on table with empty header`() {
         val table = Table.using(style) {
             row(style.header) {
-                cell() {
+                cell {
                     id("headerCell")
                 }
-
-                forId("headerCell").setWidth(5)
             }
+
+            forId("headerCell").setWidth(5)
         }
 
         println(printer.print(table))
@@ -284,11 +277,9 @@ class IntegrationTest {
                     id("col1")
                     text = "Col 1"
                 }
-
                 cell {
                     text = "Col 2"
                 }
-
                 cell {
                     text = "Col 3"
                 }
@@ -299,7 +290,6 @@ class IntegrationTest {
                     id("col1")
                     text = "12"
                 }
-
                 cell {
                     text = "12345678"
                 }
@@ -310,7 +300,6 @@ class IntegrationTest {
                     id("col1")
                     text = "12345678"
                 }
-
                 cell {
                     text = "32"
                 }
@@ -343,11 +332,9 @@ class IntegrationTest {
                     cell {
                         text = "Tekst pierwszy"
                     }
-
                     cell {
                         text = "Tekst drugi"
                     }
-
                     cell {
                         text = "Tekst trzeci"
                     }
@@ -371,11 +358,9 @@ class IntegrationTest {
                 cell {
                     text = "Tekst pierwszy"
                 }
-
                 cell {
                     text = "Tekst drugi"
                 }
-
                 cell {
                     text = "Tekst trzeci"
                 }
@@ -409,11 +394,9 @@ class IntegrationTest {
                 cell {
                     text = "Tekst pierwszy"
                 }
-
                 cell {
                     text = "Tekst drugi"
                 }
-
                 cell {
                     text = "Tekst trzeci"
                 }
@@ -446,11 +429,9 @@ class IntegrationTest {
                 cell {
                     text = "Tekst pierwszy"
                 }
-
                 cell {
                     text = "Tekst drugi\nLinia 1\nLinia2\nBardzo długi tekst"
                 }
-
                 cell {
                     text = "Tekst trzeci"
                 }
@@ -491,18 +472,17 @@ class IntegrationTest {
                     alignCenter()
                     text = BANK_ACCOUNT_TEXT
                 }
-
                 cell {
-
                     text = "Text trzeci"
                 }
             }
+
             row {
                 cell {
+                    alignCenter()
                     text = "Dolny wiersz"
                 }
             }
-
         }
 
         println(printer.print(table))
@@ -532,17 +512,16 @@ class IntegrationTest {
                     id("left")
                     text = "Tekst pierwszy"
                 }
-
                 cell {
                     id("central")
                     alignCenter()
                     text = BANK_ACCOUNT_TEXT
                 }
-
                 cell {
                     text = "Text trzeci"
                 }
             }
+
             row {
                 cell {
                     id("left")
@@ -557,6 +536,7 @@ class IntegrationTest {
                     text = "column C"
                 }
             }
+
             row {
                 cell {
                     text = "Dolny wiersz"
@@ -603,7 +583,9 @@ class IntegrationTest {
                     text = LOREM_IPSUM_TEXT
                 }
             }
+
             row { }
+
             row {
                 cell {
                     textWidth = 2
@@ -617,7 +599,6 @@ class IntegrationTest {
                     leftMargin = 1
                     rightMargin = 1
                 }
-
                 cell {
                     justify()
                     text = OPTION1_DESCRIPTION_TEXT
@@ -625,14 +606,15 @@ class IntegrationTest {
             }
 
             row {
-                cell { textWidth = 2 }
+                cell {
+                    textWidth = 2
+                }
                 cell {
                     id(optionName)
                     text = "Some other option"
                 }
                 cell {
                     text = " : "
-                    textWidth = 3
                     leftMargin = 0
                     rightMargin = 0
                 }

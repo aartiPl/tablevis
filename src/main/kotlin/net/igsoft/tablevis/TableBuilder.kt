@@ -3,24 +3,24 @@ package net.igsoft.tablevis
 import kotlin.math.max
 
 class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val styleSet: STYLE_SET) {
-    private val baseStyle : STYLE = styleSet.baseStyle
-    private val functions = mutableMapOf<Any, MutableSet<(Set<CellBuilder<STYLE, STYLE_SET>>) -> Unit>>()
-    private val cells = mutableMapOf<Any, MutableSet<CellBuilder<STYLE, STYLE_SET>>>()
+    private val style : STYLE = styleSet.baseStyle
+    private val functions = mutableMapOf<Any, MutableSet<(Set<CellBuilder<STYLE>>) -> Unit>>()
+    private val cells = mutableMapOf<Any, MutableSet<CellBuilder<STYLE>>>()
 
-    private val rows = mutableListOf<RowBuilder<STYLE, STYLE_SET>>()
+    private val rows = mutableListOf<RowBuilder<STYLE>>()
 
-    var minimalTextWidth = 1
+    var minimalTextWidth = style.minimalTextWidth
 
     var width: Int? = null
     var height: Int? = null
 
-    var leftMargin: Int = baseStyle.leftMargin
-    var topMargin: Int = baseStyle.topMargin
-    var rightMargin: Int = baseStyle.rightMargin
-    var bottomMargin: Int = baseStyle.bottomMargin
+    var leftMargin: Int = style.leftMargin
+    var topMargin: Int = style.topMargin
+    var rightMargin: Int = style.rightMargin
+    var bottomMargin: Int = style.bottomMargin
 
-    fun row(style: STYLE = baseStyle, block: RowBuilder<STYLE, STYLE_SET>.() -> Unit = {}) {
-        rows.add(RowBuilder(this, style).apply(block))
+    fun row(rowStyle: STYLE = style, block: RowBuilder<STYLE>.() -> Unit = {}) {
+        rows.add(RowBuilder(rowStyle).apply(block))
     }
 
     fun alignCenter() = apply {
@@ -51,12 +51,12 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val style
         this.verticalAlignment = VerticalAlignment.Bottom
     }
 
-    fun forId(vararg id: Any): IdOperation<STYLE, STYLE_SET> = IdOperation(this, id.toList())
+    fun forId(vararg id: Any): IdOperation<STYLE> = IdOperation(id.toList(), functions)
 
-    internal fun build(): Table<STYLE, STYLE_SET> {
+    internal fun build(): Table<STYLE_SET> {
         //Do minimal calculations on texts...
         for (row in rows) {
-            row.resolveTexts()
+            row.resolveTexts(cells)
         }
 
         //Execute deferred functions...
@@ -97,18 +97,8 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val style
         return Table(styleSet, calculatedWidth, height!!, this.rows.map { it.build() })
     }
 
-    internal var verticalAlignment: VerticalAlignment = baseStyle.verticalAlignment
-    internal var horizontalAlignment: HorizontalAlignment = baseStyle.horizontalAlignment
-
-    internal fun addOperation(id: Any, fn: (Set<CellBuilder<STYLE, STYLE_SET>>) -> Unit) {
-        val functionsSet = functions.getOrPut(id) { mutableSetOf() }
-        functionsSet.add(fn)
-    }
-
-    internal fun registerId(id: Any, cell: CellBuilder<STYLE, STYLE_SET>) {
-        val cellsSet = cells.getOrPut(id) { mutableSetOf() }
-        cellsSet.add(cell)
-    }
+    internal var verticalAlignment: VerticalAlignment = style.verticalAlignment
+    internal var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
 
     //
 //    private val idRegistry = mutable.MultiDict.empty[Any, TextCellBuilder]

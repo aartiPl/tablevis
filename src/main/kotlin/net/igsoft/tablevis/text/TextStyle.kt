@@ -14,6 +14,7 @@ data class TextStyle(
     override val bottomMargin: Int = 0,
     override val verticalAlignment: VerticalAlignment = VerticalAlignment.Middle,
     override val horizontalAlignment: HorizontalAlignment = HorizontalAlignment.Left,
+    override val minimalTextWidth: Int = 1
 ) : Style {
     override val horizontalLineWidth: Int get() = horizontalLine.length
     override val horizontalLineHeight: Int get() = 1

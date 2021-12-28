@@ -1,8 +1,8 @@
 package net.igsoft.tablevis
 
-class Table<S: Style, T : StyleSet<S>> internal constructor(val style: T, val width: Int, val height: Int, val rows: List<Row>) {
+class Table<STYLE_SET : StyleSet<out Style>> internal constructor(val styleSet: STYLE_SET, val width: Int, val height: Int, val rows: List<Row>) {
     companion object {
-        fun <S: Style, T : StyleSet<S>> using(style: T, block: TableBuilder<S, T>.() -> Unit = {}): Table<S, T> {
+        fun <STYLE: Style, STYLE_SET : StyleSet<STYLE>> using(style: STYLE_SET, block: TableBuilder<STYLE, STYLE_SET>.() -> Unit = {}): Table<STYLE_SET> {
             return TableBuilder(style).apply(block).build()
         }
     }

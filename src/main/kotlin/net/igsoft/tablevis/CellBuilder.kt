@@ -2,21 +2,20 @@ package net.igsoft.tablevis
 
 import kotlin.math.max
 
-class CellBuilder<S: Style, T : StyleSet<S>>(private val rowBuilder: RowBuilder<S, T>) {
+class CellBuilder<STYLE : Style>(private val style: STYLE) {
     var width: Int? = null
     var height: Int? = null
 
-    var minimalTextWidth = rowBuilder.minimalTextWidth
+    var minimalTextWidth = style.minimalTextWidth
 
-    var leftMargin = rowBuilder.leftMargin
-    var topMargin = rowBuilder.topMargin
-    var rightMargin = rowBuilder.rightMargin
-    var bottomMargin = rowBuilder.bottomMargin
+    var leftMargin = style.leftMargin
+    var topMargin = style.topMargin
+    var rightMargin = style.rightMargin
+    var bottomMargin = style.bottomMargin
 
     var text = ""
 
     fun id(vararg ids: Any) {
-        ids.forEach { rowBuilder.tableBuilder.registerId(it, this) }
         this.ids = ids.toList()
     }
 
@@ -51,16 +50,21 @@ class CellBuilder<S: Style, T : StyleSet<S>>(private val rowBuilder: RowBuilder<
     //------------------------------------------------------------------------------------------------------------------
     //Implementation code
 
-    private lateinit var ids: List<Any>
-    private lateinit var lines: List<String>
-    private var horizontalAlignment = rowBuilder.horizontalAlignment
-    private var verticalAlignment = rowBuilder.verticalAlignment
+    private var ids: List<Any> = emptyList()
+    private var lines: List<String> = emptyList()
+    private var horizontalAlignment = style.horizontalAlignment
+    private var verticalAlignment = style.verticalAlignment
     internal var naturalTextWidth: Int = 0
     internal var naturalWidth = 0
     internal var minimalWidth = 0
     internal var textWidth = 0
 
-    internal fun resolveTexts() {
+    internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellBuilder<STYLE>>>) {
+        ids.forEach {
+            val cellSet = cells.getOrPut(it) { mutableSetOf() }
+            cellSet.add(this)
+        }
+
         if (text.isEmpty()) {
             lines = listOf()
             naturalTextWidth = 0
