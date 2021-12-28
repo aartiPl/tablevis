@@ -594,7 +594,7 @@ class IntegrationTest {
 
         //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
 
-        //TODO: no borders style
+        //TODO: no-borders style
         val table = Table.using(style) {
             width = 110
             row {
@@ -646,7 +646,7 @@ class IntegrationTest {
             forId(optionName).setMinimalWidth()
         }
 
-        println(table)
+        println(printer.print(table))
     }
 
     companion object {
