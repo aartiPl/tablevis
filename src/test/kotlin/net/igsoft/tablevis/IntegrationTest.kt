@@ -11,35 +11,6 @@ import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
 
 class IntegrationTest {
-    //@formatter:off
-  private val BANK_ACCOUNT_TEXT = "Rachunek bankowy:\nCRK ProEcclesia SCh - \"ProCracovia\"\nul. Puławska 114\n" +
-    "02-620 Warszawa\n\nPLN 78 1240 1112 1111 0010 0909 5620\nBank Pekao SA\nVIII odział w Warszawie"
-
-  private val LOREM_IPSUM_TEXT = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. \n\n\t" +
-    "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took " +
-    "a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, " +
-    "but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the " +
-    "1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop " +
-    "publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-
-  private val OPTION1_DESCRIPTION_TEXT = "\tOption description - It is a long established     *fact*    that a reader " +
-    "will be distracted by the readable content of a page when looking at its layout. The point of using Lorem " +
-    "Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, " +
-    "content here', making it look like readable English. Many desktop publishing packages and web page " +
-    "editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many " +
-    "web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, " +
-    "sometimes on purpose (injected humour and the like)."
-
-  private val OPTION2_DESCRIPTION_TEXT = "\tSome other option description - contrary to popular belief, " +
-    "Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, " +
-    "making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, " +
-    "looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through " +
-    "the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from " +
-    "sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, " +
-    "written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. " +
-    "The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a line in section 1.10.32."
-  //@formatter:on
-
     private val style = BoxTextStyleSet(lineSeparator = "\n")
     private val printer = TextTablePrinter()
 
@@ -509,135 +480,203 @@ class IntegrationTest {
         )
     }
 
-//    fun `Simple table without width set and with multiline text1`() {
-//        val table =
-//            TextTable.builder()
-//                .lineSeparator("\n")
-//                .addRow()
-//                .addCell()
-//                .text("Tekst pierwszy")
-//                .addCell()
-//                .text(BANK_ACCOUNT_TEXT).alignCenter.addCell()
-//                .text("Text trzeci")
-//                .addRow()
-//                .addCell()
-//                .text("Dolny wiersz").build
-//
-//        println(table.toString)
-//
-//        assertThat(printer.print(table)).isEqualTo(
-//            """-----------------------------------------------------------------------
-//        || Tekst pierwszy |          Rachunek bankowy:           | Text trzeci |
-//        ||                | CRK ProEcclesia SCh - "ProCracovia"  |             |
-//        ||                |           ul. Puławska 114           |             |
-//        ||                |           02-620 Warszawa            |             |
-//        ||                |                                      |             |
-//        ||                | PLN 78 1240 1112 1111 0010 0909 5620 |             |
-//        ||                |            Bank Pekao SA             |             |
-//        ||                |       VIII odział w Warszawie        |             |
-//        |-----------------------------------------------------------------------
-//        || Dolny wiersz                                                        |
-//        |-----------------------------------------------------------------------
-//        |""".trimMargin()
-//        )
-//    }
-//
-//    fun `Simple table without width set and with multiline text and multiple aligned rows`() {
-//
-//        val table =
-//            TextTable.builder()
-//                .lineSeparator("\n")
-//                .addRow()
-//                .addCell()
-//                .id("left")
-//                .text("Tekst pierwszy")
-//                .addCell()
-//                .id("central")
-//                .text(BANK_ACCOUNT_TEXT).alignCenter.addCell()
-//                .text("Text trzeci")
-//                .addRow()
-//                .addCell()
-//                .id("left")
-//                .text("column A")
-//                .addCell()
-//                .id("central")
-//                .text("column B").alignCenter.addCell()
-//                .text("column C")
-//                .addRow()
-//                .addCell()
-//                .text("Dolny wiersz")
-//                .forId("central")
-//                .setMinimalWidth()
-//                .forId("left")
-//                .setMinimalWidth().build
-//
-//        println(table.toString)
-//
-//        assertThat(printer.print(table)).isEqualTo(
-//            """-----------------------------------------------------------------------
-//        || Tekst pierwszy |          Rachunek bankowy:           | Text trzeci |
-//        ||                | CRK ProEcclesia SCh - "ProCracovia"  |             |
-//        ||                |           ul. Puławska 114           |             |
-//        ||                |           02-620 Warszawa            |             |
-//        ||                |                                      |             |
-//        ||                | PLN 78 1240 1112 1111 0010 0909 5620 |             |
-//        ||                |            Bank Pekao SA             |             |
-//        ||                |       VIII odział w Warszawie        |             |
-//        |-----------------------------------------------------------------------
-//        || column A       |       column B                       | column C    |
-//        |-----------------------------------------------------------------------
-//        || Dolny wiersz                                                        |
-//        |-----------------------------------------------------------------------
-//        |""".trimMargin()
-//        )
-//    }
-//
-//    fun `Just show the table`() {
-//        val optionName = "optionName"
-//
-//        //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
-//
-//        val table = TextTable.builder()
-//            .tableWidth(110)
-//            //.horizontalLine( '─' )
-//            //.horizontalLine( '\u2501' )
-//            //.verticalLine( '│' )
-//            //.noBorders
-//            .addRow()
-//            .addCell()
-//            .text(LOREM_IPSUM_TEXT)
-//            .alignLeft()
-//            .justify()
-//            .addRow()
-//            .addRow()
-//            .addCell()
-//            .textWidth(2)
-//            .addCell()
-//            .id(optionName)
-//            .text("First option")
-//            .addCell()
-//            .text(":")
-//            .textWidth(1)
-//            .leftIndent(1)
-//            .rightIndent(1)
-//            .addCell()
-//            .text(OPTION1_DESCRIPTION_TEXT).justify.addRow()
-//            .addCell()
-//            .textWidth(2)
-//            .addCell()
-//            .id(optionName)
-//            .text("Some other option")
-//            .addCell()
-//            .text(" : ")
-//            .textWidth(3)
-//            .leftIndent(0)
-//            .rightIndent(0)
-//            .addCell()
-//            .text(OPTION2_DESCRIPTION_TEXT)
-//            .addRow()
-//            .forId(optionName)
-//            .setMinimalWidth().build
-//
-//        println(table)
-//    }
+    @Test
+    fun `Simple table without width set and with multiline text1`() {
+        val table = Table.using(style) {
+            row {
+                cell {
+                    text = "Tekst pierwszy"
+                }
+                cell {
+                    alignCenter()
+                    text = BANK_ACCOUNT_TEXT
+                }
+
+                cell {
+
+                    text = "Text trzeci"
+                }
+            }
+            row {
+                cell {
+                    text = "Dolny wiersz"
+                }
+            }
+
+        }
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|-----------------------------------------------------------------------
+               || Tekst pierwszy |          Rachunek bankowy:           | Text trzeci |
+               ||                | CRK ProEcclesia SCh - "ProCracovia"  |             |
+               ||                |           ul. Puławska 114           |             |
+               ||                |           02-620 Warszawa            |             |
+               ||                |                                      |             |
+               ||                | PLN 78 1240 1112 1111 0010 0909 5620 |             |
+               ||                |            Bank Pekao SA             |             |
+               ||                |       VIII odział w Warszawie        |             |
+               |-----------------------------------------------------------------------
+               || Dolny wiersz                                                        |
+               |-----------------------------------------------------------------------
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Simple table without width set and with multiline text and multiple aligned rows`() {
+        val table = Table.using(style) {
+            row {
+                cell {
+                    id("left")
+                    text = "Tekst pierwszy"
+                }
+
+                cell {
+                    id("central")
+                    alignCenter()
+                    text = BANK_ACCOUNT_TEXT
+                }
+
+                cell {
+                    text = "Text trzeci"
+                }
+            }
+            row {
+                cell {
+                    id("left")
+                    text = "column A"
+                }
+                cell {
+                    id("central")
+                    text = "column B"
+                    alignCenter()
+                }
+                cell {
+                    text = "column C"
+                }
+            }
+            row {
+                cell {
+                    text = "Dolny wiersz"
+                }
+            }
+
+            forId("central").setMinimalWidth()
+            forId("left").setMinimalWidth()
+        }
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|-----------------------------------------------------------------------
+               || Tekst pierwszy |          Rachunek bankowy:           | Text trzeci |
+               ||                | CRK ProEcclesia SCh - "ProCracovia"  |             |
+               ||                |           ul. Puławska 114           |             |
+               ||                |           02-620 Warszawa            |             |
+               ||                |                                      |             |
+               ||                | PLN 78 1240 1112 1111 0010 0909 5620 |             |
+               ||                |            Bank Pekao SA             |             |
+               ||                |       VIII odział w Warszawie        |             |
+               |-----------------------------------------------------------------------
+               || column A       |       column B                       | column C    |
+               |-----------------------------------------------------------------------
+               || Dolny wiersz                                                        |
+               |-----------------------------------------------------------------------
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Just show the table`() {
+        val optionName = "optionName"
+
+        //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
+
+        //TODO: no borders style
+        val table = Table.using(style) {
+            width = 110
+            row {
+                cell {
+                    justify()
+                    text = LOREM_IPSUM_TEXT
+                }
+            }
+            row { }
+            row {
+                cell {
+                    textWidth = 2
+                }
+                cell {
+                    id(optionName)
+                    text = "First option"
+                }
+                cell {
+                    text = ":"
+                    leftMargin = 1
+                    rightMargin = 1
+                }
+
+                cell {
+                    justify()
+                    text = OPTION1_DESCRIPTION_TEXT
+                }
+            }
+
+            row {
+                cell { textWidth = 2 }
+                cell {
+                    id(optionName)
+                    text = "Some other option"
+                }
+                cell {
+                    text = " : "
+                    textWidth = 3
+                    leftMargin = 0
+                    rightMargin = 0
+                }
+                cell {
+                    text = OPTION2_DESCRIPTION_TEXT
+                }
+            }
+
+            row { }
+
+            forId(optionName).setMinimalWidth()
+        }
+
+        println(table)
+    }
+
+    companion object {
+        //@formatter:off
+        private const val BANK_ACCOUNT_TEXT = "Rachunek bankowy:\nCRK ProEcclesia SCh - \"ProCracovia\"\nul. Puławska 114\n" +
+                "02-620 Warszawa\n\nPLN 78 1240 1112 1111 0010 0909 5620\nBank Pekao SA\nVIII odział w Warszawie"
+
+        private const val LOREM_IPSUM_TEXT = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. \n\n\t" +
+                "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took " +
+                "a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, " +
+                "but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the " +
+                "1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop " +
+                "publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+
+        private const val OPTION1_DESCRIPTION_TEXT = "\tOption description - It is a long established     *fact*    that a reader " +
+                "will be distracted by the readable content of a page when looking at its layout. The point of using Lorem " +
+                "Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, " +
+                "content here', making it look like readable English. Many desktop publishing packages and web page " +
+                "editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many " +
+                "web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, " +
+                "sometimes on purpose (injected humour and the like)."
+
+        private const val OPTION2_DESCRIPTION_TEXT = "\tSome other option description - contrary to popular belief, " +
+                "Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, " +
+                "making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, " +
+                "looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through " +
+                "the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from " +
+                "sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, " +
+                "written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. " +
+                "The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a line in section 1.10.32."
+        //@formatter:on
+    }
 }
