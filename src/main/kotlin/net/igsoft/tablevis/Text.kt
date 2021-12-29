@@ -1,5 +1,8 @@
 package net.igsoft.tablevis
 
+import kotlin.math.max
+import kotlin.math.min
+
 object Text {
     fun splitTextually(text: String, width: Int): List<String> {
         val newLines = mutableListOf<String>()
@@ -22,6 +25,7 @@ object Text {
         }
 
         val newLines = mutableListOf<String>()
+        val lookupRange = width + 1 downTo max((4 * width / 5), width - 7)
 
         var rest = line
         loop@ while (rest.isNotEmpty()) {
@@ -33,7 +37,7 @@ object Text {
 
             //2. Between cell's textWidth  + 1 (since if the next char is whitespace then splitting is also okay to split)
             //   and 4/5 of line length (lastIndexOf) is whitespace
-            for (i in width + 1 downTo (4 * width / 5)) {
+            for (i in lookupRange) {
                 if (rest[i - 1].isWhitespace()) {
                     newLines += rest.substring(0, i - 1).trimEnd()
                     rest = rest.substring(i - 1).trimStart()
