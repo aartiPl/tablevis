@@ -2,7 +2,7 @@ package net.igsoft.tablevis
 
 import kotlin.math.max
 
-class RowBuilder<STYLE: Style>(private val style: STYLE) {
+class RowDef<STYLE: Style>(private val style: STYLE) {
     private var width: Int? = null
     private var height: Int? = null
 
@@ -13,8 +13,8 @@ class RowBuilder<STYLE: Style>(private val style: STYLE) {
     var rightMargin: Int = style.rightMargin
     var bottomMargin: Int = style.bottomMargin
 
-    fun cell(cellStyle: STYLE = style, block: CellBuilder<STYLE>.() -> Unit = {}) {
-        cells.add(CellBuilder(cellStyle).apply(block))
+    fun cell(cellStyle: STYLE = style, block: CellDef<STYLE>.() -> Unit = {}) {
+        cells.add(CellDef(cellStyle).apply(block))
     }
 
     fun alignCenter() = apply {
@@ -58,10 +58,10 @@ class RowBuilder<STYLE: Style>(private val style: STYLE) {
     internal var verticalAlignment: VerticalAlignment = style.verticalAlignment
     internal var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
 
-    private val cellsWithNoWidth = mutableListOf<CellBuilder<STYLE>>()
-    val cells = mutableListOf<CellBuilder<STYLE>>()
+    private val cellsWithNoWidth = mutableListOf<CellDef<STYLE>>()
+    val cells = mutableListOf<CellDef<STYLE>>()
 
-    internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellBuilder<STYLE>>>) {
+    internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellDef<STYLE>>>) {
         //Make sure there is at least one cell in a row...
         if (this.cells.isEmpty()) {
             cell()

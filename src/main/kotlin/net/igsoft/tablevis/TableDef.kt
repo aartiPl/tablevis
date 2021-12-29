@@ -1,11 +1,9 @@
 package net.igsoft.tablevis
 
-import kotlin.math.max
+class TableDef<STYLE : Style>(val style: STYLE) {
+    val functions = mutableMapOf<Any, MutableSet<(Set<CellDef<STYLE>>) -> Unit>>()
 
-class TableBuilder<STYLE : Style>(val style: STYLE) {
-    val functions = mutableMapOf<Any, MutableSet<(Set<CellBuilder<STYLE>>) -> Unit>>()
-
-    val rows = mutableListOf<RowBuilder<STYLE>>()
+    val rows = mutableListOf<RowDef<STYLE>>()
 
     var minimalTextWidth = style.minimalTextWidth
 
@@ -17,8 +15,8 @@ class TableBuilder<STYLE : Style>(val style: STYLE) {
     var rightMargin: Int = style.rightMargin
     var bottomMargin: Int = style.bottomMargin
 
-    fun row(rowStyle: STYLE = style, block: RowBuilder<STYLE>.() -> Unit = {}) {
-        rows.add(RowBuilder(rowStyle).apply(block))
+    fun row(rowStyle: STYLE = style, block: RowDef<STYLE>.() -> Unit = {}) {
+        rows.add(RowDef(rowStyle).apply(block))
     }
 
     fun alignCenter() = apply {

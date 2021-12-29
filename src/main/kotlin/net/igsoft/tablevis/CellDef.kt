@@ -1,9 +1,8 @@
 package net.igsoft.tablevis
 
-import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
-class CellBuilder<STYLE : Style>(private val style: STYLE) {
+class CellDef<STYLE : Style>(private val style: STYLE) {
     var width: Int? = null
     var height: Int? = null
 
@@ -60,7 +59,7 @@ class CellBuilder<STYLE : Style>(private val style: STYLE) {
     internal var minimalWidth = 0
     internal var textWidth = 0
 
-    internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellBuilder<STYLE>>>) {
+    internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellDef<STYLE>>>) {
         ids.forEach {
             val cellSet = cells.getOrPut(it) { mutableSetOf() }
             cellSet.add(this)

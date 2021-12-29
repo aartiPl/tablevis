@@ -2,10 +2,10 @@ package net.igsoft.tablevis
 
 import kotlin.math.max
 
-object Builder {
-    fun <STYLE : Style, STYLE_SET : StyleSet<STYLE>> build(styleSet: STYLE_SET, table: TableBuilder<STYLE>): Table<STYLE_SET> {
+object Creator {
+    fun <STYLE : Style, STYLE_SET : StyleSet<STYLE>> create(styleSet: STYLE_SET, table: TableDef<STYLE>): Table<STYLE_SET> {
         //Do minimal calculations on texts and resolution of cells...
-        val cells = mutableMapOf<Any, MutableSet<CellBuilder<STYLE>>>()
+        val cells = mutableMapOf<Any, MutableSet<CellDef<STYLE>>>()
         for (row in table.rows) {
             row.resolveTexts(cells)
         }

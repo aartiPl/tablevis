@@ -1,9 +1,9 @@
 package net.igsoft.tablevis
 
 class IdOperation<STYLE : Style>(
-    private val ids: List<Any>, private val functions: MutableMap<Any, MutableSet<(Set<CellBuilder<STYLE>>) -> Unit>>
+    private val ids: List<Any>, private val functions: MutableMap<Any, MutableSet<(Set<CellDef<STYLE>>) -> Unit>>
 ) {
-    private val setMinimalWidthFn: (Set<CellBuilder<STYLE>>) -> Unit = { cells ->
+    private val setMinimalWidthFn: (Set<CellDef<STYLE>>) -> Unit = { cells ->
         val maxWidth = cells.maxOf { it.naturalTextWidth }
 
         cells.forEach {
