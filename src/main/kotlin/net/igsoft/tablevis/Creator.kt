@@ -4,10 +4,28 @@ import kotlin.math.max
 
 object Creator {
     fun <STYLE : Style, STYLE_SET : StyleSet<STYLE>> create(styleSet: STYLE_SET, table: TableDef<STYLE>): Table<STYLE_SET> {
-        //Do minimal calculations on texts and resolution of cells...
+        //Make sure there is at least one cell in a row...
+        for (row in table.rows) {
+            if (row.cells.isEmpty()) {
+                row.cell()
+            }
+        }
+
+        //Map cellIds to cells...
         val cells = mutableMapOf<Any, MutableSet<CellDef<STYLE>>>()
         for (row in table.rows) {
-            row.resolveTexts(cells)
+            for(cell in row.cells) {
+                cell.ids.forEach {
+                    val cellSet = cells.getOrPut(it) { mutableSetOf() }
+                    cellSet.add(cell)
+                }
+            }
+        }
+
+        //Do minimal calculations on texts and resolution of cells...
+//        table.applyVisitor(BaseCellPropertiesVisitor())
+        for (row in table.rows) {
+            row.resolveTexts()
         }
 
         //Execute deferred functions...
@@ -17,11 +35,14 @@ object Creator {
             functionsToExecute.forEach { it(cellsToApply) }
         }
 
+        //Calculate widths
+        val imposedWidth = (table.width != null)
+
         var naturalWidth = 0
         var minimalWidth = 0
 
         for (row in table.rows) {
-            row.resolveWidth()
+            row.resolveWidth(imposedWidth)
 
             naturalWidth = max(row.naturalWidth, naturalWidth)
             minimalWidth = max(row.minimalWidth, minimalWidth)

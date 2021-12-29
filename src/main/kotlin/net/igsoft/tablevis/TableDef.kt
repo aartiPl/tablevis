@@ -1,6 +1,11 @@
 package net.igsoft.tablevis
 
+import net.igsoft.tablevis.visitor.TableProperties
+import net.igsoft.tablevis.visitor.Visitor
+
 class TableDef<STYLE : Style>(val style: STYLE) {
+    private val properties = TableProperties()
+
     val functions = mutableMapOf<Any, MutableSet<(Set<CellDef<STYLE>>) -> Unit>>()
 
     val rows = mutableListOf<RowDef<STYLE>>()
@@ -49,6 +54,8 @@ class TableDef<STYLE : Style>(val style: STYLE) {
 
     fun forId(vararg id: Any): IdOperation<STYLE> = IdOperation(id.toList(), functions)
 
-    internal var verticalAlignment: VerticalAlignment = style.verticalAlignment
-    internal var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
+    var verticalAlignment: VerticalAlignment = style.verticalAlignment
+    var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
+
+    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, properties)
 }

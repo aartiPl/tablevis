@@ -31,16 +31,17 @@ object Text {
                 continue
             }
 
-            //3. between cell's textWidth and 4/5 of line length (lastIndexOf) is whitespace
-            for (i in width downTo (4 * width / 5)) {
-                if (rest[i].isWhitespace()) {
-                    newLines += rest.substring(0, i).trimEnd()
-                    rest = rest.substring(i).trimStart()
+            //2. Between cell's textWidth  + 1 (since if the next char is whitespace then splitting is also okay to split)
+            //   and 4/5 of line length (lastIndexOf) is whitespace
+            for (i in width + 1 downTo (4 * width / 5)) {
+                if (rest[i - 1].isWhitespace()) {
+                    newLines += rest.substring(0, i - 1).trimEnd()
+                    rest = rest.substring(i - 1).trimStart()
                     continue@loop
                 }
             }
 
-            //4. put dash in split point and continue
+            //3. put dash in split point and continue
             newLines += rest.substring(0, width - 1) + "-"
             rest = rest.substring(width - 1)
         }

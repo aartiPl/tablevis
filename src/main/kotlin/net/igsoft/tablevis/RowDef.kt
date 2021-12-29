@@ -1,8 +1,12 @@
 package net.igsoft.tablevis
 
+import net.igsoft.tablevis.visitor.RowProperties
+import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
 class RowDef<STYLE: Style>(private val style: STYLE) {
+    private val properties = RowProperties()
+
     private var width: Int? = null
     private var height: Int? = null
 
@@ -61,20 +65,15 @@ class RowDef<STYLE: Style>(private val style: STYLE) {
     private val cellsWithNoWidth = mutableListOf<CellDef<STYLE>>()
     val cells = mutableListOf<CellDef<STYLE>>()
 
-    internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellDef<STYLE>>>) {
-        //Make sure there is at least one cell in a row...
-        if (this.cells.isEmpty()) {
-            cell()
-        }
-
-        for (cell in this.cells) {
-            cell.resolveTexts(cells)
+    internal fun resolveTexts() {
+        for (cell in cells) {
+            cell.resolveTexts()
         }
     }
 
-    internal fun resolveWidth() {
+    internal fun resolveWidth(imposedWidth: Boolean) {
         for (cell in cells) {
-            cell.resolveWidth()
+            cell.resolveWidth(imposedWidth)
 
             naturalWidth += (cell.width ?: cell.naturalWidth) + style.verticalLineWidth
             assignedWidth += (cell.width ?: 0) + style.verticalLineWidth
@@ -125,4 +124,6 @@ class RowDef<STYLE: Style>(private val style: STYLE) {
         height = height?: maxHeight
         width = calculatedWidth
     }
+
+    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, properties)
 }

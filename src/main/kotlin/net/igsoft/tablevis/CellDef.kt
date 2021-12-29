@@ -1,8 +1,18 @@
 package net.igsoft.tablevis
 
+import net.igsoft.tablevis.visitor.CellProperties
+import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
 class CellDef<STYLE : Style>(private val style: STYLE) {
+    private val properties = CellProperties()
+
+//    var test: Int
+//        get() = properties.naturalWidth
+//        set(value) {
+//            properties.naturalWidth = value
+//        }
+
     var width: Int? = null
     var height: Int? = null
 
@@ -59,12 +69,7 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
     internal var minimalWidth = 0
     internal var textWidth = 0
 
-    internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellDef<STYLE>>>) {
-        ids.forEach {
-            val cellSet = cells.getOrPut(it) { mutableSetOf() }
-            cellSet.add(this)
-        }
-
+    internal fun resolveTexts() {
         if (text.isEmpty()) {
             lines = listOf()
             naturalTextWidth = 0
@@ -76,8 +81,12 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
         naturalWidth = leftMargin + naturalTextWidth + rightMargin
     }
 
-    internal fun resolveWidth() {
+    internal fun resolveWidth(imposedWidth: Boolean) {
         minimalWidth = width ?: (leftMargin + (if (text.isEmpty()) 0 else minimalTextWidth) + rightMargin)
+
+        if (!imposedWidth) {
+            width = width ?: naturalWidth
+        }
     }
 
     internal fun adjustTexts() {
@@ -92,7 +101,6 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
             lines.flatMap { Text.splitLineTextually(it, textWidth) }
         }
 
-        width = width ?: (leftMargin + naturalTextWidth + rightMargin)
         height = height ?: max(lines.size, 1)
 
 //        if (cell.horizontalAlignment.contains(HorizontalAlignment.Justified)) {
@@ -116,4 +124,6 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
             lines
         )
     }
+
+    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, properties)
 }

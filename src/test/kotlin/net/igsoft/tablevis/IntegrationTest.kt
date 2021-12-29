@@ -228,8 +228,8 @@ class IntegrationTest {
                |│ passages, and more recen- │
                |│ tly with desktop publish- │
                |│ ing software like Aldus   │
-               |│ PageMaker including vers- │
-               |│ ions of Lorem Ipsum.      │
+               |│ PageMaker including       │
+               |│ versions of Lorem Ipsum.  │
                |└───────────────────────────┘
                |""".trimMargin()
         )
@@ -377,13 +377,13 @@ class IntegrationTest {
         println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
-            """|----------------------------------------
-                 || Tekst      | Tekst      | Tekst      |
-                 || pierwszy   | drugi      | trzeci     |
-                 |----------------------------------------
-                 || Dolny wiersz                         |
-                 |----------------------------------------
-                 |""".trimMargin()
+                """|┌──────────┬──────────┬───────────┐
+                   |│ Tekst    │ Tekst    │ Tekst tr- │
+                   |│ pierwszy │ drugi    │ zeci      │
+                   |├──────────┴──────────┴───────────┤
+                   |│          Dolny wiersz           │
+                   |└─────────────────────────────────┘
+                   |""".trimMargin()
         )
     }
 
@@ -413,11 +413,11 @@ class IntegrationTest {
         println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
-            """|┌────────────────┬──────────────┬───────────────┐
-               |│ Tekst pierwszy │ Tekst drugi  │ Tekst trzeci  │
-               |├────────────────┴──────────────┴───────────────┤
-               |│                  Dolny wiersz                 │
-               |└───────────────────────────────────────────────┘
+            """|┌────────────────┬─────────────┬──────────────┐
+               |│ Tekst pierwszy │ Tekst drugi │ Tekst trzeci │
+               |├────────────────┴─────────────┴──────────────┤
+               |│                Dolny wiersz                 │
+               |└─────────────────────────────────────────────┘
                |""".trimMargin()
         )
     }
@@ -449,14 +449,14 @@ class IntegrationTest {
 
 
         assertThat(printer.print(table)).isEqualTo(
-            """|┌────────────────┬────────────────────┬───────────────┐
-               |│ Tekst pierwszy │ Tekst drugi        │ Tekst trzeci  │
-               |│                │ Linia 1            │               │
-               |│                │ Linia2             │               │
-               |│                │ Bardzo długi tekst │               │
-               |├────────────────┴────────────────────┴───────────────┤
-               |│                  Dolny wiersz                       │
-               |└─────────────────────────────────────────────────────┘
+            """|┌────────────────┬────────────────────┬──────────────┐
+               |│ Tekst pierwszy │ Tekst drugi        │ Tekst trzeci │
+               |│                │ Linia 1            │              │
+               |│                │ Linia2             │              │
+               |│                │ Bardzo długi tekst │              │
+               |├────────────────┴────────────────────┴──────────────┤
+               |│                    Dolny wiersz                    │
+               |└────────────────────────────────────────────────────┘
                |""".trimMargin()
         )
     }
@@ -488,18 +488,18 @@ class IntegrationTest {
         println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
-            """|-----------------------------------------------------------------------
-               || Tekst pierwszy |          Rachunek bankowy:           | Text trzeci |
-               ||                | CRK ProEcclesia SCh - "ProCracovia"  |             |
-               ||                |           ul. Puławska 114           |             |
-               ||                |           02-620 Warszawa            |             |
-               ||                |                                      |             |
-               ||                | PLN 78 1240 1112 1111 0010 0909 5620 |             |
-               ||                |            Bank Pekao SA             |             |
-               ||                |       VIII odział w Warszawie        |             |
-               |-----------------------------------------------------------------------
-               || Dolny wiersz                                                        |
-               |-----------------------------------------------------------------------
+            """|┌────────────────┬──────────────────────────────────────┬─────────────┐
+               |│ Tekst pierwszy │          Rachunek bankowy:           │ Text trzeci │
+               |│                │ CRK ProEcclesia SCh - "ProCracovia"  │             │
+               |│                │           ul. Puławska 114           │             │
+               |│                │           02-620 Warszawa            │             │
+               |│                │                                      │             │
+               |│                │ PLN 78 1240 1112 1111 0010 0909 5620 │             │
+               |│                │            Bank Pekao SA             │             │
+               |│                │       VIII odział w Warszawie        │             │
+               |├────────────────┴──────────────────────────────────────┴─────────────┤
+               |│                            Dolny wiersz                             │
+               |└─────────────────────────────────────────────────────────────────────┘
                |""".trimMargin()
         )
     }
@@ -550,28 +550,26 @@ class IntegrationTest {
         println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
-            """|-----------------------------------------------------------------------
-               || Tekst pierwszy |          Rachunek bankowy:           | Text trzeci |
-               ||                | CRK ProEcclesia SCh - "ProCracovia"  |             |
-               ||                |           ul. Puławska 114           |             |
-               ||                |           02-620 Warszawa            |             |
-               ||                |                                      |             |
-               ||                | PLN 78 1240 1112 1111 0010 0909 5620 |             |
-               ||                |            Bank Pekao SA             |             |
-               ||                |       VIII odział w Warszawie        |             |
-               |-----------------------------------------------------------------------
-               || column A       |       column B                       | column C    |
-               |-----------------------------------------------------------------------
-               || Dolny wiersz                                                        |
-               |-----------------------------------------------------------------------
+            """|┌────────────────┬──────────────────────────────────────┬─────────────┐
+               |│ Tekst pierwszy │          Rachunek bankowy:           │ Text trzeci │
+               |│                │ CRK ProEcclesia SCh - "ProCracovia"  │             │
+               |│                │           ul. Puławska 114           │             │
+               |│                │           02-620 Warszawa            │             │
+               |│                │                                      │             │
+               |│                │ PLN 78 1240 1112 1111 0010 0909 5620 │             │
+               |│                │            Bank Pekao SA             │             │
+               |│                │       VIII odział w Warszawie        │             │
+               |├────────────────┼──────────────────────────────────────┼─────────────┤
+               |│ column A       │               column B               │ column C    │
+               |├────────────────┴──────────────────────────────────────┴─────────────┤
+               |│ Dolny wiersz                                                        │
+               |└─────────────────────────────────────────────────────────────────────┘
                |""".trimMargin()
         )
     }
 
     @Test
     fun `Just show the table`() {
-        val optionName = "optionName"
-
         //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
 
         //TODO: no-borders style
@@ -588,16 +586,15 @@ class IntegrationTest {
 
             row {
                 cell {
-                    width = 1
+                    id(1)
                 }
                 cell {
-                    id(optionName)
+                    id(2)
                     text = "First option"
                 }
                 cell {
+                    id(3)
                     text = ":"
-                    leftMargin = 1
-                    rightMargin = 1
                 }
                 cell {
                     justify()
@@ -607,16 +604,15 @@ class IntegrationTest {
 
             row {
                 cell {
-                    textWidth = 2
+                    id(1)
                 }
                 cell {
-                    id(optionName)
+                    id(2)
                     text = "Some other option"
                 }
                 cell {
-                    text = " : "
-                    leftMargin = 0
-                    rightMargin = 0
+                    id(3)
+                    text = ":"
                 }
                 cell {
                     text = OPTION2_DESCRIPTION_TEXT
@@ -625,7 +621,7 @@ class IntegrationTest {
 
             row { }
 
-            forId(optionName).setMinimalWidth()
+            forId(1, 2, 3).setMinimalWidth()
         }
 
         println(printer.print(table))
