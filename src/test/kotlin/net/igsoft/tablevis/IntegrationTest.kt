@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
 
 class IntegrationTest {
-    private val style = BoxTextStyleSet(lineSeparator = "\n")
+    private val styleSet = BoxTextStyleSet(lineSeparator = "\n")
     private val printer = TextTablePrinter()
 
     @Test
     fun `Nothing defined`() {
-        val table = Table.using(style)
+        val table = Table.using(styleSet)
 
         println(printer.print(table))
 
@@ -25,8 +25,8 @@ class IntegrationTest {
 
     @Test
     fun `Nothing defined, but empty header`() {
-        val table = Table.using(style) {
-            row(style.header) {}
+        val table = Table.using(styleSet) {
+            row(styleSet.header) {}
         }
 
         println(printer.print(table))
@@ -41,11 +41,11 @@ class IntegrationTest {
 
     @Test
     fun `Header, row and footer`() {
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             width = 40
             //alignRight()
 
-            row(style.header) {
+            row(styleSet.header) {
                 cell {
                     alignCenter()
                     text = "Header"
@@ -72,7 +72,7 @@ class IntegrationTest {
                 }
             }
 
-            row(style.footer) {
+            row(styleSet.footer) {
                 cell {
                     alignCenter()
                     text = "Footer"
@@ -103,11 +103,11 @@ class IntegrationTest {
 
     @Test
     fun `Header, rows and footer - narrow`() {
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             width = 21
             //alignRight()
 
-            row(style.header) {
+            row(styleSet.header) {
                 cell {
                     alignCenter()
                     text = "Header"
@@ -144,7 +144,7 @@ class IntegrationTest {
                 }
             }
 
-            row(style.footer) {
+            row(styleSet.footer) {
                 cell {
                     alignCenter()
                     text = "Footer"
@@ -190,7 +190,7 @@ class IntegrationTest {
 
     @Test
     fun `Splitting text into rows`() {
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             width = 29
 
             row {
@@ -249,8 +249,8 @@ class IntegrationTest {
 
     @Test
     fun `Id on table with empty header`() {
-        val table = Table.using(style) {
-            row(style.header) {
+        val table = Table.using(styleSet) {
+            row(styleSet.header) {
                 cell {
                     id("headerCell")
                 }
@@ -271,8 +271,8 @@ class IntegrationTest {
 
     @Test
     fun `Set min width on header and rows`() {
-        val table = Table.using(style) {
-            row(style.header) {
+        val table = Table.using(styleSet) {
+            row(styleSet.header) {
                 cell {
                     id("col1")
                     text = "Col 1"
@@ -325,7 +325,7 @@ class IntegrationTest {
     @Test
     fun `Width shorter than it is possible to put texts`() {
         assertThat {
-            Table.using(style) {
+            Table.using(styleSet) {
                 width = 6
 
                 row {
@@ -351,7 +351,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table with width set`() {
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             width = 35
 
             row {
@@ -389,7 +389,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set`() {
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             row {
                 cell {
                     text = "Tekst pierwszy"
@@ -424,7 +424,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text`() {
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             row {
                 cell {
                     text = "Tekst pierwszy"
@@ -463,7 +463,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text1`() {
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             row {
                 cell {
                     text = "Tekst pierwszy"
@@ -506,7 +506,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text and multiple aligned rows`() {
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             row {
                 cell {
                     id("left")
@@ -575,7 +575,7 @@ class IntegrationTest {
         //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
 
         //TODO: no-borders style
-        val table = Table.using(style) {
+        val table = Table.using(styleSet) {
             width = 110
             row {
                 cell {
@@ -588,7 +588,7 @@ class IntegrationTest {
 
             row {
                 cell {
-                    textWidth = 2
+                    width = 1
                 }
                 cell {
                     id(optionName)

@@ -59,7 +59,7 @@ class RowBuilder<STYLE: Style>(private val style: STYLE) {
     internal var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
 
     private val cellsWithNoWidth = mutableListOf<CellBuilder<STYLE>>()
-    private val cells = mutableListOf<CellBuilder<STYLE>>()
+    val cells = mutableListOf<CellBuilder<STYLE>>()
 
     internal fun resolveTexts(cells: MutableMap<Any, MutableSet<CellBuilder<STYLE>>>) {
         //Make sure there is at least one cell in a row...

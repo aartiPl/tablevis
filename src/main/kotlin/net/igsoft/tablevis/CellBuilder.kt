@@ -1,5 +1,6 @@
 package net.igsoft.tablevis
 
+import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
 class CellBuilder<STYLE : Style>(private val style: STYLE) {
@@ -50,7 +51,7 @@ class CellBuilder<STYLE : Style>(private val style: STYLE) {
     //------------------------------------------------------------------------------------------------------------------
     //Implementation code
 
-    private var ids: List<Any> = emptyList()
+    var ids: List<Any> = emptyList()
     private var lines: List<String> = emptyList()
     private var horizontalAlignment = style.horizontalAlignment
     private var verticalAlignment = style.verticalAlignment
@@ -69,8 +70,7 @@ class CellBuilder<STYLE : Style>(private val style: STYLE) {
             lines = listOf()
             naturalTextWidth = 0
         } else {
-            text = Text.resolveTabs(text)
-            lines = text.lines()
+            lines = Text.resolveTabs(text).lines()
             naturalTextWidth = lines.maxOf { it.length }
         }
 

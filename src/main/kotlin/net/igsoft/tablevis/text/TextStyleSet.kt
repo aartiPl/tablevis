@@ -2,7 +2,7 @@ package net.igsoft.tablevis.text
 
 import net.igsoft.tablevis.StyleSet
 
-interface TextStyleSet<T : TextStyle> : StyleSet<T> {
+interface TextStyleSet<STYLE : TextStyle> : StyleSet<STYLE> {
     fun resolveCrossSection(value: IntersectionMatrix): Char
     val lineSeparator: String
 }
