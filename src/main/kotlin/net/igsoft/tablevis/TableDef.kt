@@ -57,5 +57,5 @@ class TableDef<STYLE : Style>(val style: STYLE) {
     var verticalAlignment: VerticalAlignment = style.verticalAlignment
     var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
 
-    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, properties)
+    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, style, properties)
 }

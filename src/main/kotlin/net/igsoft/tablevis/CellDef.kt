@@ -8,6 +8,15 @@ import kotlin.math.max
 class CellDef<STYLE : Style>(private val style: STYLE) {
     private val properties = TypedProperties()
 
+    init {
+        properties[Property.leftMargin] = style.leftMargin
+        properties[Property.topMargin] = style.topMargin
+        properties[Property.rightMargin] = style.rightMargin
+        properties[Property.bottomMargin] = style.bottomMargin
+
+        properties[Property.minimalTextWidth] = style.minimalTextWidth
+    }
+
     var text: String
         get() = properties.getValue(Property.text)
         set(value) {
@@ -125,5 +134,5 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
         )
     }
 
-    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, properties)
+    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, style, properties)
 }

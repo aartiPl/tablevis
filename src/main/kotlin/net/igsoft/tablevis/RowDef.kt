@@ -125,5 +125,5 @@ class RowDef<STYLE: Style>(private val style: STYLE) {
         width = calculatedWidth
     }
 
-    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, properties)
+    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, style, properties)
 }

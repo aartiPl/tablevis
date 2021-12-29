@@ -3,6 +3,8 @@ package net.igsoft.tablevis.visitor
 import net.igsoft.tablevis.marker.TypedMarker
 
 object Property {
+    val topMargin = TypedMarker<Int>("topMargin")
+    val bottomMargin = TypedMarker<Int>("bottomMargin")
     val leftMargin = TypedMarker<Int>("leftMargin")
     val rightMargin = TypedMarker<Int>("rightMargin")
     val text = TypedMarker<String>("text")

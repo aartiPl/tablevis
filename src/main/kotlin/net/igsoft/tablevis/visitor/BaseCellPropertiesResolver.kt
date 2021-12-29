@@ -5,7 +5,7 @@ import net.igsoft.tablevis.Style
 import net.igsoft.tablevis.Text
 
 class BaseCellPropertiesResolver<STYLE : Style> : Visitor<STYLE> {
-    override fun visit(cell: CellDef<STYLE>, properties: TypedProperties) {
+    override fun visit(cell: CellDef<STYLE>, style: STYLE, properties: TypedProperties) {
         if (properties[Property.text].isNullOrEmpty()) {
             properties[Property.lines] = listOf()
             properties[Property.naturalTextWidth] = 0

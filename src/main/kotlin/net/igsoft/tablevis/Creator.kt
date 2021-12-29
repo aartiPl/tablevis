@@ -37,7 +37,7 @@ object Creator {
         }
 
         //Do minimal calculations on texts and resolution of cells...
-        //table.applyVisitor(BaseCellPropertiesResolver())
+        table.applyVisitor(BaseCellPropertiesResolver())
 
         for (row in table.rows) {
             row.resolveTexts()
