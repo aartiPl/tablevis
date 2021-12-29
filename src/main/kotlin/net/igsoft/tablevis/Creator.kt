@@ -11,15 +11,28 @@ object Creator {
             }
         }
 
-        //Map cellIds to cells...
+        //Map cellIds to cells... Add default row and col names (col-1, row-1, etc.)
         val cells = mutableMapOf<Any, MutableSet<CellDef<STYLE>>>()
+        var rowCounter = 1
         for (row in table.rows) {
+            var colCounter = 1
+
             for(cell in row.cells) {
                 cell.ids.forEach {
                     val cellSet = cells.getOrPut(it) { mutableSetOf() }
                     cellSet.add(cell)
                 }
+
+                val rowCellSet = cells.getOrPut("row-$rowCounter") { mutableSetOf() }
+                rowCellSet.add(cell)
+
+                val colCellSet = cells.getOrPut("col-$colCounter") { mutableSetOf() }
+                colCellSet.add(cell)
+
+                colCounter++
             }
+
+            rowCounter++
         }
 
         //Do minimal calculations on texts and resolution of cells...
