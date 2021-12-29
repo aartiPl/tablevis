@@ -1,5 +1,6 @@
 package net.igsoft.tablevis
 
+import net.igsoft.tablevis.visitor.BaseCellPropertiesResolver
 import kotlin.math.max
 
 object Creator {
@@ -36,7 +37,8 @@ object Creator {
         }
 
         //Do minimal calculations on texts and resolution of cells...
-//        table.applyVisitor(BaseCellPropertiesVisitor())
+        //table.applyVisitor(BaseCellPropertiesResolver())
+
         for (row in table.rows) {
             row.resolveTexts()
         }

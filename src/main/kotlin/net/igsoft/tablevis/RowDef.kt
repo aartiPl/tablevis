@@ -1,11 +1,11 @@
 package net.igsoft.tablevis
 
-import net.igsoft.tablevis.visitor.RowProperties
+import net.igsoft.tablevis.visitor.TypedProperties
 import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
 class RowDef<STYLE: Style>(private val style: STYLE) {
-    private val properties = RowProperties()
+    private val properties = TypedProperties()
 
     private var width: Int? = null
     private var height: Int? = null

@@ -1,17 +1,18 @@
 package net.igsoft.tablevis
 
-import net.igsoft.tablevis.visitor.CellProperties
+import net.igsoft.tablevis.visitor.Property
+import net.igsoft.tablevis.visitor.TypedProperties
 import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
 class CellDef<STYLE : Style>(private val style: STYLE) {
-    private val properties = CellProperties()
+    private val properties = TypedProperties()
 
-//    var test: Int
-//        get() = properties.naturalWidth
-//        set(value) {
-//            properties.naturalWidth = value
-//        }
+    var text: String
+        get() = properties.getValue(Property.text)
+        set(value) {
+            properties[Property.text] = value
+        }
 
     var width: Int? = null
     var height: Int? = null
@@ -22,8 +23,6 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
     var topMargin = style.topMargin
     var rightMargin = style.rightMargin
     var bottomMargin = style.bottomMargin
-
-    var text = ""
 
     fun id(vararg ids: Any) {
         this.ids = ids.toList()
@@ -70,9 +69,10 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
     internal var textWidth = 0
 
     internal fun resolveTexts() {
-        if (text.isEmpty()) {
+        if (properties[Property.text].isNullOrEmpty()) {
             lines = listOf()
             naturalTextWidth = 0
+            minimalTextWidth = 0
         } else {
             lines = Text.resolveTabs(text).lines()
             naturalTextWidth = lines.maxOf { it.length }
@@ -82,7 +82,7 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
     }
 
     internal fun resolveWidth(imposedWidth: Boolean) {
-        minimalWidth = width ?: (leftMargin + (if (text.isEmpty()) 0 else minimalTextWidth) + rightMargin)
+        minimalWidth = width ?: (leftMargin + minimalTextWidth + rightMargin)
 
         if (!imposedWidth) {
             width = width ?: naturalWidth

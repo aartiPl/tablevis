@@ -1,10 +1,10 @@
 package net.igsoft.tablevis
 
-import net.igsoft.tablevis.visitor.TableProperties
+import net.igsoft.tablevis.visitor.TypedProperties
 import net.igsoft.tablevis.visitor.Visitor
 
 class TableDef<STYLE : Style>(val style: STYLE) {
-    private val properties = TableProperties()
+    private val properties = TypedProperties()
 
     val functions = mutableMapOf<Any, MutableSet<(Set<CellDef<STYLE>>) -> Unit>>()
 

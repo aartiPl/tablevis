@@ -619,7 +619,7 @@ class IntegrationTest {
 
             row { }
 
-            //col-3 and other identifiers are added by default
+            //col-3 and other identifiers are added automatically
             forId(1, 2, "col-3").setMinimalWidth()
         }
 
