@@ -16,24 +16,6 @@ class RowDef<STYLE: Style>(style: STYLE) : BaseDef<STYLE, RowProperties<STYLE>>(
         return Row(properties.width!!, properties.height!!, style, properties.cells.map { it.build() })
     }
 
-    internal fun resolveWidth(imposedWidth: Boolean) {
-        for (cell in properties.cells) {
-            cell.resolveWidth(imposedWidth)
-
-            properties.naturalWidth += (cell.properties.width ?: cell.properties.naturalWidth) + style.verticalLineWidth
-            properties.assignedWidth += (cell.properties.width ?: 0) + style.verticalLineWidth
-            properties.minimalWidth += cell.properties.minimalWidth + style.verticalLineWidth
-
-            if (cell.properties.width == null) {
-                properties.cellsWithNoWidth.add(cell)
-            }
-        }
-
-        properties.naturalWidth += style.verticalLineWidth
-        properties.assignedWidth += style.verticalLineWidth
-        properties.minimalWidth += style.verticalLineWidth
-    }
-
     internal fun distributeRemainingSpace(remainingSpace: Int) {
         if (remainingSpace > 0) {
             if (properties.cellsWithNoWidth.isNotEmpty()) {

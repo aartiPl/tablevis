@@ -1,6 +1,7 @@
 package net.igsoft.tablevis
 
 import net.igsoft.tablevis.visitor.BasePropertiesResolver
+import net.igsoft.tablevis.visitor.WidthResolver
 import kotlin.math.max
 
 object Creator {
@@ -47,20 +48,11 @@ object Creator {
         }
 
         //Calculate widths
-        val imposedWidth = (table.properties.width != null)
+        val tableProperties = table.applyVisitor(WidthResolver())
 
-        var naturalWidth = 0
-        var minimalWidth = 0
-
-        for (row in table.properties.rows) {
-            row.resolveWidth(imposedWidth)
-
-            naturalWidth = max(row.properties.naturalWidth, naturalWidth)
-            minimalWidth = max(row.properties.minimalWidth, minimalWidth)
-        }
-
-        //If the overall width is not set, set it to naturalWidth...
-        val calculatedWidth = table.properties.width ?: naturalWidth
+        val calculatedWidth = tableProperties.width!!
+        val naturalWidth = tableProperties.naturalWidth
+        val minimalWidth = tableProperties.minimalWidth
 
         println("Calculated values: width=$calculatedWidth, naturalWidth=$naturalWidth, minimalWidth=$minimalWidth")
 

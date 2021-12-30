@@ -1,7 +1,6 @@
 package net.igsoft.tablevis
 
 import kotlin.math.max
-import kotlin.math.min
 
 object Text {
     fun splitTextually(text: String, width: Int): List<String> {

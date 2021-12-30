@@ -15,17 +15,6 @@ class CellDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, CellProperties<STYLE
             properties.text = value
         }
 
-    //------------------------------------------------------------------------------------------------------------------
-    //Implementation code
-
-    internal fun resolveWidth(imposedWidth: Boolean) {
-        properties.minimalWidth = properties.width ?: (leftMargin + properties.minimalTextWidth + rightMargin)
-
-        if (!imposedWidth) {
-            properties.width = properties.width ?: properties.naturalWidth
-        }
-    }
-
     internal fun adjustTexts() {
         properties.textWidth = (properties.width ?: properties.minimalWidth) - leftMargin - rightMargin
 
@@ -40,12 +29,15 @@ class CellDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, CellProperties<STYLE
 
         properties.height = properties.height ?: max(properties.lines.size, 1)
 
+        //TODO: justify text in Printer
 //        if (cell.horizontalAlignment.contains(HorizontalAlignment.Justified)) {
 //            val justificationThreshold = cell.cellTextWidth.get * 4 / 5)
 //            cell.lines =
 //                cell.lines map (line => Text.justifyLine(line, cell.cellTextWidth.get, justificationThreshold))
 //        }
     }
+
+
 
     internal fun build(): Cell {
 

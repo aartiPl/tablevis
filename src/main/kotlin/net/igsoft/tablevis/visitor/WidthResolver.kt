@@ -43,8 +43,8 @@ class WidthResolver<STYLE : Style> : Visitor<STYLE> {
         rowProperties.cells.forEach { cell ->
             val cellProperties = cell.applyVisitor(this)
 
-            naturalWidth += cellProperties.width
-                ?: (cellProperties.naturalWidth + rowProperties.style.verticalLineWidth)
+            naturalWidth += (cellProperties.width
+                ?: cellProperties.naturalWidth) + cellProperties.style.verticalLineWidth
 
             assignedWidth += (cellProperties.width ?: 0) + cellProperties.style.verticalLineWidth
             minimalWidth += cellProperties.minimalWidth + cellProperties.style.verticalLineWidth
