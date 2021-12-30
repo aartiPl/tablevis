@@ -20,11 +20,7 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(
         table.applyVisitor(BasePropertiesResolver())
 
         //Execute deferred functions...
-        for (entry in table.properties.cellsPerId.entries) {
-            val cellsToApply = entry.value
-            val functionsToExecute = table.properties.functions[entry.key] ?: emptySet()
-            functionsToExecute.forEach { it(cellsToApply) }
-        }
+        table.applyVisitor(DeferredFunctionsResolver())
 
         //Calculate widths
         table.applyVisitor(WidthResolver())
@@ -32,16 +28,9 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(
         //Calculate cell sizes so that they match table size
         table.applyVisitor(TextAdjustingResolver())
 
-        //TODO: calculate height
-        table.properties.height = table.properties.height ?: 0
+        //Calculate height
+        table.applyVisitor(HeightResolver())
 
         return table.applyVisitor(BuilderResolver(styleSet))
     }
-
-//        //Calculate row height
-//        for (row < -headerWithRows if row.height <= 0) {
-//            val rowHeight = row.cells.maxBy(cell => cell . lines . size).lines.size
-//            row.height = if (rowHeight > 0) rowHeight else 1
-//        }
-//
 }
