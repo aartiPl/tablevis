@@ -238,12 +238,36 @@ class IntegrationTest {
     fun `Nothing defined, but empty header with windows lineSeparator`() {
         val style = SimpleTextStyleSet(lineSeparator = "\r\n")
         val table = TableBuilder(style) {
-            row(style.header) { }
+            alignCenter()
+            width = 39
+
+            row {
+                cell {
+                    text = "Header 1"
+                }
+                cell {
+                    text = "Header 2"
+                }
+            }
+
+            row {
+                cell {
+                    text = "Row"
+                }
+            }
         }.build()
 
         println(printer.print(table))
 
-        assertThat(printer.print(table)).isEqualTo("+~=+\r\n*  *\r\n+~=+\r\n")
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
+            """|+------------------+------------------+
+               ||     Header 1     |     Header 2     |
+               |+------------------+------------------+
+               ||                 Row                 |
+               |+-------------------------------------+
+               |
+               |""".trimMargin()
+        )
     }
 
     @Test
@@ -450,7 +474,6 @@ class IntegrationTest {
 
         println(printer.print(table))
 
-
         @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
             """|┌────────────────┬────────────────────┬──────────────┐
                |│ Tekst pierwszy │ Tekst drugi        │ Tekst trzeci │
@@ -574,7 +597,7 @@ class IntegrationTest {
     }
 
     @Test
-    fun `Just show the table`() {
+    fun `Program options formatting`() {
         //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
 
         //TODO: no-borders style

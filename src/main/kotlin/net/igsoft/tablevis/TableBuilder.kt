@@ -28,7 +28,7 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(
         //Calculate cell sizes so that they match table size
         table.applyVisitor(TextAdjustingResolver())
 
-        //Calculate height
+        //Calculate heights
         table.applyVisitor(HeightResolver())
 
         return table.applyVisitor(BuilderResolver(styleSet))

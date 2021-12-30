@@ -1,1 +1,101 @@
+:tablevis-version: 0.5.0
+
 = Table visualisation library
+
+Table visualisation library (tablevis) allows creating (custom DSL) and lay outing the complicated tables.
+It's design aims to be universal library for drawing tables on any canvas (e.g. simple text, screen, html).
+
+Currently, it has implemented printer for box drawing characters or simple Ascii Characters.
+
+Below you can find some examples of what is possible using this library.
+
+.Table 1
+----
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                Header                ┃
+┡━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━┩
+│ Row 1 Cell 1     │      Row 1 Cell 2 │
+├──────────────────┼───────────────────┤
+│ Row 2 Cell 1     │      Row 2 Cell 2 │
+┢━━━━━━━━━━━━━━━━━━┷━━━┳━━━━━━━━━━━━━━━┪
+┃        Footer        ┃   page 1/1    ┃
+┗━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┛
+----
+
+
+.Table 2
+----
+┏━━━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃ Col 1    ┃ Col 2 ┃ Col 3 ┃
+┡━━━━━━━━━━╇━━━━━━━┻━━━━━━━┩
+│ 12       │ 12345678      │
+├──────────┼───────────────┤
+│ 12345678 │ 32            │
+└──────────┴───────────────┘
+----
+
+.Table 3
+----
++------------------+------------------+
+|     Header 1     |     Header 2     |
++------------------+------------------+
+|                 Row                 |
++-------------------------------------+
+----
+
+
+== How to start
+
+Add dependency to tablevis library in your build file:
+
+[source,groovy,subs="attributes+"]
+.Gradle
+----
+dependencies {
+    implementation("net.igsoft:tablevis:{tablevis-version}")
+}
+----
+
+[source,xml,subs="attributes+"]
+.Maven
+----
+<dependency>
+    <groupId>net.igsoft</groupId>
+    <artifactId>tablevis</artifactId>
+    <version>{tablevis-version}</version>
+</dependency>
+----
+
+
+== I can not see box drawing characters in IDE. What to do?
+
+To see box drawing characters in IDE you need to have Unicode enabled console. It is not the default in Windows, so you will have to enable it manually.
+
+
+
+
+sposób uzyskania UTF-8 w konsoli Eclipse: -Dfile.encoding=UTF-8 + czcionka
+http://paranoid-engineering.blogspot.com/2008/05/getting-unicode-output-in-eclipse.html
+
+
+== Concept and simple usage
+
+
+[source, kotlin]
+.SimpleTableExample.java
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/SimpleTableExample.kt[tags=config]
+endif::[]
+
+ifdef::env-github[]
+    public static class Config {}
+
+    public static class ConfigCreator extends CreatorBase<Config, LaunchType> {
+        @Override
+        public Config create(InstanceProvider instanceProvider, LaunchType launchType) {
+            return new Config();
+        }
+    }
+endif::[]
+----
