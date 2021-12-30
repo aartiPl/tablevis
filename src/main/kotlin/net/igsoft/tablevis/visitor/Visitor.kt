@@ -3,17 +3,21 @@ package net.igsoft.tablevis.visitor
 import net.igsoft.tablevis.*
 
 interface Visitor<STYLE : Style> {
-    fun visit(table: TableDef<STYLE>, style: STYLE, properties: TypedProperties) {
-        table.rows.forEach {
+    fun visit(tableProperties: TableProperties<STYLE>): TableProperties<STYLE> {
+        tableProperties.rows.forEach {
             it.applyVisitor(this)
         }
+
+        return tableProperties
     }
 
-    fun visit(row: RowDef<STYLE>, style: STYLE, properties: TypedProperties) {
-        row.cells.forEach {
+    fun visit(rowProperties: RowProperties<STYLE>): RowProperties<STYLE> {
+        rowProperties.cells.forEach {
             it.applyVisitor(this)
         }
+
+        return rowProperties
     }
 
-    fun visit(cell: CellDef<STYLE>, style: STYLE, properties: TypedProperties)
+    fun visit(cellProperties: CellProperties<STYLE>): CellProperties<STYLE>
 }

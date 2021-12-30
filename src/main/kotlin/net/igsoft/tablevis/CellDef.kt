@@ -1,68 +1,19 @@
 package net.igsoft.tablevis
 
-import net.igsoft.tablevis.visitor.Property
-import net.igsoft.tablevis.visitor.TypedProperties
+import net.igsoft.tablevis.visitor.CellProperties
 import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
-class CellDef<STYLE : Style>(private val style: STYLE) {
-    private val properties = TypedProperties()
-
-    init {
-        properties[Property.leftMargin] = style.leftMargin
-        properties[Property.topMargin] = style.topMargin
-        properties[Property.rightMargin] = style.rightMargin
-        properties[Property.bottomMargin] = style.bottomMargin
-
-        properties[Property.minimalTextWidth] = style.minimalTextWidth
-    }
-
-    var text: String
-        get() = properties.getValue(Property.text)
-        set(value) {
-            properties[Property.text] = value
-        }
+class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE>>(CellProperties(style), style) {
+    var text: String = ""
 
     var width: Int? = null
     var height: Int? = null
 
     var minimalTextWidth = style.minimalTextWidth
 
-    var leftMargin = style.leftMargin
-    var topMargin = style.topMargin
-    var rightMargin = style.rightMargin
-    var bottomMargin = style.bottomMargin
-
     fun id(vararg ids: Any) {
         this.ids = ids.toList()
-    }
-
-    fun alignCenter() = apply {
-        this.horizontalAlignment = HorizontalAlignment.Center
-    }
-
-    fun alignLeft() = apply {
-        this.horizontalAlignment = HorizontalAlignment.Left
-    }
-
-    fun alignRight() = apply {
-        this.horizontalAlignment = HorizontalAlignment.Right
-    }
-
-    fun justify() = apply {
-        this.horizontalAlignment = HorizontalAlignment.Justified
-    }
-
-    fun alignTop() = apply {
-        this.verticalAlignment = VerticalAlignment.Top
-    }
-
-    fun alignMiddle() = apply {
-        this.verticalAlignment = VerticalAlignment.Middle
-    }
-
-    fun alignBottom() = apply {
-        this.verticalAlignment = VerticalAlignment.Bottom
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -70,15 +21,13 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
 
     var ids: List<Any> = emptyList()
     private var lines: List<String> = emptyList()
-    private var horizontalAlignment = style.horizontalAlignment
-    private var verticalAlignment = style.verticalAlignment
     internal var naturalTextWidth: Int = 0
     internal var naturalWidth = 0
     internal var minimalWidth = 0
     internal var textWidth = 0
 
     internal fun resolveTexts() {
-        if (properties[Property.text].isNullOrEmpty()) {
+        if (text.isEmpty()) {
             lines = listOf()
             naturalTextWidth = 0
             minimalTextWidth = 0
@@ -128,11 +77,11 @@ class CellDef<STYLE : Style>(private val style: STYLE) {
             topMargin,
             rightMargin,
             bottomMargin,
-            horizontalAlignment,
-            verticalAlignment,
+            properties.horizontalAlignment,
+            properties.verticalAlignment,
             lines
         )
     }
 
-    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, style, properties)
+    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(properties)
 }

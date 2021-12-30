@@ -1,52 +1,19 @@
 package net.igsoft.tablevis
 
-import net.igsoft.tablevis.visitor.TypedProperties
+import net.igsoft.tablevis.visitor.RowProperties
 import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
-class RowDef<STYLE: Style>(private val style: STYLE) {
-    private val properties = TypedProperties()
+class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(RowProperties(style), style) {
 
     private var width: Int? = null
     private var height: Int? = null
 
     var minimalTextWidth = style.minimalTextWidth
 
-    var leftMargin: Int = style.leftMargin
-    var topMargin: Int = style.topMargin
-    var rightMargin: Int = style.rightMargin
-    var bottomMargin: Int = style.bottomMargin
 
     fun cell(cellStyle: STYLE = style, block: CellDef<STYLE>.() -> Unit = {}) {
         cells.add(CellDef(cellStyle).apply(block))
-    }
-
-    fun alignCenter() = apply {
-        this.horizontalAlignment = HorizontalAlignment.Center
-    }
-
-    fun alignLeft() = apply {
-        this.horizontalAlignment = HorizontalAlignment.Left
-    }
-
-    fun alignRight() = apply {
-        this.horizontalAlignment = HorizontalAlignment.Right
-    }
-
-    fun justify() = apply {
-        this.horizontalAlignment = HorizontalAlignment.Justified
-    }
-
-    fun alignTop() = apply {
-        this.verticalAlignment = VerticalAlignment.Top
-    }
-
-    fun alignMiddle() = apply {
-        this.verticalAlignment = VerticalAlignment.Middle
-    }
-
-    fun alignBottom() = apply {
-        this.verticalAlignment = VerticalAlignment.Bottom
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -58,9 +25,6 @@ class RowDef<STYLE: Style>(private val style: STYLE) {
     internal var naturalWidth = 0
     internal var assignedWidth = 0
     internal var minimalWidth = 0
-
-    internal var verticalAlignment: VerticalAlignment = style.verticalAlignment
-    internal var horizontalAlignment: HorizontalAlignment = style.horizontalAlignment
 
     private val cellsWithNoWidth = mutableListOf<CellDef<STYLE>>()
     val cells = mutableListOf<CellDef<STYLE>>()
@@ -125,5 +89,5 @@ class RowDef<STYLE: Style>(private val style: STYLE) {
         width = calculatedWidth
     }
 
-    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(this, style, properties)
+    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(properties)
 }
