@@ -1,6 +1,5 @@
 package net.igsoft.tablevis.visitor
 
-import net.igsoft.tablevis.CellDef
 import net.igsoft.tablevis.HorizontalAlignment
 import net.igsoft.tablevis.Style
 import net.igsoft.tablevis.VerticalAlignment

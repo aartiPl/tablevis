@@ -6,8 +6,8 @@ import kotlin.math.max
 object Creator {
     fun <STYLE : Style, STYLE_SET : StyleSet<STYLE>> create(styleSet: STYLE_SET, table: TableDef<STYLE>): Table<STYLE_SET> {
         //Make sure there is at least one cell in a row...
-        for (row in table.rows) {
-            if (row.cells.isEmpty()) {
+        for (row in table.properties.rows) {
+            if (row.properties.cells.isEmpty()) {
                 row.cell()
             }
         }
@@ -15,10 +15,10 @@ object Creator {
         //Map cellIds to cells... Add default row and col names (col-1, row-1, etc.)
         val cells = mutableMapOf<Any, MutableSet<CellDef<STYLE>>>()
         var rowCounter = 1
-        for (row in table.rows) {
+        for (row in table.properties.rows) {
             var colCounter = 1
 
-            for(cell in row.cells) {
+            for(cell in row.properties.cells) {
                 cell.ids.forEach {
                     val cellSet = cells.getOrPut(it) { mutableSetOf() }
                     cellSet.add(cell)
@@ -39,10 +39,6 @@ object Creator {
         //Do minimal calculations on texts and resolution of cells...
         table.applyVisitor(BaseCellPropertiesResolver())
 
-        for (row in table.rows) {
-            row.resolveTexts()
-        }
-
         //Execute deferred functions...
         for (entry in cells.entries) {
             val cellsToApply = entry.value
@@ -56,7 +52,7 @@ object Creator {
         var naturalWidth = 0
         var minimalWidth = 0
 
-        for (row in table.rows) {
+        for (row in table.properties.rows) {
             row.resolveWidth(imposedWidth)
 
             naturalWidth = max(row.naturalWidth, naturalWidth)
@@ -73,7 +69,7 @@ object Creator {
         }
 
         //Calculate cell sizes so that they match table size
-        for (row in table.rows) {
+        for (row in table.properties.rows) {
             val remainingSpace = calculatedWidth - row.assignedWidth
             row.distributeRemainingSpace(remainingSpace)
             row.adjustTexts()
@@ -81,7 +77,7 @@ object Creator {
 
         table.height = table.height ?: 0
 
-        return Table(styleSet, calculatedWidth, table.height!!, table.rows.map { it.build() })
+        return Table(styleSet, calculatedWidth, table.height!!, table.properties.rows.map { it.build() })
     }
 
 //    fun build(): TextTable {

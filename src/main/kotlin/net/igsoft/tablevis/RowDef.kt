@@ -11,15 +11,14 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
 
     var minimalTextWidth = style.minimalTextWidth
 
-
     fun cell(cellStyle: STYLE = style, block: CellDef<STYLE>.() -> Unit = {}) {
-        cells.add(CellDef(cellStyle).apply(block))
+        properties.cells.add(CellDef(cellStyle).apply(block))
     }
 
     //------------------------------------------------------------------------------------------------------------------
 
     internal fun build(): Row {
-        return Row(width!!, height!!, style, cells.map { it.build() })
+        return Row(width!!, height!!, style, properties.cells.map { it.build() })
     }
 
     internal var naturalWidth = 0
@@ -27,19 +26,12 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
     internal var minimalWidth = 0
 
     private val cellsWithNoWidth = mutableListOf<CellDef<STYLE>>()
-    val cells = mutableListOf<CellDef<STYLE>>()
-
-    internal fun resolveTexts() {
-        for (cell in cells) {
-            cell.resolveTexts()
-        }
-    }
 
     internal fun resolveWidth(imposedWidth: Boolean) {
-        for (cell in cells) {
+        for (cell in properties.cells) {
             cell.resolveWidth(imposedWidth)
 
-            naturalWidth += (cell.width ?: cell.naturalWidth) + style.verticalLineWidth
+            naturalWidth += (cell.width ?: cell.properties.naturalWidth) + style.verticalLineWidth
             assignedWidth += (cell.width ?: 0) + style.verticalLineWidth
             minimalWidth += cell.minimalWidth + style.verticalLineWidth
 
@@ -64,10 +56,10 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
                 }
             } else {
                 //Distribute remaining space to cells with width already assigned
-                val weights = cells.map { c -> c.width!! }
+                val weights = properties.cells.map { c -> c.width!! }
                 val widths = Utils.distributeProportionally(assignedWidth, weights, remainingSpace)
 
-                for ((cell, width) in cells.zip(widths)) {
+                for ((cell, width) in properties.cells.zip(widths)) {
                     cell.width = cell.width!! + width
                 }
             }
@@ -79,7 +71,7 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
         var maxHeight = 0
         var calculatedWidth = 0
 
-        for (cell in cells) {
+        for (cell in properties.cells) {
             cell.adjustTexts()
             maxHeight = max(maxHeight, cell.height!!)
             calculatedWidth += cell.width!! + style.verticalLineWidth

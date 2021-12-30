@@ -5,45 +5,31 @@ import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
 class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE>>(CellProperties(style), style) {
-    var text: String = ""
-
     var width: Int? = null
     var height: Int? = null
-
-    var minimalTextWidth = style.minimalTextWidth
 
     fun id(vararg ids: Any) {
         this.ids = ids.toList()
     }
 
+    var text: String
+        get() = properties.text
+        set(value) {
+            properties.text = value
+        }
+
     //------------------------------------------------------------------------------------------------------------------
     //Implementation code
 
     var ids: List<Any> = emptyList()
-    private var lines: List<String> = emptyList()
-    internal var naturalTextWidth: Int = 0
-    internal var naturalWidth = 0
     internal var minimalWidth = 0
     internal var textWidth = 0
 
-    internal fun resolveTexts() {
-        if (text.isEmpty()) {
-            lines = listOf()
-            naturalTextWidth = 0
-            minimalTextWidth = 0
-        } else {
-            lines = Text.resolveTabs(text).lines()
-            naturalTextWidth = lines.maxOf { it.length }
-        }
-
-        naturalWidth = leftMargin + naturalTextWidth + rightMargin
-    }
-
     internal fun resolveWidth(imposedWidth: Boolean) {
-        minimalWidth = width ?: (leftMargin + minimalTextWidth + rightMargin)
+        minimalWidth = width ?: (leftMargin + properties.minimalTextWidth + rightMargin)
 
         if (!imposedWidth) {
-            width = width ?: naturalWidth
+            width = width ?: properties.naturalWidth
         }
     }
 
@@ -51,15 +37,15 @@ class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE
         textWidth = (width ?: minimalWidth) - leftMargin - rightMargin
 
         //Choose strategy of splitting text
-        lines = if (textWidth < 5) {
+        properties.lines = if (textWidth < 5) {
             //Cell is too small to do anything fancy...
-            lines.flatMap { it.chunked(textWidth) }
+            properties.lines.flatMap { it.chunked(textWidth) }
         } else {
             //Split textually
-            lines.flatMap { Text.splitLineTextually(it, textWidth) }
+            properties.lines.flatMap { Text.splitLineTextually(it, textWidth) }
         }
 
-        height = height ?: max(lines.size, 1)
+        height = height ?: max(properties.lines.size, 1)
 
 //        if (cell.horizontalAlignment.contains(HorizontalAlignment.Justified)) {
 //            val justificationThreshold = cell.cellTextWidth.get * 4 / 5)
@@ -79,7 +65,7 @@ class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE
             bottomMargin,
             properties.horizontalAlignment,
             properties.verticalAlignment,
-            lines
+            properties.lines
         )
     }
 

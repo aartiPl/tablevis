@@ -4,7 +4,7 @@ class IdOperation<STYLE : Style>(
     private val ids: List<Any>, private val functions: MutableMap<Any, MutableSet<(Set<CellDef<STYLE>>) -> Unit>>
 ) {
     private val setMinimalWidthFn: (Set<CellDef<STYLE>>) -> Unit = { cells ->
-        val maxWidth = cells.maxOf { it.naturalTextWidth }
+        val maxWidth = cells.maxOf { it.properties.naturalTextWidth }
 
         cells.forEach {
             it.width = it.leftMargin + maxWidth + it.rightMargin
