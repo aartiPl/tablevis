@@ -4,9 +4,7 @@ import net.igsoft.tablevis.visitor.RowProperties
 import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
-class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(RowProperties(style), style) {
-
-    var minimalTextWidth = style.minimalTextWidth
+class RowDef<STYLE: Style>(style: STYLE) : BaseDef<STYLE, RowProperties<STYLE>>(RowProperties(style), style) {
 
     fun cell(cellStyle: STYLE = style, block: CellDef<STYLE>.() -> Unit = {}) {
         properties.cells.add(CellDef(cellStyle).apply(block))
@@ -24,7 +22,7 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
 
             properties.naturalWidth += (cell.properties.width ?: cell.properties.naturalWidth) + style.verticalLineWidth
             properties.assignedWidth += (cell.properties.width ?: 0) + style.verticalLineWidth
-            properties.minimalWidth += cell.minimalWidth + style.verticalLineWidth
+            properties.minimalWidth += cell.properties.minimalWidth + style.verticalLineWidth
 
             if (cell.properties.width == null) {
                 properties.cellsWithNoWidth.add(cell)

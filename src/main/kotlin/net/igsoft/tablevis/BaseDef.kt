@@ -2,7 +2,7 @@ package net.igsoft.tablevis
 
 import net.igsoft.tablevis.visitor.CommonProperties
 
-open class DefBase<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(val properties: PROPERTIES, protected val style: STYLE) {
+open class BaseDef<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(val properties: PROPERTIES, protected val style: STYLE) {
     var leftMargin: Int
         get() = properties.leftMargin
         set(value) {
@@ -26,7 +26,6 @@ open class DefBase<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(val prope
         set(value) {
             properties.bottomMargin = value
         }
-
 
     var width: Int?
         get() = properties.width

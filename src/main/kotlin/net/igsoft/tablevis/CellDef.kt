@@ -4,9 +4,9 @@ import net.igsoft.tablevis.visitor.CellProperties
 import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
-class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE>>(CellProperties(style), style) {
+class CellDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, CellProperties<STYLE>>(CellProperties(style), style) {
     fun id(vararg ids: Any) {
-        this.ids = ids.toList()
+        properties.ids = ids.toList()
     }
 
     var text: String
@@ -18,12 +18,8 @@ class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE
     //------------------------------------------------------------------------------------------------------------------
     //Implementation code
 
-    var ids: List<Any> = emptyList()
-    internal var minimalWidth = 0
-    internal var textWidth = 0
-
     internal fun resolveWidth(imposedWidth: Boolean) {
-        minimalWidth = properties.width ?: (leftMargin + properties.minimalTextWidth + rightMargin)
+        properties.minimalWidth = properties.width ?: (leftMargin + properties.minimalTextWidth + rightMargin)
 
         if (!imposedWidth) {
             properties.width = properties.width ?: properties.naturalWidth
@@ -31,15 +27,15 @@ class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE
     }
 
     internal fun adjustTexts() {
-        textWidth = (properties.width ?: minimalWidth) - leftMargin - rightMargin
+        properties.textWidth = (properties.width ?: properties.minimalWidth) - leftMargin - rightMargin
 
         //Choose strategy of splitting text
-        properties.lines = if (textWidth < 5) {
+        properties.lines = if (properties.textWidth < 5) {
             //Cell is too small to do anything fancy...
-            properties.lines.flatMap { it.chunked(textWidth) }
+            properties.lines.flatMap { it.chunked(properties.textWidth) }
         } else {
             //Split textually
-            properties.lines.flatMap { Text.splitLineTextually(it, textWidth) }
+            properties.lines.flatMap { Text.splitLineTextually(it, properties.textWidth) }
         }
 
         properties.height = properties.height ?: max(properties.lines.size, 1)

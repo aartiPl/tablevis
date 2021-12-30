@@ -7,5 +7,7 @@ class CellProperties<STYLE : Style>(style: STYLE) : CommonProperties<STYLE>(styl
     var lines: List<String> = emptyList()
 
     var naturalTextWidth: Int = 0
-    var minimalTextWidth: Int = 0
+    var textWidth = 0
+
+    var ids: List<Any> = emptyList()
 }

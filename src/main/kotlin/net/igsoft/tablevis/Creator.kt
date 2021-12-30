@@ -19,7 +19,7 @@ object Creator {
             var colCounter = 1
 
             for(cell in row.properties.cells) {
-                cell.ids.forEach {
+                cell.properties.ids.forEach {
                     val cellSet = cells.getOrPut(it) { mutableSetOf() }
                     cellSet.add(cell)
                 }
