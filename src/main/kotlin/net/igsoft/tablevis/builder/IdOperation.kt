@@ -3,13 +3,13 @@ package net.igsoft.tablevis.builder
 import net.igsoft.tablevis.style.Style
 
 class IdOperation<STYLE : Style>(
-    private val ids: List<Any>, private val functions: MutableMap<Any, MutableSet<(Set<CellDef<STYLE>>) -> Unit>>
+    private val ids: List<Any>, private val functions: MutableMap<Any, MutableSet<(Set<CellProperties<STYLE>>) -> Unit>>
 ) {
-    private val setMinimalWidthFn: (Set<CellDef<STYLE>>) -> Unit = { cells ->
-        val maxWidth = cells.maxOf { it.properties.naturalTextWidth }
+    private val setMinimalWidthFn: (Set<CellProperties<STYLE>>) -> Unit = { cells ->
+        val maxWidth = cells.maxOf { it.naturalTextWidth }
 
         cells.forEach {
-            it.properties.width = it.leftMargin + maxWidth + it.rightMargin
+            it.width = it.leftMargin + maxWidth + it.rightMargin
         }
     }
 
@@ -25,7 +25,7 @@ class IdOperation<STYLE : Style>(
             val functionsSet = functions.getOrPut(id) { mutableSetOf() }
             functionsSet.add { cells ->
                 cells.forEach {
-                    it.properties.width = it.leftMargin + width + it.rightMargin
+                    it.width = it.leftMargin + width + it.rightMargin
                 }
             }
         }
@@ -36,7 +36,7 @@ class IdOperation<STYLE : Style>(
             val functionsSet = functions.getOrPut(id) { mutableSetOf() }
             functionsSet.add { cells ->
                 cells.forEach {
-                    it.properties.height = it.topMargin + height + it.bottomMargin
+                    it.height = it.topMargin + height + it.bottomMargin
                 }
             }
         }

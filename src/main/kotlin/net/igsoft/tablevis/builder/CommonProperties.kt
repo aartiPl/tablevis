@@ -1,8 +1,8 @@
 package net.igsoft.tablevis.builder
 
 import net.igsoft.tablevis.model.HorizontalAlignment
-import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.model.VerticalAlignment
+import net.igsoft.tablevis.style.Style
 
 abstract class CommonProperties<STYLE : Style>(val style: STYLE) {
     var leftMargin: Int = style.leftMargin
