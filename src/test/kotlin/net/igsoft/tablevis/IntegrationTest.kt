@@ -259,13 +259,12 @@ class IntegrationTest {
 
         println(printer.print(table))
 
-        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
+        assertThat(printer.print(table)).isEqualTo(
             """|+------------------+------------------+
                ||     Header 1     |     Header 2     |
                |+------------------+------------------+
                ||                 Row                 |
                |+-------------------------------------+
-               |
                |""".trimMargin()
         )
     }

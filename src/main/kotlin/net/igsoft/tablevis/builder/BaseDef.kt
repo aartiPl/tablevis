@@ -4,7 +4,7 @@ import net.igsoft.tablevis.model.HorizontalAlignment
 import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.model.VerticalAlignment
 
-open class BaseDef<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(val properties: PROPERTIES, protected val style: STYLE) {
+open class BaseDef<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(protected val properties: PROPERTIES, protected val style: STYLE) {
     var leftMargin: Int
         get() = properties.leftMargin
         set(value) {

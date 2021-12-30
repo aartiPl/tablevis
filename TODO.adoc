@@ -2,3 +2,8 @@
 
 - Justify text (both sides)
 - More layout errors handling
+- make properties protected
+- cascading properties down the stack
+- finish documentation
+- add examples
+- table should have type: Row | Border and Cell | Border

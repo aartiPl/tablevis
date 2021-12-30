@@ -10,6 +10,7 @@ import kotlin.math.max
 
 class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowProperties<STYLE>, CellProperties<STYLE>> {
     private var width = 0
+
     override fun visit(tableProperties: TableProperties<STYLE>): TableProperties<STYLE> {
         width = tableProperties.width!!
 
@@ -29,15 +30,15 @@ class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYL
                 val widths = Utils.distributeEvenly(rowProperties.cellsWithNoWidth.size, remainingSpace)
 
                 for ((cell, width) in rowProperties.cellsWithNoWidth.zip(widths)) {
-                    cell.properties.width = width
+                    cell.width = width
                 }
             } else {
                 //Distribute remaining space to cells with width already assigned
-                val weights = rowProperties.cells.map { c -> c.properties.width!! }
+                val weights = rowProperties.cells.map { c -> c.width!! }
                 val widths = Utils.distributeProportionally(rowProperties.assignedWidth, weights, remainingSpace)
 
                 for ((cell, width) in rowProperties.cells.zip(widths)) {
-                    cell.properties.width = cell.properties.width!! + width
+                    cell.width = cell.width!! + width
                 }
             }
         }

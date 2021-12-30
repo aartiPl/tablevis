@@ -46,12 +46,16 @@ class WidthResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowP
         var assignedWidth = 0
         var minimalWidth = 0
 
-        val cellsWithNoWidth = mutableListOf<CellDef<STYLE>>()
+        val cellsWithNoWidth = mutableListOf<CellProperties<STYLE>>()
 
-        val firstVerticalLineWidth = rowProperties.cells.first().properties.style.verticalLineWidth
+        var firstVerticalLineWidth = -1
 
         rowProperties.cells.forEach { cell ->
             val cellProperties = cell.applyVisitor(this)
+
+            if (firstVerticalLineWidth == -1) {
+                firstVerticalLineWidth = cellProperties.style.verticalLineWidth
+            }
 
             naturalWidth += (cellProperties.width
                 ?: cellProperties.naturalWidth) + cellProperties.style.verticalLineWidth
@@ -60,7 +64,7 @@ class WidthResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowP
             minimalWidth += cellProperties.minimalWidth + cellProperties.style.verticalLineWidth
 
             if (cellProperties.width == null) {
-                cellsWithNoWidth.add(cell)
+                cellsWithNoWidth.add(cellProperties)
             }
         }
 
