@@ -18,43 +18,37 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
         return Row(properties.width!!, properties.height!!, style, properties.cells.map { it.build() })
     }
 
-    internal var naturalWidth = 0
-    internal var assignedWidth = 0
-    internal var minimalWidth = 0
-
-    private val cellsWithNoWidth = mutableListOf<CellDef<STYLE>>()
-
     internal fun resolveWidth(imposedWidth: Boolean) {
         for (cell in properties.cells) {
             cell.resolveWidth(imposedWidth)
 
-            naturalWidth += (cell.properties.width ?: cell.properties.naturalWidth) + style.verticalLineWidth
-            assignedWidth += (cell.properties.width ?: 0) + style.verticalLineWidth
-            minimalWidth += cell.minimalWidth + style.verticalLineWidth
+            properties.naturalWidth += (cell.properties.width ?: cell.properties.naturalWidth) + style.verticalLineWidth
+            properties.assignedWidth += (cell.properties.width ?: 0) + style.verticalLineWidth
+            properties.minimalWidth += cell.minimalWidth + style.verticalLineWidth
 
             if (cell.properties.width == null) {
-                cellsWithNoWidth.add(cell)
+                properties.cellsWithNoWidth.add(cell)
             }
         }
 
-        naturalWidth += style.verticalLineWidth
-        assignedWidth += style.verticalLineWidth
-        minimalWidth += style.verticalLineWidth
+        properties.naturalWidth += style.verticalLineWidth
+        properties.assignedWidth += style.verticalLineWidth
+        properties.minimalWidth += style.verticalLineWidth
     }
 
     internal fun distributeRemainingSpace(remainingSpace: Int) {
         if (remainingSpace > 0) {
-            if (cellsWithNoWidth.isNotEmpty()) {
+            if (properties.cellsWithNoWidth.isNotEmpty()) {
                 //Distribute remaining space to cells with no width
-                val widths = Utils.distributeEvenly(cellsWithNoWidth.size, remainingSpace)
+                val widths = Utils.distributeEvenly(properties.cellsWithNoWidth.size, remainingSpace)
 
-                for ((cell, width) in cellsWithNoWidth.zip(widths)) {
+                for ((cell, width) in properties.cellsWithNoWidth.zip(widths)) {
                     cell.properties.width = width
                 }
             } else {
                 //Distribute remaining space to cells with width already assigned
                 val weights = properties.cells.map { c -> c.properties.width!! }
-                val widths = Utils.distributeProportionally(assignedWidth, weights, remainingSpace)
+                val widths = Utils.distributeProportionally(properties.assignedWidth, weights, remainingSpace)
 
                 for ((cell, width) in properties.cells.zip(widths)) {
                     cell.properties.width = cell.properties.width!! + width

@@ -5,4 +5,5 @@ import net.igsoft.tablevis.Style
 
 class RowProperties<STYLE: Style>(style: STYLE): CommonProperties<STYLE>(style) {
     val cells = mutableListOf<CellDef<STYLE>>()
+    var cellsWithNoWidth: MutableList<CellDef<STYLE>> = mutableListOf()
 }

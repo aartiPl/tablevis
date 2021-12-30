@@ -55,8 +55,8 @@ object Creator {
         for (row in table.properties.rows) {
             row.resolveWidth(imposedWidth)
 
-            naturalWidth = max(row.naturalWidth, naturalWidth)
-            minimalWidth = max(row.minimalWidth, minimalWidth)
+            naturalWidth = max(row.properties.naturalWidth, naturalWidth)
+            minimalWidth = max(row.properties.minimalWidth, minimalWidth)
         }
 
         //If the overall width is not set, set it to naturalWidth...
@@ -70,7 +70,7 @@ object Creator {
 
         //Calculate cell sizes so that they match table size
         for (row in table.properties.rows) {
-            val remainingSpace = calculatedWidth - row.assignedWidth
+            val remainingSpace = calculatedWidth - row.properties.assignedWidth
             row.distributeRemainingSpace(remainingSpace)
             row.adjustTexts()
         }
