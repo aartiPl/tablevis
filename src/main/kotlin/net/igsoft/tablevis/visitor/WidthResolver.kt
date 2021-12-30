@@ -7,7 +7,7 @@ import net.igsoft.tablevis.builder.TableProperties
 import net.igsoft.tablevis.style.Style
 import kotlin.math.max
 
-class WidthResolver<STYLE : Style> : Visitor<STYLE> {
+class WidthResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowProperties<STYLE>, CellProperties<STYLE>> {
     private var imposedWidth: Boolean = false
 
     override fun visit(tableProperties: TableProperties<STYLE>): TableProperties<STYLE> {

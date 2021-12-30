@@ -8,7 +8,7 @@ import net.igsoft.tablevis.util.Text
 import net.igsoft.tablevis.util.Utils
 import kotlin.math.max
 
-class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE> {
+class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowProperties<STYLE>, CellProperties<STYLE>> {
     private var width = 0
     override fun visit(tableProperties: TableProperties<STYLE>): TableProperties<STYLE> {
         width = tableProperties.width!!

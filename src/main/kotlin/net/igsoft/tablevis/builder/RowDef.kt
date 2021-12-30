@@ -14,5 +14,6 @@ class RowDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, RowProperties<STYLE>>
         return Row(properties.width!!, properties.height!!, style, properties.cells.map { it.build() })
     }
 
-    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(properties)
+    internal fun <TABLE_RESULT, ROW_RESULT, CELL_RESULT> applyVisitor(visitor: Visitor<STYLE, TABLE_RESULT, ROW_RESULT, CELL_RESULT>) =
+        visitor.visit(properties)
 }

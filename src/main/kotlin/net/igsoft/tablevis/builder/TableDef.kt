@@ -10,5 +10,6 @@ class TableDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, TableProperties<STY
 
     fun forId(vararg id: Any): IdOperation<STYLE> = IdOperation(id.toList(), properties.functions)
 
-    internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(properties)
+    internal fun <TABLE_RESULT, ROW_RESULT, CELL_RESULT> applyVisitor(visitor: Visitor<STYLE, TABLE_RESULT, ROW_RESULT, CELL_RESULT>) =
+        visitor.visit(properties)
 }

@@ -4,10 +4,7 @@ import net.igsoft.tablevis.builder.TableDef
 import net.igsoft.tablevis.model.Table
 import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.style.StyleSet
-import net.igsoft.tablevis.visitor.BasePropertiesResolver
-import net.igsoft.tablevis.visitor.CellIdResolver
-import net.igsoft.tablevis.visitor.TextAdjustingResolver
-import net.igsoft.tablevis.visitor.WidthResolver
+import net.igsoft.tablevis.visitor.*
 
 class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(
     private val styleSet: STYLE_SET, private val block: TableDef<STYLE>.() -> Unit = {}
@@ -30,7 +27,7 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(
         }
 
         //Calculate widths
-        val tableProperties = table.applyVisitor(WidthResolver())
+        table.applyVisitor(WidthResolver())
 
         //Calculate cell sizes so that they match table size
         table.applyVisitor(TextAdjustingResolver())
@@ -38,7 +35,7 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(
         //TODO: calculate height
         table.properties.height = table.properties.height ?: 0
 
-        return Table(styleSet, tableProperties.width!!, table.properties.height!!, table.properties.rows.map { it.build() })
+        return table.applyVisitor(BuilderResolver(styleSet))
     }
 
 //        //Calculate row height
