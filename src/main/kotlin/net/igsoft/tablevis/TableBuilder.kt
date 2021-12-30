@@ -9,10 +9,12 @@ import net.igsoft.tablevis.visitor.BasePropertiesResolver
 import net.igsoft.tablevis.visitor.TextAdjustingResolver
 import net.igsoft.tablevis.visitor.WidthResolver
 
-object Creator {
-    fun <STYLE : Style, STYLE_SET : StyleSet<STYLE>> create(
-        styleSet: STYLE_SET, table: TableDef<STYLE>
-    ): Table<STYLE_SET> {
+class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(
+    private val styleSet: STYLE_SET, private val block: TableDef<STYLE>.() -> Unit = {}
+) {
+    fun build(): Table<STYLE_SET> {
+        val table = TableDef(styleSet.baseStyle).apply(block)
+
         //Make sure there is at least one cell in a row...
         for (row in table.properties.rows) {
             if (row.properties.cells.isEmpty()) {

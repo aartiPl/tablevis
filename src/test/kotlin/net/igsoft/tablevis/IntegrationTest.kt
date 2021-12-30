@@ -17,7 +17,7 @@ class IntegrationTest {
 
     @Test
     fun `Nothing defined`() {
-        val table = Table.using(styleSet)
+        val table = TableBuilder(styleSet).build()
 
         println(printer.print(table))
 
@@ -26,9 +26,9 @@ class IntegrationTest {
 
     @Test
     fun `Nothing defined, but empty header`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             row(styleSet.header) {}
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -42,7 +42,7 @@ class IntegrationTest {
 
     @Test
     fun `Header, row and footer`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             width = 40
             //alignRight()
 
@@ -84,7 +84,7 @@ class IntegrationTest {
                     text = "page 1/1"
                 }
             }
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -104,7 +104,7 @@ class IntegrationTest {
 
     @Test
     fun `Header, rows and footer - narrow`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             width = 21
             //alignRight()
 
@@ -158,7 +158,7 @@ class IntegrationTest {
             }
 
             forId("firstRow").setHeight(5)
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -191,7 +191,7 @@ class IntegrationTest {
 
     @Test
     fun `Splitting text into rows`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             width = 29
 
             row {
@@ -199,7 +199,7 @@ class IntegrationTest {
                     text = LOREM_IPSUM_TEXT
                 }
             }
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -239,9 +239,9 @@ class IntegrationTest {
     @Test
     fun `Nothing defined, but empty header with windows lineSeparator`() {
         val style = SimpleTextStyleSet(lineSeparator = "\r\n")
-        val table = Table.using(style) {
+        val table = TableBuilder(style) {
             row(style.header) { }
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -250,7 +250,7 @@ class IntegrationTest {
 
     @Test
     fun `Id on table with empty header`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             row(styleSet.header) {
                 cell {
                     id("headerCell")
@@ -258,7 +258,7 @@ class IntegrationTest {
             }
 
             forId("headerCell").setWidth(5)
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -272,7 +272,7 @@ class IntegrationTest {
 
     @Test
     fun `Set min width on header and rows`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             row(styleSet.header) {
                 cell {
                     id("col1")
@@ -307,7 +307,7 @@ class IntegrationTest {
             }
 
             forId("col1").setMinimalWidth()
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -326,7 +326,7 @@ class IntegrationTest {
     @Test
     fun `Width shorter than it is possible to put texts`() {
         assertThat {
-            Table.using(styleSet) {
+            TableBuilder(styleSet) {
                 width = 6
 
                 row {
@@ -346,13 +346,13 @@ class IntegrationTest {
                         text = "Dolny wiersz"
                     }
                 }
-            }
+            }.build()
         }.isFailure().isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun `Simple table with width set`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             width = 35
 
             row {
@@ -373,7 +373,7 @@ class IntegrationTest {
                     text = "Dolny wiersz"
                 }
             }
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -390,7 +390,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             row {
                 cell {
                     text = "Tekst pierwszy"
@@ -409,7 +409,7 @@ class IntegrationTest {
                     text = "Dolny wiersz"
                 }
             }
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -425,7 +425,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             row {
                 cell {
                     text = "Tekst pierwszy"
@@ -444,7 +444,7 @@ class IntegrationTest {
                     text = "Dolny wiersz"
                 }
             }
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -464,7 +464,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text1`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             row {
                 cell {
                     text = "Tekst pierwszy"
@@ -484,7 +484,7 @@ class IntegrationTest {
                     text = "Dolny wiersz"
                 }
             }
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -507,7 +507,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text and multiple aligned rows`() {
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             row {
                 cell {
                     id("left")
@@ -546,7 +546,7 @@ class IntegrationTest {
 
             forId("central").setMinimalWidth()
             forId("left").setMinimalWidth()
-        }
+        }.build()
 
         println(printer.print(table))
 
@@ -574,7 +574,7 @@ class IntegrationTest {
         //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
 
         //TODO: no-borders style
-        val table = Table.using(styleSet) {
+        val table = TableBuilder(styleSet) {
             width = 110
             row {
                 cell {
@@ -622,7 +622,7 @@ class IntegrationTest {
 
             //col-3 and other identifiers are added automatically
             forId(1, 2, "col-3").setMinimalWidth()
-        }
+        }.build()
 
         println(printer.print(table))
 
