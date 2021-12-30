@@ -47,7 +47,7 @@ object Creator {
         }
 
         //Calculate widths
-        val imposedWidth = (table.width != null)
+        val imposedWidth = (table.properties.width != null)
 
         var naturalWidth = 0
         var minimalWidth = 0
@@ -60,7 +60,7 @@ object Creator {
         }
 
         //If the overall width is not set, set it to naturalWidth...
-        val calculatedWidth = table.width ?: naturalWidth
+        val calculatedWidth = table.properties.width ?: naturalWidth
 
         println("Calculated values: width=$calculatedWidth, naturalWidth=$naturalWidth, minimalWidth=$minimalWidth")
 
@@ -75,9 +75,9 @@ object Creator {
             row.adjustTexts()
         }
 
-        table.height = table.height ?: 0
+        table.properties.height = table.properties.height ?: 0
 
-        return Table(styleSet, calculatedWidth, table.height!!, table.properties.rows.map { it.build() })
+        return Table(styleSet, calculatedWidth, table.properties.height!!, table.properties.rows.map { it.build() })
     }
 
 //    fun build(): TextTable {

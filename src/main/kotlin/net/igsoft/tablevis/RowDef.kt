@@ -6,9 +6,6 @@ import kotlin.math.max
 
 class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(RowProperties(style), style) {
 
-    private var width: Int? = null
-    private var height: Int? = null
-
     var minimalTextWidth = style.minimalTextWidth
 
     fun cell(cellStyle: STYLE = style, block: CellDef<STYLE>.() -> Unit = {}) {
@@ -18,7 +15,7 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
     //------------------------------------------------------------------------------------------------------------------
 
     internal fun build(): Row {
-        return Row(width!!, height!!, style, properties.cells.map { it.build() })
+        return Row(properties.width!!, properties.height!!, style, properties.cells.map { it.build() })
     }
 
     internal var naturalWidth = 0
@@ -31,11 +28,11 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
         for (cell in properties.cells) {
             cell.resolveWidth(imposedWidth)
 
-            naturalWidth += (cell.width ?: cell.properties.naturalWidth) + style.verticalLineWidth
-            assignedWidth += (cell.width ?: 0) + style.verticalLineWidth
+            naturalWidth += (cell.properties.width ?: cell.properties.naturalWidth) + style.verticalLineWidth
+            assignedWidth += (cell.properties.width ?: 0) + style.verticalLineWidth
             minimalWidth += cell.minimalWidth + style.verticalLineWidth
 
-            if (cell.width == null) {
+            if (cell.properties.width == null) {
                 cellsWithNoWidth.add(cell)
             }
         }
@@ -52,15 +49,15 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
                 val widths = Utils.distributeEvenly(cellsWithNoWidth.size, remainingSpace)
 
                 for ((cell, width) in cellsWithNoWidth.zip(widths)) {
-                    cell.width = width
+                    cell.properties.width = width
                 }
             } else {
                 //Distribute remaining space to cells with width already assigned
-                val weights = properties.cells.map { c -> c.width!! }
+                val weights = properties.cells.map { c -> c.properties.width!! }
                 val widths = Utils.distributeProportionally(assignedWidth, weights, remainingSpace)
 
                 for ((cell, width) in properties.cells.zip(widths)) {
-                    cell.width = cell.width!! + width
+                    cell.properties.width = cell.properties.width!! + width
                 }
             }
         }
@@ -73,12 +70,12 @@ class RowDef<STYLE: Style>(style: STYLE) : DefBase<STYLE, RowProperties<STYLE>>(
 
         for (cell in properties.cells) {
             cell.adjustTexts()
-            maxHeight = max(maxHeight, cell.height!!)
-            calculatedWidth += cell.width!! + style.verticalLineWidth
+            maxHeight = max(maxHeight, cell.properties.height!!)
+            calculatedWidth += cell.properties.width!! + style.verticalLineWidth
         }
 
-        height = height?: maxHeight
-        width = calculatedWidth
+        properties.height = properties.height?: maxHeight
+        properties.width = calculatedWidth
     }
 
     internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(properties)

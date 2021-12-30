@@ -5,9 +5,6 @@ import net.igsoft.tablevis.visitor.Visitor
 import kotlin.math.max
 
 class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE>>(CellProperties(style), style) {
-    var width: Int? = null
-    var height: Int? = null
-
     fun id(vararg ids: Any) {
         this.ids = ids.toList()
     }
@@ -26,15 +23,15 @@ class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE
     internal var textWidth = 0
 
     internal fun resolveWidth(imposedWidth: Boolean) {
-        minimalWidth = width ?: (leftMargin + properties.minimalTextWidth + rightMargin)
+        minimalWidth = properties.width ?: (leftMargin + properties.minimalTextWidth + rightMargin)
 
         if (!imposedWidth) {
-            width = width ?: properties.naturalWidth
+            properties.width = properties.width ?: properties.naturalWidth
         }
     }
 
     internal fun adjustTexts() {
-        textWidth = (width ?: minimalWidth) - leftMargin - rightMargin
+        textWidth = (properties.width ?: minimalWidth) - leftMargin - rightMargin
 
         //Choose strategy of splitting text
         properties.lines = if (textWidth < 5) {
@@ -45,7 +42,7 @@ class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE
             properties.lines.flatMap { Text.splitLineTextually(it, textWidth) }
         }
 
-        height = height ?: max(properties.lines.size, 1)
+        properties.height = properties.height ?: max(properties.lines.size, 1)
 
 //        if (cell.horizontalAlignment.contains(HorizontalAlignment.Justified)) {
 //            val justificationThreshold = cell.cellTextWidth.get * 4 / 5)
@@ -57,8 +54,8 @@ class CellDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, CellProperties<STYLE
     internal fun build(): Cell {
 
         return Cell(
-            width!!,
-            height!!,
+            properties.width!!,
+            properties.height!!,
             leftMargin,
             topMargin,
             rightMargin,

@@ -27,6 +27,19 @@ open class DefBase<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(val prope
             properties.bottomMargin = value
         }
 
+
+    var width: Int?
+        get() = properties.width
+        set(value) {
+            properties.width = value
+        }
+
+    var height: Int?
+        get() = properties.height
+        set(value) {
+            properties.height = value
+        }
+
     fun alignCenter() = apply {
         properties.horizontalAlignment = HorizontalAlignment.Center
     }

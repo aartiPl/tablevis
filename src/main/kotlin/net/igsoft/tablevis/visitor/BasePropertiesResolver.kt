@@ -4,30 +4,7 @@ import net.igsoft.tablevis.Style
 import net.igsoft.tablevis.Text
 
 class BasePropertiesResolver<STYLE : Style> : Visitor<STYLE> {
-    override fun visit(tableProperties: TableProperties<STYLE>): TableProperties<STYLE> {
-        var naturalWidth = 0
-
-        tableProperties.rows.forEach {
-            val rowProperties = it.applyVisitor(this)
-            naturalWidth = Math.max(naturalWidth, rowProperties.naturalWidth)
-        }
-
-        return tableProperties
-    }
-
-    override fun visit(rowProperties: RowProperties<STYLE>): RowProperties<STYLE> {
-        var naturalWidth = rowProperties.cells.first().properties.style.verticalLineWidth
-
-        rowProperties.cells.forEach {
-            val cellProperties = it.applyVisitor(this)
-            naturalWidth += cellProperties.naturalWidth + cellProperties.style.verticalLineWidth
-        }
-
-        rowProperties.naturalWidth = naturalWidth
-
-        return rowProperties
-    }
-
+    // Only cell can be resolved in first turn - other natural sizes depends on later stages of processing
     override fun visit(cellProperties: CellProperties<STYLE>): CellProperties<STYLE> {
         if (cellProperties.text.isEmpty()) {
             cellProperties.lines = listOf()

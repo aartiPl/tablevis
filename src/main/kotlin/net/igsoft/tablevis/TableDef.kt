@@ -6,9 +6,6 @@ import net.igsoft.tablevis.visitor.Visitor
 class TableDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, TableProperties<STYLE>>(TableProperties(style), style){
     var minimalTextWidth = style.minimalTextWidth
 
-    var width: Int? = null
-    var height: Int? = null
-
     fun row(rowStyle: STYLE = style, block: RowDef<STYLE>.() -> Unit = {}) {
         properties.rows.add(RowDef(rowStyle).apply(block))
     }

@@ -14,4 +14,7 @@ abstract class CommonProperties<STYLE: Style>(val style: STYLE) {
     var verticalAlignment: VerticalAlignment = style.verticalAlignment
 
     var naturalWidth: Int = 0
+
+    var width: Int? = null
+    var height: Int? = null
 }
