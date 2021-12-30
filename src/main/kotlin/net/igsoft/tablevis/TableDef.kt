@@ -4,8 +4,6 @@ import net.igsoft.tablevis.visitor.TableProperties
 import net.igsoft.tablevis.visitor.Visitor
 
 class TableDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, TableProperties<STYLE>>(TableProperties(style), style){
-    val functions = mutableMapOf<Any, MutableSet<(Set<CellDef<STYLE>>) -> Unit>>()
-
     var minimalTextWidth = style.minimalTextWidth
 
     var width: Int? = null
@@ -15,7 +13,7 @@ class TableDef<STYLE : Style>(style: STYLE) : DefBase<STYLE, TableProperties<STY
         properties.rows.add(RowDef(rowStyle).apply(block))
     }
 
-    fun forId(vararg id: Any): IdOperation<STYLE> = IdOperation(id.toList(), functions)
+    fun forId(vararg id: Any): IdOperation<STYLE> = IdOperation(id.toList(), properties.functions)
 
     internal fun applyVisitor(visitor: Visitor<STYLE>) = visitor.visit(properties)
 }

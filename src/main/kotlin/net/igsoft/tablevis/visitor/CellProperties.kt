@@ -8,6 +8,4 @@ class CellProperties<STYLE : Style>(style: STYLE) : CommonProperties<STYLE>(styl
 
     var naturalTextWidth: Int = 0
     var minimalTextWidth: Int = 0
-
-    var naturalWidth: Int = 0
 }

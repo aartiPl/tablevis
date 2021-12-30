@@ -1,6 +1,6 @@
 package net.igsoft.tablevis
 
-import net.igsoft.tablevis.visitor.BaseCellPropertiesResolver
+import net.igsoft.tablevis.visitor.BasePropertiesResolver
 import kotlin.math.max
 
 object Creator {
@@ -37,12 +37,12 @@ object Creator {
         }
 
         //Do minimal calculations on texts and resolution of cells...
-        table.applyVisitor(BaseCellPropertiesResolver())
+        table.applyVisitor(BasePropertiesResolver())
 
         //Execute deferred functions...
         for (entry in cells.entries) {
             val cellsToApply = entry.value
-            val functionsToExecute = table.functions[entry.key] ?: emptySet()
+            val functionsToExecute = table.properties.functions[entry.key] ?: emptySet()
             functionsToExecute.forEach { it(cellsToApply) }
         }
 
