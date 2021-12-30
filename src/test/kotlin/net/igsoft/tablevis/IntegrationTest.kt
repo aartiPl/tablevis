@@ -4,12 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
-import net.igsoft.tablevis.model.Table
+import net.igsoft.tablevis.printer.TextTablePrinter
 import net.igsoft.tablevis.style.BoxTextStyleSet
 import net.igsoft.tablevis.style.SimpleTextStyleSet
-import net.igsoft.tablevis.printer.TextTablePrinter
 import org.junit.jupiter.api.Test
-import java.lang.IllegalArgumentException
 
 class IntegrationTest {
     private val styleSet = BoxTextStyleSet(lineSeparator = "\n")
@@ -27,7 +25,7 @@ class IntegrationTest {
     @Test
     fun `Nothing defined, but empty header`() {
         val table = TableBuilder(styleSet) {
-            row(styleSet.header) {}
+            row(styleSet.header)
         }.build()
 
         println(printer.print(table))
@@ -203,7 +201,7 @@ class IntegrationTest {
 
         println(printer.print(table))
 
-        assertThat(printer.print(table)).isEqualTo(
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
             """|┌───────────────────────────┐
                |│ Lorem Ipsum is simply     │
                |│ dummy text of the printi- │
@@ -325,7 +323,7 @@ class IntegrationTest {
 
     @Test
     fun `Width shorter than it is possible to put texts`() {
-        assertThat {
+        @Suppress("SpellCheckingInspection") assertThat {
             TableBuilder(styleSet) {
                 width = 6
 
@@ -352,6 +350,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table with width set`() {
+        @Suppress("SpellCheckingInspection")
         val table = TableBuilder(styleSet) {
             width = 35
 
@@ -377,19 +376,20 @@ class IntegrationTest {
 
         println(printer.print(table))
 
-        assertThat(printer.print(table)).isEqualTo(
-                """|┌──────────┬──────────┬───────────┐
-                   |│ Tekst    │ Tekst    │ Tekst tr- │
-                   |│ pierwszy │ drugi    │ zeci      │
-                   |├──────────┴──────────┴───────────┤
-                   |│          Dolny wiersz           │
-                   |└─────────────────────────────────┘
-                   |""".trimMargin()
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
+            """|┌──────────┬──────────┬───────────┐
+               |│ Tekst    │ Tekst    │ Tekst tr- │
+               |│ pierwszy │ drugi    │ zeci      │
+               |├──────────┴──────────┴───────────┤
+               |│          Dolny wiersz           │
+               |└─────────────────────────────────┘
+               |""".trimMargin()
         )
     }
 
     @Test
     fun `Simple table without width set`() {
+        @Suppress("SpellCheckingInspection")
         val table = TableBuilder(styleSet) {
             row {
                 cell {
@@ -413,6 +413,7 @@ class IntegrationTest {
 
         println(printer.print(table))
 
+        @Suppress("SpellCheckingInspection")
         assertThat(printer.print(table)).isEqualTo(
             """|┌────────────────┬─────────────┬──────────────┐
                |│ Tekst pierwszy │ Tekst drugi │ Tekst trzeci │
@@ -425,6 +426,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text`() {
+        @Suppress("SpellCheckingInspection")
         val table = TableBuilder(styleSet) {
             row {
                 cell {
@@ -449,7 +451,7 @@ class IntegrationTest {
         println(printer.print(table))
 
 
-        assertThat(printer.print(table)).isEqualTo(
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
             """|┌────────────────┬────────────────────┬──────────────┐
                |│ Tekst pierwszy │ Tekst drugi        │ Tekst trzeci │
                |│                │ Linia 1            │              │
@@ -464,6 +466,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text1`() {
+        @Suppress("SpellCheckingInspection")
         val table = TableBuilder(styleSet) {
             row {
                 cell {
@@ -488,14 +491,14 @@ class IntegrationTest {
 
         println(printer.print(table))
 
-        assertThat(printer.print(table)).isEqualTo(
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
             """|┌────────────────┬──────────────────────────────────────┬─────────────┐
                |│ Tekst pierwszy │          Rachunek bankowy:           │ Text trzeci │
-               |│                │ CRK ProEcclesia SCh - "ProCracovia"  │             │
-               |│                │           ul. Puławska 114           │             │
+               |│                │ Jakaś świetna firma - "Krótka nazwa" │             │
+               |│                │           ul. Zielona 114            │             │
                |│                │           02-620 Warszawa            │             │
                |│                │                                      │             │
-               |│                │ PLN 78 1240 1112 1111 0010 0909 5620 │             │
+               |│                │ PLN 78 1280 1112 1341 1210 0909 5620 │             │
                |│                │            Bank Pekao SA             │             │
                |│                │       VIII odział w Warszawie        │             │
                |├────────────────┴──────────────────────────────────────┴─────────────┤
@@ -507,6 +510,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple table without width set and with multiline text and multiple aligned rows`() {
+        @Suppress("SpellCheckingInspection")
         val table = TableBuilder(styleSet) {
             row {
                 cell {
@@ -550,14 +554,14 @@ class IntegrationTest {
 
         println(printer.print(table))
 
-        assertThat(printer.print(table)).isEqualTo(
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
             """|┌────────────────┬──────────────────────────────────────┬─────────────┐
                |│ Tekst pierwszy │          Rachunek bankowy:           │ Text trzeci │
-               |│                │ CRK ProEcclesia SCh - "ProCracovia"  │             │
-               |│                │           ul. Puławska 114           │             │
+               |│                │ Jakaś świetna firma - "Krótka nazwa" │             │
+               |│                │           ul. Zielona 114            │             │
                |│                │           02-620 Warszawa            │             │
                |│                │                                      │             │
-               |│                │ PLN 78 1240 1112 1111 0010 0909 5620 │             │
+               |│                │ PLN 78 1280 1112 1341 1210 0909 5620 │             │
                |│                │            Bank Pekao SA             │             │
                |│                │       VIII odział w Warszawie        │             │
                |├────────────────┼──────────────────────────────────────┼─────────────┤
@@ -626,7 +630,7 @@ class IntegrationTest {
 
         println(printer.print(table))
 
-        assertThat(printer.print(table)).isEqualTo(
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
             """|┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
                |│ Lorem Ipsum is simply dummy text of the printing and typesetting industry.                                 │
                |│                                                                                                            │
@@ -662,13 +666,15 @@ class IntegrationTest {
                |├──┴───────────────────┴───┴─────────────────────────────────────────────────────────────────────────────────┤
                |│                                                                                                            │
                |└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-               |""".trimMargin())
+               |""".trimMargin()
+        )
     }
 
+    @Suppress("SpellCheckingInspection")
     companion object {
         //@formatter:off
-        private const val BANK_ACCOUNT_TEXT = "Rachunek bankowy:\nCRK ProEcclesia SCh - \"ProCracovia\"\nul. Puławska 114\n" +
-                "02-620 Warszawa\n\nPLN 78 1240 1112 1111 0010 0909 5620\nBank Pekao SA\nVIII odział w Warszawie"
+        private const val BANK_ACCOUNT_TEXT = "Rachunek bankowy:\nJakaś świetna firma - \"Krótka nazwa\"\nul. Zielona 114\n" +
+                "02-620 Warszawa\n\nPLN 78 1280 1112 1341 1210 0909 5620\nBank Pekao SA\nVIII odział w Warszawie"
 
         private const val LOREM_IPSUM_TEXT = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. \n\n\t" +
                 "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took " +
