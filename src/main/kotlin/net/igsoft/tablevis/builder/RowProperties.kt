@@ -1,7 +1,6 @@
-package net.igsoft.tablevis.visitor
+package net.igsoft.tablevis.builder
 
-import net.igsoft.tablevis.CellDef
-import net.igsoft.tablevis.Style
+import net.igsoft.tablevis.style.Style
 
 class RowProperties<STYLE: Style>(style: STYLE): CommonProperties<STYLE>(style) {
     val cells = mutableListOf<CellDef<STYLE>>()

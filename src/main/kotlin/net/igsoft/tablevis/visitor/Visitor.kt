@@ -1,6 +1,9 @@
 package net.igsoft.tablevis.visitor
 
-import net.igsoft.tablevis.*
+import net.igsoft.tablevis.builder.CellProperties
+import net.igsoft.tablevis.builder.RowProperties
+import net.igsoft.tablevis.builder.TableProperties
+import net.igsoft.tablevis.style.Style
 
 interface Visitor<STYLE : Style> {
     fun visit(tableProperties: TableProperties<STYLE>): TableProperties<STYLE> {

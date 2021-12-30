@@ -4,9 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
-import net.igsoft.tablevis.text.BoxTextStyleSet
-import net.igsoft.tablevis.text.SimpleTextStyleSet
-import net.igsoft.tablevis.text.TextTablePrinter
+import net.igsoft.tablevis.model.Table
+import net.igsoft.tablevis.style.BoxTextStyleSet
+import net.igsoft.tablevis.style.SimpleTextStyleSet
+import net.igsoft.tablevis.printer.TextTablePrinter
 import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
 

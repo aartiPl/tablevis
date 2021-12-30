@@ -1,6 +1,8 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.builder
 
-import net.igsoft.tablevis.visitor.CommonProperties
+import net.igsoft.tablevis.model.HorizontalAlignment
+import net.igsoft.tablevis.style.Style
+import net.igsoft.tablevis.model.VerticalAlignment
 
 open class BaseDef<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(val properties: PROPERTIES, protected val style: STYLE) {
     var leftMargin: Int

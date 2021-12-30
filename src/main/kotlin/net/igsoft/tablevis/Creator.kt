@@ -1,5 +1,10 @@
 package net.igsoft.tablevis
 
+import net.igsoft.tablevis.builder.CellDef
+import net.igsoft.tablevis.builder.TableDef
+import net.igsoft.tablevis.model.Table
+import net.igsoft.tablevis.style.Style
+import net.igsoft.tablevis.style.StyleSet
 import net.igsoft.tablevis.visitor.BasePropertiesResolver
 import net.igsoft.tablevis.visitor.TextAdjustingResolver
 import net.igsoft.tablevis.visitor.WidthResolver

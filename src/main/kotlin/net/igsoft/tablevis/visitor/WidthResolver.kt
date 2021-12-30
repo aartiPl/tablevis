@@ -1,6 +1,10 @@
 package net.igsoft.tablevis.visitor
 
-import net.igsoft.tablevis.*
+import net.igsoft.tablevis.builder.CellDef
+import net.igsoft.tablevis.builder.CellProperties
+import net.igsoft.tablevis.builder.RowProperties
+import net.igsoft.tablevis.builder.TableProperties
+import net.igsoft.tablevis.style.Style
 import kotlin.math.max
 
 class WidthResolver<STYLE : Style> : Visitor<STYLE> {

@@ -1,4 +1,4 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.model
 
 data class Cell(
     val width: Int,

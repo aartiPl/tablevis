@@ -1,9 +1,11 @@
-package net.igsoft.tablevis.text
+package net.igsoft.tablevis.printer
 
-import net.igsoft.tablevis.HorizontalAlignment
-import net.igsoft.tablevis.Printer
-import net.igsoft.tablevis.Row
-import net.igsoft.tablevis.Table
+import net.igsoft.tablevis.model.HorizontalAlignment
+import net.igsoft.tablevis.model.Row
+import net.igsoft.tablevis.model.Table
+import net.igsoft.tablevis.style.IntersectionMatrix
+import net.igsoft.tablevis.style.TextStyle
+import net.igsoft.tablevis.style.TextStyleSet
 import org.apache.commons.lang3.StringUtils
 
 class TextTablePrinter : Printer<Table<out TextStyleSet<TextStyle>>> {

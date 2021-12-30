@@ -1,4 +1,6 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.builder
+
+import net.igsoft.tablevis.style.Style
 
 class IdOperation<STYLE : Style>(
     private val ids: List<Any>, private val functions: MutableMap<Any, MutableSet<(Set<CellDef<STYLE>>) -> Unit>>

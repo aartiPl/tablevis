@@ -1,4 +1,7 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.style
+
+import net.igsoft.tablevis.model.HorizontalAlignment
+import net.igsoft.tablevis.model.VerticalAlignment
 
 interface Style {
     val layer: Int

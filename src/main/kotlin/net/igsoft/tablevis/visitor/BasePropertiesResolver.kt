@@ -1,7 +1,8 @@
 package net.igsoft.tablevis.visitor
 
-import net.igsoft.tablevis.Style
-import net.igsoft.tablevis.Text
+import net.igsoft.tablevis.builder.CellProperties
+import net.igsoft.tablevis.style.Style
+import net.igsoft.tablevis.util.Text
 
 class BasePropertiesResolver<STYLE : Style> : Visitor<STYLE> {
     // Only cell can be resolved in first turn - other natural sizes depends on later stages of processing

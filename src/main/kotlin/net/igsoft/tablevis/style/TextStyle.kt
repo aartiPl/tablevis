@@ -1,8 +1,7 @@
-package net.igsoft.tablevis.text
+package net.igsoft.tablevis.style
 
-import net.igsoft.tablevis.HorizontalAlignment
-import net.igsoft.tablevis.Style
-import net.igsoft.tablevis.VerticalAlignment
+import net.igsoft.tablevis.model.HorizontalAlignment
+import net.igsoft.tablevis.model.VerticalAlignment
 
 data class TextStyle(
     val horizontalLine: String,

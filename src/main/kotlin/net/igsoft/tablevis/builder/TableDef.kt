@@ -1,6 +1,6 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.builder
 
-import net.igsoft.tablevis.visitor.TableProperties
+import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.visitor.Visitor
 
 class TableDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, TableProperties<STYLE>>(TableProperties(style), style) {

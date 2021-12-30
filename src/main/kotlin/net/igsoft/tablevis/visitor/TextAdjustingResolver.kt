@@ -1,8 +1,11 @@
 package net.igsoft.tablevis.visitor
 
-import net.igsoft.tablevis.Style
-import net.igsoft.tablevis.Text
-import net.igsoft.tablevis.Utils
+import net.igsoft.tablevis.builder.CellProperties
+import net.igsoft.tablevis.builder.RowProperties
+import net.igsoft.tablevis.style.Style
+import net.igsoft.tablevis.builder.TableProperties
+import net.igsoft.tablevis.util.Text
+import net.igsoft.tablevis.util.Utils
 import kotlin.math.max
 
 class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE> {

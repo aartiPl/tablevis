@@ -1,6 +1,6 @@
-package net.igsoft.tablevis.visitor
+package net.igsoft.tablevis.builder
 
-import net.igsoft.tablevis.Style
+import net.igsoft.tablevis.style.Style
 
 class CellProperties<STYLE : Style>(style: STYLE) : CommonProperties<STYLE>(style) {
     var text: String = ""

@@ -1,6 +1,7 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.builder
 
-import net.igsoft.tablevis.visitor.CellProperties
+import net.igsoft.tablevis.model.Cell
+import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.visitor.Visitor
 
 class CellDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, CellProperties<STYLE>>(CellProperties(style), style) {

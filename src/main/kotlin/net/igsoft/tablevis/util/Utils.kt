@@ -1,4 +1,4 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.util
 
 //
 object Utils {

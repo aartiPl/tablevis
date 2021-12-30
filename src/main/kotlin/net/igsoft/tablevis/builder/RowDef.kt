@@ -1,6 +1,7 @@
-package net.igsoft.tablevis
+package net.igsoft.tablevis.builder
 
-import net.igsoft.tablevis.visitor.RowProperties
+import net.igsoft.tablevis.model.Row
+import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.visitor.Visitor
 
 class RowDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, RowProperties<STYLE>>(RowProperties(style), style) {
