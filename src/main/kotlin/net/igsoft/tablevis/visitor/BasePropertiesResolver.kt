@@ -29,7 +29,7 @@ class BasePropertiesResolver<STYLE : Style> :
         if (cellProperties.text.isEmpty()) {
             cellProperties.lines = listOf()
             cellProperties.naturalTextWidth = 0
-            cellProperties.minimalTextWidth = 0
+            cellProperties.commonStyle.minimalTextWidth = 0
         } else {
             val lines = Text.resolveTabs(cellProperties.text).lines()
             cellProperties.lines = lines
@@ -38,7 +38,7 @@ class BasePropertiesResolver<STYLE : Style> :
         }
 
         cellProperties.naturalWidth =
-            cellProperties.leftMargin + cellProperties.naturalTextWidth + cellProperties.rightMargin
+            cellProperties.commonStyle.leftMargin + cellProperties.naturalTextWidth + cellProperties.commonStyle.rightMargin
 
         return cellProperties
     }

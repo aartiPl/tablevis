@@ -9,7 +9,7 @@ class IdOperation<STYLE : Style>(
         val maxWidth = cells.maxOf { it.naturalTextWidth }
 
         cells.forEach {
-            it.width = it.leftMargin + maxWidth + it.rightMargin
+            it.width = it.commonStyle.leftMargin + maxWidth + it.commonStyle.rightMargin
         }
     }
 
@@ -25,7 +25,7 @@ class IdOperation<STYLE : Style>(
             val functionsSet = functions.getOrPut(id) { mutableSetOf() }
             functionsSet.add { cells ->
                 cells.forEach {
-                    it.width = it.leftMargin + width + it.rightMargin
+                    it.width = it.commonStyle.leftMargin + width + it.commonStyle.rightMargin
                 }
             }
         }
@@ -36,7 +36,7 @@ class IdOperation<STYLE : Style>(
             val functionsSet = functions.getOrPut(id) { mutableSetOf() }
             functionsSet.add { cells ->
                 cells.forEach {
-                    it.height = it.topMargin + height + it.bottomMargin
+                    it.height = it.commonStyle.topMargin + height + it.commonStyle.bottomMargin
                 }
             }
         }

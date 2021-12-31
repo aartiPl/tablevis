@@ -3,9 +3,11 @@ package net.igsoft.tablevis.builder
 import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.visitor.Visitor
 
-class TableDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, TableProperties<STYLE>>(TableProperties(style), style) {
-    fun row(rowStyle: STYLE = style, block: RowDef<STYLE>.() -> Unit = {}) {
-        properties.rows.add(RowDef(rowStyle).apply(block))
+class TableDef<STYLE : Style>(commonStyle: CommonStyle<STYLE>) :
+    BaseDef<STYLE, TableProperties<STYLE>>(TableProperties(commonStyle)) {
+    fun row(rowStyle: STYLE? = null, block: RowDef<STYLE>.() -> Unit = {}) {
+        val commonStyle: CommonStyle<STYLE> = if (rowStyle == null) properties.commonStyle else CommonStyle(rowStyle)
+        properties.rows.add(RowDef(commonStyle).apply(block))
     }
 
     fun forId(vararg id: Any): IdOperation<STYLE> = IdOperation(id.toList(), properties.functions)

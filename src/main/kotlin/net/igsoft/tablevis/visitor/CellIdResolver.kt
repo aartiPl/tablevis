@@ -26,7 +26,7 @@ class CellIdResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, Row
     override fun visit(rowProperties: RowProperties<STYLE>): RowProperties<STYLE> {
         //Make sure there is at least one cell in a row...
         if (rowProperties.cells.isEmpty()) {
-            rowProperties.cells.add(CellDef(rowProperties.style))
+            rowProperties.cells.add(CellDef(rowProperties.commonStyle))
         }
 
         val rowCellSet = cellsPerId.getOrPut("row-$rowCounter") { mutableSetOf() }

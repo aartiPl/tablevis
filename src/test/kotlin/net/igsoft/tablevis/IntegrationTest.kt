@@ -235,8 +235,34 @@ class IntegrationTest {
     }
 
     @Test
-    fun `Nothing defined, but empty header with windows lineSeparator`() {
+    fun `Simple header with windows line separator`() {
         val style = SimpleTextStyleSet(lineSeparator = "\r\n")
+        val table = TableBuilder(style) {
+            center()
+            width = 39
+
+            row(style.header) {
+                cell {
+                    center()
+                    text = "Header 1"
+                }
+            }
+        }.build()
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            //@formatter:off
+            "+~==~==~==~==~==~==~==~==~==~==~==~==~+\r\n" +
+            "*              Header 1               *\r\n" +
+            "+~==~==~==~==~==~==~==~==~==~==~==~==~+\r\n"
+            //@formatter:on
+        )
+    }
+
+    @Test
+    fun `Simple text style with cascading centering property`() {
+        val style = SimpleTextStyleSet(lineSeparator = "\n")
         val table = TableBuilder(style) {
             center()
             width = 39
@@ -436,8 +462,7 @@ class IntegrationTest {
 
         println(printer.print(table))
 
-        @Suppress("SpellCheckingInspection")
-        assertThat(printer.print(table)).isEqualTo(
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
             """|┌────────────────┬─────────────┬──────────────┐
                |│ Tekst pierwszy │ Tekst drugi │ Tekst trzeci │
                |├────────────────┴─────────────┴──────────────┤

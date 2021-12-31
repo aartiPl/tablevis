@@ -51,7 +51,7 @@ class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYL
             val cellProperties = it.applyVisitor(this)
 
             maxHeight = max(maxHeight, cellProperties.height!!)
-            calculatedWidth += cellProperties.width!! + cellProperties.style.verticalLineWidth
+            calculatedWidth += cellProperties.width!! + cellProperties.commonStyle.verticalLineWidth
         }
 
         rowProperties.height = rowProperties.height?: maxHeight
@@ -61,7 +61,7 @@ class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYL
     }
 
     override fun visit(cellProperties: CellProperties<STYLE>): CellProperties<STYLE> {
-        cellProperties.textWidth = (cellProperties.width ?: cellProperties.minimalWidth) - cellProperties.leftMargin - cellProperties.rightMargin
+        cellProperties.textWidth = (cellProperties.width ?: cellProperties.minimalWidth) - cellProperties.commonStyle.leftMargin - cellProperties.commonStyle.rightMargin
 
         //Choose strategy of splitting text
         cellProperties.lines = if (cellProperties.textWidth < 5) {

@@ -21,7 +21,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
     override fun visit(rowProperties: RowProperties<STYLE>): Row {
         return Row(rowProperties.width!!,
                    rowProperties.height!!,
-                   rowProperties.style,
+                   rowProperties.commonStyle.baseStyle,
                    rowProperties.cells.map { it.applyVisitor(this) })
     }
 
@@ -30,12 +30,12 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         return Cell(
             cellProperties.width!!,
             cellProperties.height!!,
-            cellProperties.leftMargin,
-            cellProperties.topMargin,
-            cellProperties.rightMargin,
-            cellProperties.bottomMargin,
-            cellProperties.horizontalAlignment,
-            cellProperties.verticalAlignment,
+            cellProperties.commonStyle.leftMargin,
+            cellProperties.commonStyle.topMargin,
+            cellProperties.commonStyle.rightMargin,
+            cellProperties.commonStyle.bottomMargin,
+            cellProperties.commonStyle.horizontalAlignment,
+            cellProperties.commonStyle.verticalAlignment,
             cellProperties.lines
         )
     }

@@ -4,29 +4,29 @@ import net.igsoft.tablevis.model.HorizontalAlignment
 import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.model.VerticalAlignment
 
-open class BaseDef<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(protected val properties: PROPERTIES, protected val style: STYLE) {
+open class BaseDef<STYLE : Style, PROPERTIES : CommonProperties<STYLE>>(protected val properties: PROPERTIES) {
     var leftMargin: Int
-        get() = properties.leftMargin
+        get() = properties.commonStyle.leftMargin
         set(value) {
-            properties.leftMargin = value
+            properties.commonStyle.leftMargin = value
         }
 
     var topMargin: Int
-        get() = properties.topMargin
+        get() = properties.commonStyle.topMargin
         set(value) {
-            properties.topMargin = value
+            properties.commonStyle.topMargin = value
         }
 
     var rightMargin: Int
-        get() = properties.rightMargin
+        get() = properties.commonStyle.rightMargin
         set(value) {
-            properties.rightMargin = value
+            properties.commonStyle.rightMargin = value
         }
 
     var bottomMargin: Int
-        get() = properties.bottomMargin
+        get() = properties.commonStyle.bottomMargin
         set(value) {
-            properties.bottomMargin = value
+            properties.commonStyle.bottomMargin = value
         }
 
     var width: Int?
@@ -42,30 +42,30 @@ open class BaseDef<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(protected
         }
 
     fun center() = apply {
-        properties.horizontalAlignment = HorizontalAlignment.Center
+        properties.commonStyle.horizontalAlignment = HorizontalAlignment.Center
     }
 
     fun left() = apply {
-        properties.horizontalAlignment = HorizontalAlignment.Left
+        properties.commonStyle.horizontalAlignment = HorizontalAlignment.Left
     }
 
     fun right() = apply {
-        properties.horizontalAlignment = HorizontalAlignment.Right
+        properties.commonStyle.horizontalAlignment = HorizontalAlignment.Right
     }
 
     fun justify() = apply {
-        properties.horizontalAlignment = HorizontalAlignment.Justified
+        properties.commonStyle.horizontalAlignment = HorizontalAlignment.Justified
     }
 
     fun top() = apply {
-        properties.verticalAlignment = VerticalAlignment.Top
+        properties.commonStyle.verticalAlignment = VerticalAlignment.Top
     }
 
     fun middle() = apply {
-        properties.verticalAlignment = VerticalAlignment.Middle
+        properties.commonStyle.verticalAlignment = VerticalAlignment.Middle
     }
 
     fun bottom() = apply {
-        properties.verticalAlignment = VerticalAlignment.Bottom
+        properties.commonStyle.verticalAlignment = VerticalAlignment.Bottom
     }
 }

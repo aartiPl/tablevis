@@ -1,5 +1,6 @@
 package net.igsoft.tablevis
 
+import net.igsoft.tablevis.builder.CommonStyle
 import net.igsoft.tablevis.builder.TableDef
 import net.igsoft.tablevis.model.Table
 import net.igsoft.tablevis.style.Style
@@ -10,7 +11,7 @@ class TableBuilder<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(
     private val styleSet: STYLE_SET, private val block: TableDef<STYLE>.() -> Unit = {}
 ) {
     fun build(): Table<STYLE_SET> {
-        val table = TableDef(styleSet.baseStyle).apply(block)
+        val table = TableDef(CommonStyle(styleSet.baseStyle)).apply(block)
 
         //Make sure there is at least one cell in a row...
         //Map cellIds to cells... Add default row and col names (col-1, row-1, etc.)

@@ -2,7 +2,7 @@ package net.igsoft.tablevis.builder
 
 import net.igsoft.tablevis.style.Style
 
-class CellProperties<STYLE : Style>(style: STYLE) : CommonProperties<STYLE>(style) {
+class CellProperties<STYLE : Style>(commonStyle: CommonStyle<STYLE>) : CommonProperties<STYLE>(commonStyle) {
     var text: String = ""
     var lines: List<String> = emptyList()
 

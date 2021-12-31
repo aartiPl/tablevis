@@ -3,7 +3,7 @@ package net.igsoft.tablevis.builder
 import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.visitor.Visitor
 
-class CellDef<STYLE : Style>(style: STYLE) : BaseDef<STYLE, CellProperties<STYLE>>(CellProperties(style), style) {
+class CellDef<STYLE : Style>(commonStyle: CommonStyle<STYLE>) : BaseDef<STYLE, CellProperties<STYLE>>(CellProperties(commonStyle)) {
     fun id(vararg ids: Any) {
         properties.ids = ids.toList()
     }

@@ -1,6 +1,5 @@
 package net.igsoft.tablevis.visitor
 
-import net.igsoft.tablevis.builder.CellDef
 import net.igsoft.tablevis.builder.CellProperties
 import net.igsoft.tablevis.builder.RowProperties
 import net.igsoft.tablevis.builder.TableProperties
@@ -54,14 +53,14 @@ class WidthResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowP
             val cellProperties = cell.applyVisitor(this)
 
             if (firstVerticalLineWidth == -1) {
-                firstVerticalLineWidth = cellProperties.style.verticalLineWidth
+                firstVerticalLineWidth = cellProperties.commonStyle.verticalLineWidth
             }
 
             naturalWidth += (cellProperties.width
-                ?: cellProperties.naturalWidth) + cellProperties.style.verticalLineWidth
+                ?: cellProperties.naturalWidth) + cellProperties.commonStyle.verticalLineWidth
 
-            assignedWidth += (cellProperties.width ?: 0) + cellProperties.style.verticalLineWidth
-            minimalWidth += cellProperties.minimalWidth + cellProperties.style.verticalLineWidth
+            assignedWidth += (cellProperties.width ?: 0) + cellProperties.commonStyle.verticalLineWidth
+            minimalWidth += cellProperties.minimalWidth + cellProperties.commonStyle.verticalLineWidth
 
             if (cellProperties.width == null) {
                 cellsWithNoWidth.add(cellProperties)
@@ -84,7 +83,7 @@ class WidthResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowP
     override fun visit(cellProperties: CellProperties<STYLE>): CellProperties<STYLE> {
         cellProperties.minimalWidth =
             cellProperties.width
-                ?: (cellProperties.leftMargin + cellProperties.minimalTextWidth + cellProperties.rightMargin)
+                ?: (cellProperties.commonStyle.leftMargin + cellProperties.commonStyle.minimalTextWidth + cellProperties.commonStyle.rightMargin)
 
         if (!imposedWidth) {
             cellProperties.width = cellProperties.width ?: cellProperties.naturalWidth
