@@ -5,12 +5,12 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.igsoft.tablevis.printer.text.TextTablePrinter
-import net.igsoft.tablevis.style.text.BoxTextStyleSet
-import net.igsoft.tablevis.style.text.SimpleTextStyleSet
+import net.igsoft.tablevis.style.text.BoxTextTableStyleSet
+import net.igsoft.tablevis.style.text.SimpleTextTableStyleSet
 import org.junit.jupiter.api.Test
 
 class IntegrationTest {
-    private val styleSet = BoxTextStyleSet(lineSeparator = "\n")
+    private val styleSet = BoxTextTableStyleSet(lineSeparator = "\n")
     private val printer = TextTablePrinter()
 
     @Test
@@ -236,7 +236,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple header with windows line separator`() {
-        val styleSet = SimpleTextStyleSet(lineSeparator = "\r\n")
+        val styleSet = SimpleTextTableStyleSet(lineSeparator = "\r\n")
         val table = TableBuilder(styleSet) {
             width = 39
 
@@ -261,7 +261,7 @@ class IntegrationTest {
 
     @Test
     fun `Simple text style with cascading centering property`() {
-        val styleSet = SimpleTextStyleSet(lineSeparator = "\n")
+        val styleSet = SimpleTextTableStyleSet(lineSeparator = "\n")
         val table = TableBuilder(styleSet) {
             center()
             width = 39
@@ -296,7 +296,7 @@ class IntegrationTest {
 
     @Test
     fun `Cascading styles`() {
-        val styleSet = SimpleTextStyleSet(lineSeparator = "\n")
+        val styleSet = SimpleTextTableStyleSet(lineSeparator = "\n")
         val table = TableBuilder(styleSet) {
             center() //Everything centered by default
             width = 39

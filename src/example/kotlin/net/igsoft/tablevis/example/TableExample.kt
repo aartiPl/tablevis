@@ -2,8 +2,8 @@ package net.igsoft.tablevis.example
 
 import net.igsoft.tablevis.TableBuilder
 import net.igsoft.tablevis.printer.text.TextTablePrinter
-import net.igsoft.tablevis.style.text.BoxTextStyleSet
-import net.igsoft.tablevis.style.text.SimpleTextStyleSet
+import net.igsoft.tablevis.style.text.BoxTextTableStyleSet
+import net.igsoft.tablevis.style.text.SimpleTextTableStyleSet
 
 fun main() {
     println("Let's print some tables...")
@@ -13,7 +13,7 @@ fun main() {
     // tag::simplest_table[]
     val printer = TextTablePrinter()
 
-    var table = TableBuilder(BoxTextStyleSet()) {
+    var table = TableBuilder(BoxTextTableStyleSet()) {
         row {}
     }.build()
 
@@ -23,7 +23,7 @@ fun main() {
     //------------------------------------------------------------------------------------------------------------------
 
     // tag::complicated_table[]
-    table = TableBuilder(BoxTextStyleSet()) {
+    table = TableBuilder(BoxTextTableStyleSet()) {
         row(styleSet.header) {
             cell {
                 value = "Consecutive number"
@@ -60,7 +60,7 @@ fun main() {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    table = TableBuilder(BoxTextStyleSet()) {
+    table = TableBuilder(BoxTextTableStyleSet()) {
         row(styleSet.header) {
             cell {
                 value = "Consecutive number"
@@ -98,7 +98,7 @@ fun main() {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    table = TableBuilder(BoxTextStyleSet()) {
+    table = TableBuilder(BoxTextTableStyleSet()) {
         row(styleSet.header) {
             cell {
                 value = "Consecutive number"
@@ -140,7 +140,7 @@ fun main() {
     val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
     val profits = listOf(12000, 40000, 29000, 18500, 41300, 21650, 30150, 29999, 24700, 22890, 51135, 49134)
 
-    table = TableBuilder(BoxTextStyleSet()) {
+    table = TableBuilder(BoxTextTableStyleSet()) {
         width = 60
 
         row(styleSet.header) {
@@ -193,7 +193,7 @@ fun main() {
     //------------------------------------------------------------------------------------------------------------------
 
     // tag::simple_text_table[]
-    val simpleTextTable = TableBuilder(SimpleTextStyleSet(lineSeparator = "\n")) {
+    val simpleTextTable = TableBuilder(SimpleTextTableStyleSet(lineSeparator = "\n")) {
         center() //Everything centered by default
         width = 39
 

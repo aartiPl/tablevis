@@ -5,47 +5,45 @@ import net.igsoft.tablevis.model.Row
 import net.igsoft.tablevis.model.Table
 import net.igsoft.tablevis.printer.Printer
 import net.igsoft.tablevis.style.text.IntersectionMatrix
-import net.igsoft.tablevis.style.text.TextStyle
-import net.igsoft.tablevis.style.text.TextStyleSet
+import net.igsoft.tablevis.style.text.TextTableStyle
+import net.igsoft.tablevis.style.text.TextTableStyleSet
 import org.apache.commons.lang3.StringUtils
 
-class TextTablePrinter : Printer<Table<out TextStyleSet<TextStyle>>> {
+class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
 
-    override fun print(table: Table<out TextStyleSet<TextStyle>>): String {
+    override fun print(table: Table<out TextTableStyleSet<TextTableStyle>>): String {
         if (table.rows.isEmpty()) {
             return ""
         }
 
         val sb = StringBuilder()
 
-        val maxSize = 2 * table.rows.size + 1
-        for (i in 0 until maxSize) {
+        val maxSize = 2 * table.rows.size
+        for (i in 0..maxSize) {
             if (i % 2 == 0) {
                 //line
                 val previousRow = if (i == 0) null else table.rows[(i - 1) / 2]
-                val nextRow = if (i == maxSize - 1) null else table.rows[(i + 1) / 2]
+                val nextRow = if (i == maxSize) null else table.rows[(i + 1) / 2]
                 drawHorizontalLine(sb, previousRow, nextRow, table.width, table.styleSet)
             } else {
                 //row content
                 val row = table.rows[i / 2]
-                drawRow(sb, row.style as TextStyle, row, table.styleSet.lineSeparator)
+                drawRow(sb, row.style as TextTableStyle, row, table.styleSet.lineSeparator)
             }
         }
         return sb.toString()
     }
 
     private fun drawHorizontalLine(
-        sb: StringBuilder, previousRow: Row?, nextRow: Row?, width: Int, tableStyle: TextStyleSet<TextStyle>
+        sb: StringBuilder, previousRow: Row?, nextRow: Row?, width: Int, tableStyle: TextTableStyleSet<TextTableStyle>
     ) {
         require(previousRow != null || nextRow != null)
 
         val style = calculateStyle(previousRow, nextRow)
-        val line = style.horizontalLine.repeat(width).substring(0, width).toCharArray()
-
         val matrices = mutableMapOf<Int, IntersectionMatrix>()
 
         if (previousRow != null) {
-            val previousRowStyle = previousRow.style as TextStyle
+            val previousRowStyle = previousRow.style as TextTableStyle
             var position = 0
             matrices.getOrPut(position) { IntersectionMatrix() }
                 .setRight(style.horizontalLine[0])
@@ -66,7 +64,7 @@ class TextTablePrinter : Printer<Table<out TextStyleSet<TextStyle>>> {
         }
 
         if (nextRow != null) {
-            val nextRowStyle = nextRow.style as TextStyle
+            val nextRowStyle = nextRow.style as TextTableStyle
             var position = 0
             matrices.getOrPut(position) { IntersectionMatrix() }
                 .setRight(style.horizontalLine[0])
@@ -86,6 +84,7 @@ class TextTablePrinter : Printer<Table<out TextStyleSet<TextStyle>>> {
                 .setBottom(nextRowStyle.verticalLine[0])
         }
 
+        val line = style.horizontalLine.repeat(width).substring(0, width).toCharArray()
         for (entry in matrices.entries) {
             line[entry.key] = tableStyle.resolveCrossSection(entry.value)
         }
@@ -93,17 +92,17 @@ class TextTablePrinter : Printer<Table<out TextStyleSet<TextStyle>>> {
         sb.append(String(line) + tableStyle.lineSeparator)
     }
 
-    private fun calculateStyle(previousRow: Row?, nextRow: Row?): TextStyle {
+    private fun calculateStyle(previousRow: Row?, nextRow: Row?): TextTableStyle {
         require(previousRow != null || nextRow != null)
 
         if (previousRow == null || nextRow == null) {
-            return (previousRow ?: nextRow)!!.style as TextStyle
+            return (previousRow ?: nextRow)!!.style as TextTableStyle
         }
 
-        return (if (previousRow.style.layer > nextRow.style.layer) previousRow.style else nextRow.style) as TextStyle
+        return (if (previousRow.style.layer > nextRow.style.layer) previousRow.style else nextRow.style) as TextTableStyle
     }
 
-    private fun drawRow(sb: StringBuilder, textSectionStyle: TextStyle, row: Row, tableLineSeparator: String) {
+    private fun drawRow(sb: StringBuilder, textSectionStyle: TextTableStyle, row: Row, tableLineSeparator: String) {
         for (line in 0 until row.height) {
             sb.append(textSectionStyle.verticalLine)
 

@@ -51,14 +51,14 @@ class WidthResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowP
             val cellProperties = cell.applyVisitor(this)
 
             if (firstVerticalLineWidth == -1) {
-                firstVerticalLineWidth = cellProperties.commonStyle.verticalLineWidth
+                firstVerticalLineWidth = cellProperties.commonStyle.leftBorder.size
             }
 
             naturalWidth += (cellProperties.width
-                ?: cellProperties.naturalWidth) + cellProperties.commonStyle.verticalLineWidth
+                ?: cellProperties.naturalWidth) + cellProperties.commonStyle.rightBorder.size
 
-            assignedWidth += (cellProperties.width ?: 0) + cellProperties.commonStyle.verticalLineWidth
-            minimalWidth += cellProperties.minimalWidth + cellProperties.commonStyle.verticalLineWidth
+            assignedWidth += (cellProperties.width ?: 0) + cellProperties.commonStyle.rightBorder.size
+            minimalWidth += cellProperties.minimalWidth + cellProperties.commonStyle.rightBorder.size
 
             if (cellProperties.width == null) {
                 cellsWithNoWidth.add(cellProperties)

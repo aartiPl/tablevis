@@ -51,7 +51,7 @@ class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYL
             val cellProperties = it.applyVisitor(this)
 
             maxHeight = max(maxHeight, cellProperties.height!!)
-            calculatedWidth += cellProperties.width!! + cellProperties.commonStyle.verticalLineWidth
+            calculatedWidth += cellProperties.width!! + cellProperties.commonStyle.rightBorder.size
         }
 
         rowProperties.height = rowProperties.height?: maxHeight

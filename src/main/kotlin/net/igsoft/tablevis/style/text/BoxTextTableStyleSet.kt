@@ -1,12 +1,21 @@
 package net.igsoft.tablevis.style.text
 
-class BoxTextStyleSet(
+class BoxTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
 
-    val header: TextStyle = TextStyle("━", "┃", 100),
-    val row: TextStyle = TextStyle("─", "│", 50),
-    val footer: TextStyle = TextStyle("━", "┃", 75),
-) : TextStyleSet<TextStyle> {
+    val header: TextTableStyle = TextTableStyle(
+        verticalBorder = verticalHeavyBoxBorder,
+        horizontalBorder = horizontalHeavyBoxBorder,
+    ),
+    val row: TextTableStyle = TextTableStyle(
+        verticalBorder = verticalBoxBorder,
+        horizontalBorder = horizontalBoxBorder,
+    ),
+    val footer: TextTableStyle = TextTableStyle(
+        verticalBorder = verticalHeavyFooterBoxBorder,
+        horizontalBorder = horizontalHeavyFooterBoxBorder,
+    ),
+) : TextTableStyleSet<TextTableStyle> {
     override val baseStyle = row
 
     //Encoding of intersections:
@@ -62,5 +71,18 @@ class BoxTextStyleSet(
 
     override fun resolveCrossSection(value: IntersectionMatrix): Char {
         return intersections[value.toString()] ?: '?'
+    }
+
+    companion object {
+        val horizontalBoxBorder = TextTableBorder("─", 1, 50)
+        val verticalBoxBorder = TextTableBorder("│", 1, 50)
+
+        val horizontalHeavyBoxBorder = TextTableBorder("━", 1, 100)
+        val verticalHeavyBoxBorder = TextTableBorder("┃", 1, 100)
+
+        val horizontalHeavyFooterBoxBorder = TextTableBorder("━", 1, 75)
+        val verticalHeavyFooterBoxBorder = TextTableBorder("┃", 1, 75)
+
+        val noBorder = TextTableBorder("", 0, 500)
     }
 }
