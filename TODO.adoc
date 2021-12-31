@@ -1,9 +1,9 @@
 = TODO
 
 - Justify text (both sides)
+- Height resolver
 - More layout errors handling
-- make properties protected
-- cascading properties down the stack
-- finish documentation
-- add examples
-- table should have type: Row | Border and Cell | Border
+- Finish documentation
+- Add examples
+- Table should have type: Row | Border and Cell | Border
+- Better handling of borders (e.g. noBorder)

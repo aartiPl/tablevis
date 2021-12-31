@@ -6,7 +6,7 @@ import net.igsoft.tablevis.visitor.Visitor
 class TableDef<STYLE : Style>(commonStyle: CommonStyle<STYLE>) :
     BaseDef<STYLE, TableProperties<STYLE>>(TableProperties(commonStyle)) {
     fun row(rowStyle: STYLE? = null, block: RowDef<STYLE>.() -> Unit = {}) {
-        val commonStyle: CommonStyle<STYLE> = if (rowStyle == null) properties.commonStyle else CommonStyle(rowStyle)
+        val commonStyle = if (rowStyle == null) properties.commonStyle else CommonStyle(rowStyle)
         properties.rows.add(RowDef(commonStyle).apply(block))
     }
 

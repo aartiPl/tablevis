@@ -2,8 +2,11 @@ package net.igsoft.tablevis.style
 
 import net.igsoft.tablevis.model.HorizontalAlignment
 import net.igsoft.tablevis.model.VerticalAlignment
+import org.apache.commons.lang3.builder.EqualsBuilder
+import org.apache.commons.lang3.builder.HashCodeBuilder
+import org.apache.commons.lang3.builder.ToStringBuilder
 
-data class TextStyle(
+open class TextStyle(
     val horizontalLine: String,
     val verticalLine: String,
     override val layer: Int,
@@ -19,4 +22,16 @@ data class TextStyle(
     override val horizontalLineHeight: Int get() = 1
     override val verticalLineWidth: Int get() = verticalLine.length
     override val verticalLineHeight: Int get() = 1
+
+    override fun equals(other: Any?): Boolean {
+        return EqualsBuilder.reflectionEquals(this, other)
+    }
+
+    override fun hashCode(): Int {
+        return HashCodeBuilder.reflectionHashCode(this)
+    }
+
+    override fun toString(): String {
+        return ToStringBuilder.reflectionToString(this)
+    }
 }

@@ -1,13 +1,9 @@
 package net.igsoft.tablevis.util
 
-//
+
 object Utils {
-    //  fun appendValue<T>(collection: mutable.Buffer<T>, value: T): T = {
-//    collection += value
-//    value
-//  }
-//
-//TODO: merge below two functions
+
+    //TODO: merge below two functions
     fun distributeEvenly(valueNumber: Int, adjustment: Int): List<Int> {
         val values = mutableListOf<Int>()
 

@@ -236,12 +236,11 @@ class IntegrationTest {
 
     @Test
     fun `Simple header with windows line separator`() {
-        val style = SimpleTextStyleSet(lineSeparator = "\r\n")
-        val table = TableBuilder(style) {
-            center()
+        val styleSet = SimpleTextStyleSet(lineSeparator = "\r\n")
+        val table = TableBuilder(styleSet) {
             width = 39
 
-            row(style.header) {
+            row(styleSet.header) {
                 cell {
                     center()
                     text = "Header 1"
@@ -262,8 +261,8 @@ class IntegrationTest {
 
     @Test
     fun `Simple text style with cascading centering property`() {
-        val style = SimpleTextStyleSet(lineSeparator = "\n")
-        val table = TableBuilder(style) {
+        val styleSet = SimpleTextStyleSet(lineSeparator = "\n")
+        val table = TableBuilder(styleSet) {
             center()
             width = 39
 
