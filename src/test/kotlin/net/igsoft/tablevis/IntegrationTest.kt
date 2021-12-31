@@ -4,9 +4,9 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
-import net.igsoft.tablevis.printer.TextTablePrinter
-import net.igsoft.tablevis.style.BoxTextStyleSet
-import net.igsoft.tablevis.style.SimpleTextStyleSet
+import net.igsoft.tablevis.printer.text.TextTablePrinter
+import net.igsoft.tablevis.style.text.BoxTextStyleSet
+import net.igsoft.tablevis.style.text.SimpleTextStyleSet
 import org.junit.jupiter.api.Test
 
 class IntegrationTest {

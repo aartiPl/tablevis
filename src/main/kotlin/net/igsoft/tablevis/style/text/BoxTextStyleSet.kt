@@ -1,4 +1,4 @@
-package net.igsoft.tablevis.style
+package net.igsoft.tablevis.style.text
 
 class BoxTextStyleSet(
     override val lineSeparator: String = System.lineSeparator(),

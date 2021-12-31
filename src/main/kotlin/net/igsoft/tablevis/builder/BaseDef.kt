@@ -5,6 +5,18 @@ import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.model.VerticalAlignment
 
 open class BaseDef<STYLE : Style, PROPERTIES : CommonProperties<STYLE>>(protected val properties: PROPERTIES) {
+    var width: Int?
+        get() = properties.width
+        set(value) {
+            properties.width = value
+        }
+
+    var height: Int?
+        get() = properties.height
+        set(value) {
+            properties.height = value
+        }
+
     var leftMargin: Int
         get() = properties.commonStyle.leftMargin
         set(value) {
@@ -27,18 +39,6 @@ open class BaseDef<STYLE : Style, PROPERTIES : CommonProperties<STYLE>>(protecte
         get() = properties.commonStyle.bottomMargin
         set(value) {
             properties.commonStyle.bottomMargin = value
-        }
-
-    var width: Int?
-        get() = properties.width
-        set(value) {
-            properties.width = value
-        }
-
-    var height: Int?
-        get() = properties.height
-        set(value) {
-            properties.height = value
         }
 
     fun center() = apply {

@@ -1,4 +1,4 @@
-package net.igsoft.tablevis.style
+package net.igsoft.tablevis.style.text
 
 @JvmInline
 value class IntersectionMatrix(private val matrix: CharArray = charArrayOf(' ', ' ', ' ', ' ')) {

@@ -1,9 +1,9 @@
 package net.igsoft.tablevis.example
 
 import net.igsoft.tablevis.TableBuilder
-import net.igsoft.tablevis.printer.TextTablePrinter
-import net.igsoft.tablevis.style.BoxTextStyleSet
-import net.igsoft.tablevis.style.SimpleTextStyleSet
+import net.igsoft.tablevis.printer.text.TextTablePrinter
+import net.igsoft.tablevis.style.text.BoxTextStyleSet
+import net.igsoft.tablevis.style.text.SimpleTextStyleSet
 
 fun main() {
     println("Let's print some tables...")
