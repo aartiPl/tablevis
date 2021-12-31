@@ -3,6 +3,7 @@ package net.igsoft.tablevis.example
 import net.igsoft.tablevis.TableBuilder
 import net.igsoft.tablevis.printer.TextTablePrinter
 import net.igsoft.tablevis.style.BoxTextStyleSet
+import net.igsoft.tablevis.style.SimpleTextStyleSet
 
 fun main() {
     println("Let's print some tables...")
@@ -138,6 +139,7 @@ fun main() {
     // tag::financial_table[]
     val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
     val profits = listOf(12000, 40000, 29000, 18500, 41300, 21650, 30150, 29999, 24700, 22890, 51135, 49134)
+
     table = TableBuilder(BoxTextStyleSet()) {
         width = 60
 
@@ -146,7 +148,6 @@ fun main() {
                 id("#")
                 value = "Consecutive number"
             }
-
             cell {
                 value = "Month name"
             }
@@ -188,6 +189,47 @@ fun main() {
 
     println(printer.print(table))
     // end::financial_table[]
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    // tag::simple_text_table[]
+    val simpleTextTable = TableBuilder(SimpleTextStyleSet(lineSeparator = "\n")) {
+        center() //Everything centered by default
+        width = 39
+
+        row(styleSet.header) {
+            //New style cancels top level alignment (no inheritance here)
+            cell {
+                right()
+                value = "Header 1"
+            }
+            cell {
+                value = "Header 2"
+            }
+        }
+
+        row {
+            //Inherited center property
+            cell {
+                value = "Row"
+            }
+        }
+
+        row {
+            right() //this row is right aligned
+            cell {
+                value = "Cell 1"
+            }
+            cell {
+                left() //but this cell is left aligned
+                value = "Cell 2"
+            }
+        }
+    }.build()
+
+    println(printer.print(simpleTextTable))
+
+    // end::simple_text_table[]
 
     //------------------------------------------------------------------------------------------------------------------
 

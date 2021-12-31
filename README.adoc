@@ -265,3 +265,41 @@ endif::[]
 ┃ Sum                                       ┃  370 458 $   ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━┛
 ----
+
+In this case we have used property 'width' on the table builder. The same property can be used on rows and on cells. There are also different properties connected with style, which are inherited by child elements. For example if you enforce centering on table element level, that will be respected for the same style on other elements. Please notice that if you provide style for some specific row, that will effectively cancel inheritance, as it will be overwritten by new style. Let's see it on some fancy example:
+
+[source, kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=simple_text_table]
+endif::[]
+
+ifdef::env-github[]
+
+endif::[]
+----
+
+.Result
+----
++~==~==~==~==~==~==+==~==~==~==~==~==~+
+*         Header 1 * Header 2         *
++~==~==~==~==~==~==+==~==~==~==~==~==~+
+|                 Row                 |
++------------------+------------------+
+|           Cell 1 | Cell 2           |
++------------------+------------------+
+----
+
+Although 'center()' is defined on top level, it is overridden on lower levels, either on row level or cell level.
+
+There are many more options, which you can discover by looking on unit tests.
+
+Have fun with tables!
+
+== Properties of 'tablevis' in a glance
+
+* Simple and intuitive way of defining tables
+* Automatic text handling
+* Constrained definition of tables
+* Properties are inherited by children elements
