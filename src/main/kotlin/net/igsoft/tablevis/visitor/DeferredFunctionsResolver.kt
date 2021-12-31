@@ -10,7 +10,9 @@ class DeferredFunctionsResolver<STYLE : Style> : Visitor<STYLE, Unit, Unit, Unit
         for (entry in tableProperties.cellsPerId.entries) {
             val cellsToApply = entry.value
             val functionsToExecute = tableProperties.functions[entry.key] ?: emptySet()
-            functionsToExecute.forEach { it(cellsToApply) }
+            functionsToExecute.forEach { fn ->
+                fn(cellsToApply)
+            }
         }
     }
 

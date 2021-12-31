@@ -41,15 +41,15 @@ open class BaseDef<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(protected
             properties.height = value
         }
 
-    fun alignCenter() = apply {
+    fun center() = apply {
         properties.horizontalAlignment = HorizontalAlignment.Center
     }
 
-    fun alignLeft() = apply {
+    fun left() = apply {
         properties.horizontalAlignment = HorizontalAlignment.Left
     }
 
-    fun alignRight() = apply {
+    fun right() = apply {
         properties.horizontalAlignment = HorizontalAlignment.Right
     }
 
@@ -57,15 +57,15 @@ open class BaseDef<STYLE : Style, PROPERTIES: CommonProperties<STYLE>>(protected
         properties.horizontalAlignment = HorizontalAlignment.Justified
     }
 
-    fun alignTop() = apply {
+    fun top() = apply {
         properties.verticalAlignment = VerticalAlignment.Top
     }
 
-    fun alignMiddle() = apply {
+    fun middle() = apply {
         properties.verticalAlignment = VerticalAlignment.Middle
     }
 
-    fun alignBottom() = apply {
+    fun bottom() = apply {
         properties.verticalAlignment = VerticalAlignment.Bottom
     }
 }

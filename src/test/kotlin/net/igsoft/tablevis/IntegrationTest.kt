@@ -46,7 +46,7 @@ class IntegrationTest {
 
             row(styleSet.header) {
                 cell {
-                    alignCenter()
+                    center()
                     text = "Header"
                 }
             }
@@ -56,7 +56,7 @@ class IntegrationTest {
                     text = "Row 1 Cell 1"
                 }
                 cell {
-                    alignRight()
+                    right()
                     text = "Row 1 Cell 2"
                 }
             }
@@ -66,18 +66,18 @@ class IntegrationTest {
                     text = "Row 2 Cell 1"
                 }
                 cell {
-                    alignRight()
+                    right()
                     text = "Row 2 Cell 2"
                 }
             }
 
             row(styleSet.footer) {
                 cell {
-                    alignCenter()
+                    center()
                     text = "Footer"
                 }
                 cell {
-                    alignCenter().alignMiddle()
+                    center().middle()
                     width = 15
                     text = "page 1/1"
                 }
@@ -108,7 +108,7 @@ class IntegrationTest {
 
             row(styleSet.header) {
                 cell {
-                    alignCenter()
+                    center()
                     text = "Header"
                 }
             }
@@ -145,11 +145,11 @@ class IntegrationTest {
 
             row(styleSet.footer) {
                 cell {
-                    alignCenter()
+                    center()
                     text = "Footer"
                 }
                 cell {
-                    alignCenter().alignMiddle()
+                    center().middle()
                     width = 15
                     text = "page 1/1"
                 }
@@ -238,7 +238,7 @@ class IntegrationTest {
     fun `Nothing defined, but empty header with windows lineSeparator`() {
         val style = SimpleTextStyleSet(lineSeparator = "\r\n")
         val table = TableBuilder(style) {
-            alignCenter()
+            center()
             width = 39
 
             row {
@@ -391,7 +391,7 @@ class IntegrationTest {
 
             row {
                 cell {
-                    alignCenter()
+                    center()
                     text = "Dolny wiersz"
                 }
             }
@@ -428,7 +428,7 @@ class IntegrationTest {
 
             row {
                 cell {
-                    alignCenter()
+                    center()
                     text = "Dolny wiersz"
                 }
             }
@@ -465,7 +465,7 @@ class IntegrationTest {
 
             row {
                 cell {
-                    alignCenter()
+                    center()
                     text = "Dolny wiersz"
                 }
             }
@@ -495,7 +495,7 @@ class IntegrationTest {
                     text = "Tekst pierwszy"
                 }
                 cell {
-                    alignCenter()
+                    center()
                     text = BANK_ACCOUNT_TEXT
                 }
                 cell {
@@ -505,7 +505,7 @@ class IntegrationTest {
 
             row {
                 cell {
-                    alignCenter()
+                    center()
                     text = "Dolny wiersz"
                 }
             }
@@ -541,7 +541,7 @@ class IntegrationTest {
                 }
                 cell {
                     id("central")
-                    alignCenter()
+                    center()
                     text = BANK_ACCOUNT_TEXT
                 }
                 cell {
@@ -557,7 +557,7 @@ class IntegrationTest {
                 cell {
                     id("central")
                     text = "column B"
-                    alignCenter()
+                    center()
                 }
                 cell {
                     text = "column C"
