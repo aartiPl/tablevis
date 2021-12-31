@@ -8,10 +8,10 @@ class CellDef<STYLE : Style>(commonStyle: CommonStyle<STYLE>) : BaseDef<STYLE, C
         properties.ids = ids.toList()
     }
 
-    var text: String
-        get() = properties.text
+    var value: Any
+        get() = properties.value
         set(value) {
-            properties.text = value
+            properties.value = value
         }
 
     internal fun <TABLE_RESULT, ROW_RESULT, CELL_RESULT> applyVisitor(visitor: Visitor<STYLE, TABLE_RESULT, ROW_RESULT, CELL_RESULT>) =

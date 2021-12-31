@@ -26,12 +26,14 @@ class BasePropertiesResolver<STYLE : Style> :
 
     // Only cell can be resolved in first turn - other natural sizes depends on later stages of processing
     override fun visit(cellProperties: CellProperties<STYLE>): CellProperties<STYLE> {
-        if (cellProperties.text.isEmpty()) {
+        val stringValue = cellProperties.value.toString()
+
+        if (stringValue.isEmpty()) {
             cellProperties.lines = listOf()
             cellProperties.naturalTextWidth = 0
             cellProperties.commonStyle.minimalTextWidth = 0
         } else {
-            val lines = Text.resolveTabs(cellProperties.text).lines()
+            val lines = Text.resolveTabs(stringValue).lines()
             cellProperties.lines = lines
             cellProperties.naturalTextWidth = lines.maxOf { it.length }
             //minimalTextWidth is already assigned from style or from user

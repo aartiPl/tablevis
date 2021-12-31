@@ -31,8 +31,6 @@ class WidthResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowP
             tableProperties.width = naturalWidth
         }
 
-        println("Calculated values: width=${tableProperties.width}, naturalWidth=$naturalWidth, minimalWidth=$minimalWidth")
-
         if (tableProperties.width!! < minimalWidth) {
             throw IllegalArgumentException("Constraint violation: table width [$tableProperties.width] is less than minimal table width [$minimalWidth]")
         }

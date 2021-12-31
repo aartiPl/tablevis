@@ -80,22 +80,188 @@ http://paranoid-engineering.blogspot.com/2008/05/getting-unicode-output-in-eclip
 
 == Concept and simple usage
 
+This library is meant to provide generic algorithm for laying out tables. It has implemented printer for text tables, but with simple changes it should be possible to extend it for printing e.g. on image.
+
+First step while creating table is its definition using Kotlin custom DSL. Let's have a look at simplest table.
+
 
 [source, kotlin]
-.SimpleTableExample.java
+.TableExample.kt
 ----
 ifndef::env-github[]
-include::src/example/kotlin/net/igsoft/tablevis/example/SimpleTableExample.kt[tags=config]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=simplest_table]
 endif::[]
 
 ifdef::env-github[]
-    public static class Config {}
+    val printer = TextTablePrinter()
 
-    public static class ConfigCreator extends CreatorBase<Config, LaunchType> {
-        @Override
-        public Config create(InstanceProvider instanceProvider, LaunchType launchType) {
-            return new Config();
-        }
-    }
+    val table = TableBuilder(BoxTextStyleSet()) {
+        row {}
+    }.build()
+
+    println(printer.print(table))
 endif::[]
+----
+
+.Result
+----
+┌──┐
+│  │
+└──┘
+----
+
+Table is defined using TableBuilder() which gets as an argument StyleSet. StyleSet defines different styles e.g. for header, for footer or for common rows. StyleSet is necessary also for defining common properties for Styles. For example border crossing characters are defined in StyleSet. Think about it - it is not that simple - in case of box drawing characters you have a lot of different combinations for crossing lines, depending on lines used for drawing boxes. For example if you cross vertical pipe ('│') with horizontal pipe ('─') you should get corner character either '┌', '┐', '└' or '┘'. If you take into consideration that lines can have a different styles, then the number of combinations is overwhelming. But you do not think about it - it is defined in StyleSet.
+
+Let's create now something more complicated.
+
+[source, kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=complicated_table]
+endif::[]
+
+ifdef::env-github[]
+
+endif::[]
+----
+
+.Result
+----
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Consecutive number ┃ Month name ┃
+┡━━━┯━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━┩
+│ 1 │ January                     │
+├───┼─────────────────────────────┤
+│ 2 │ February                    │
+└───┴─────────────────────────────┘
+----
+
+Please notice that style set which is passed to the builder is exposed inside as a property 'styleSet'. We have used one of the styles defined inside style set - header - to define style of the first row.
+
+Looks nice... but... Yes, in tables you would expect the first column to be aligned and to have same width. But this library do not create any assumptions about table layout at the start. So standard layout of table is based on best size of cells. "Best" in this case means fitting the whole text in it.
+
+Every cell in the table has pre-defined two identifiers: one for column number and one for row number, so that first column in first row has pre-defined following identifiers: 'col-1' and 'row-1'. Now we want to make first column to be same size for all rows.
+
+Let's try to make all cells in column 1 to have same, minimal possible size. To do that we have to instruct layout engine that for 'col-1' identifiers the size of columns should be same. For brevity, I am just adding missing piece of code below last row definition:
+
+[source, kotlin]
+----
+// ....... 8< .......
+row {
+    cell {
+        text = "2"
+    }
+    cell {
+        text = "February"
+    }
+}
+
+forId("col-1").setMinimalWidth()
+// ....... >8 .......
+----
+
+.Result
+----
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Consecutive number ┃ Month name ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ 1                  │ January    │
+├────────────────────┼────────────┤
+│ 2                  │ February   │
+└────────────────────┴────────────┘
+----
+
+In similar way we can define identifiers on any cell in the table. Then we can apply modifications on that cells as a whole group. We define identifiers in the cell using "id(...)" function call. Identifier can be any type e.g. String or Int.
+
+[source, kotlin]
+----
+// ....... 8< .......
+cell {
+    id("first column", 42)
+    text = "2"
+}
+// ....... >8 .......
+----
+
+Now the result looks a bit better - at least the size of the first column is same for all rows. But it still seems to big for the content.
+
+Let's try to make first column narrower. We can do it by applying different transformation on first column:
+
+[source, kotlin]
+----
+// ....... 8< .......
+forId("col-1").setWidth(11)
+// ....... >8 .......
+----
+
+.Result
+----
+┏━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Consecutive ┃ Month name ┃
+┃ number      ┃            ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ 1           │ January    │
+├─────────────┼────────────┤
+│ 2           │ February   │
+└─────────────┴────────────┘
+----
+
+Please notice how the text in first column was automatically split in such a way that it fits into the cell.
+
+Texts in the cells are automatically split into rows based on some simple rules:
+1) Tabulators are replaced with spaces.
+2) Layout engine tries to preserve natural flow of the text, so new lines are kept as much as possible.
+3) Layout engine tries to split text by whitespace if it is possible
+4) If it is not possible layout engine splits text in the middle adding dash character at splitting point.
+
+Now let's center first column and set its width to 6. Additionally, let's make the whole table wider. We can also add some numbers so that we can sum them and add to summary row. To keep correct layout of the table we will have to change widths for specific cells in rows, not for all of them based on column number.
+
+Please look at the below example:
+
+[source, kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=financial_table]
+endif::[]
+
+ifdef::env-github[]
+
+endif::[]
+----
+
+.Result
+----
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Conse- ┃ Month name                       ┃    Profit    ┃
+┃ cutive ┃                                  ┃              ┃
+┃ number ┃                                  ┃              ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│   1    │ January                          │   12 000 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   2    │ February                         │   40 000 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   3    │ March                            │   29 000 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   4    │ April                            │   18 500 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   5    │ May                              │   41 300 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   6    │ June                             │   21 650 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   7    │ July                             │   30 150 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   8    │ August                           │   29 999 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   9    │ September                        │   24 700 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   10   │ October                          │   22 890 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   11   │ November                         │   51 135 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   12   │ December                         │   49 134 $   │
+┢━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╈━━━━━━━━━━━━━━┪
+┃ Sum                                       ┃  370 458 $   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━┛
 ----

@@ -47,39 +47,39 @@ class IntegrationTest {
             row(styleSet.header) {
                 cell {
                     center()
-                    text = "Header"
+                    value = "Header"
                 }
             }
 
             row {
                 cell {
-                    text = "Row 1 Cell 1"
+                    value = "Row 1 Cell 1"
                 }
                 cell {
                     right()
-                    text = "Row 1 Cell 2"
+                    value = "Row 1 Cell 2"
                 }
             }
 
             row {
                 cell {
-                    text = "Row 2 Cell 1"
+                    value = "Row 2 Cell 1"
                 }
                 cell {
                     right()
-                    text = "Row 2 Cell 2"
+                    value = "Row 2 Cell 2"
                 }
             }
 
             row(styleSet.footer) {
                 cell {
                     center()
-                    text = "Footer"
+                    value = "Footer"
                 }
                 cell {
                     center().middle()
                     width = 15
-                    text = "page 1/1"
+                    value = "page 1/1"
                 }
             }
         }.build()
@@ -109,49 +109,49 @@ class IntegrationTest {
             row(styleSet.header) {
                 cell {
                     center()
-                    text = "Header"
+                    value = "Header"
                 }
             }
 
             row {
                 cell {
                     id("firstCol", "firstRow")
-                    text = "Row 1 Cell 1"
+                    value = "Row 1 Cell 1"
                 }
                 cell {
-                    text = "Row 1 Cell 2"
-                }
-            }
-
-            row {
-                cell {
-                    id("firstCol")
-                    text = "Row 2 Cell 1"
-                }
-                cell {
-                    text = "Row 2 Cell 2"
+                    value = "Row 1 Cell 2"
                 }
             }
 
             row {
                 cell {
                     id("firstCol")
-                    text = "Row 3 Cell 1"
+                    value = "Row 2 Cell 1"
                 }
                 cell {
-                    text = "Row 3 Cell 2"
+                    value = "Row 2 Cell 2"
+                }
+            }
+
+            row {
+                cell {
+                    id("firstCol")
+                    value = "Row 3 Cell 1"
+                }
+                cell {
+                    value = "Row 3 Cell 2"
                 }
             }
 
             row(styleSet.footer) {
                 cell {
                     center()
-                    text = "Footer"
+                    value = "Footer"
                 }
                 cell {
                     center().middle()
                     width = 15
-                    text = "page 1/1"
+                    value = "page 1/1"
                 }
             }
 
@@ -194,7 +194,7 @@ class IntegrationTest {
 
             row {
                 cell {
-                    text = LOREM_IPSUM_TEXT
+                    value = LOREM_IPSUM_TEXT
                 }
             }
         }.build()
@@ -243,7 +243,7 @@ class IntegrationTest {
             row(styleSet.header) {
                 cell {
                     center()
-                    text = "Header 1"
+                    value = "Header 1"
                 }
             }
         }.build()
@@ -268,16 +268,16 @@ class IntegrationTest {
 
             row {
                 cell {
-                    text = "Header 1"
+                    value = "Header 1"
                 }
                 cell {
-                    text = "Header 2"
+                    value = "Header 2"
                 }
             }
 
             row {
                 cell {
-                    text = "Row"
+                    value = "Row"
                 }
             }
         }.build()
@@ -290,6 +290,57 @@ class IntegrationTest {
                |+------------------+------------------+
                ||                 Row                 |
                |+-------------------------------------+
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Cascading styles`() {
+        val styleSet = SimpleTextStyleSet(lineSeparator = "\n")
+        val table = TableBuilder(styleSet) {
+            center() //Everything centered by default
+            width = 39
+
+            row(styleSet.header) {
+                //New style cancels top level alignment (no inheritance here)
+                cell {
+                    right()
+                    value = "Header 1"
+                }
+                cell {
+                    value = "Header 2"
+                }
+            }
+
+            row {
+                //Inherited center property
+                cell {
+                    value = "Row"
+                }
+            }
+
+            row {
+                right() //this row is right aligned
+                cell {
+                    value = "Cell 1"
+                }
+                cell {
+                    left() //but this cell is left aligned
+                    value = "Cell 2"
+                }
+            }
+        }.build()
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|+~==~==~==~==~==~==+==~==~==~==~==~==~+
+               |*         Header 1 * Header 2         *
+               |+~==~==~==~==~==~==+==~==~==~==~==~==~+
+               ||                 Row                 |
+               |+------------------+------------------+
+               ||           Cell 1 | Cell 2           |
+               |+------------------+------------------+
                |""".trimMargin()
         )
     }
@@ -322,33 +373,33 @@ class IntegrationTest {
             row(styleSet.header) {
                 cell {
                     id("col1")
-                    text = "Col 1"
+                    value = "Col 1"
                 }
                 cell {
-                    text = "Col 2"
+                    value = "Col 2"
                 }
                 cell {
-                    text = "Col 3"
-                }
-            }
-
-            row {
-                cell {
-                    id("col1")
-                    text = "12"
-                }
-                cell {
-                    text = "12345678"
+                    value = "Col 3"
                 }
             }
 
             row {
                 cell {
                     id("col1")
-                    text = "12345678"
+                    value = "12"
                 }
                 cell {
-                    text = "32"
+                    value = "12345678"
+                }
+            }
+
+            row {
+                cell {
+                    id("col1")
+                    value = "12345678"
+                }
+                cell {
+                    value = "32"
                 }
             }
 
@@ -377,19 +428,19 @@ class IntegrationTest {
 
                 row {
                     cell {
-                        text = "Tekst pierwszy"
+                        value = "Tekst pierwszy"
                     }
                     cell {
-                        text = "Tekst drugi"
+                        value = "Tekst drugi"
                     }
                     cell {
-                        text = "Tekst trzeci"
+                        value = "Tekst trzeci"
                     }
                 }
 
                 row {
                     cell {
-                        text = "Dolny wiersz"
+                        value = "Dolny wiersz"
                     }
                 }
             }.build()
@@ -404,20 +455,20 @@ class IntegrationTest {
 
             row {
                 cell {
-                    text = "Tekst pierwszy"
+                    value = "Tekst pierwszy"
                 }
                 cell {
-                    text = "Tekst drugi"
+                    value = "Tekst drugi"
                 }
                 cell {
-                    text = "Tekst trzeci"
+                    value = "Tekst trzeci"
                 }
             }
 
             row {
                 cell {
                     center()
-                    text = "Dolny wiersz"
+                    value = "Dolny wiersz"
                 }
             }
         }.build()
@@ -441,20 +492,20 @@ class IntegrationTest {
         val table = TableBuilder(styleSet) {
             row {
                 cell {
-                    text = "Tekst pierwszy"
+                    value = "Tekst pierwszy"
                 }
                 cell {
-                    text = "Tekst drugi"
+                    value = "Tekst drugi"
                 }
                 cell {
-                    text = "Tekst trzeci"
+                    value = "Tekst trzeci"
                 }
             }
 
             row {
                 cell {
                     center()
-                    text = "Dolny wiersz"
+                    value = "Dolny wiersz"
                 }
             }
         }.build()
@@ -477,20 +528,20 @@ class IntegrationTest {
         val table = TableBuilder(styleSet) {
             row {
                 cell {
-                    text = "Tekst pierwszy"
+                    value = "Tekst pierwszy"
                 }
                 cell {
-                    text = "Tekst drugi\nLinia 1\nLinia2\nBardzo długi tekst"
+                    value = "Tekst drugi\nLinia 1\nLinia2\nBardzo długi tekst"
                 }
                 cell {
-                    text = "Tekst trzeci"
+                    value = "Tekst trzeci"
                 }
             }
 
             row {
                 cell {
                     center()
-                    text = "Dolny wiersz"
+                    value = "Dolny wiersz"
                 }
             }
         }.build()
@@ -516,21 +567,21 @@ class IntegrationTest {
         val table = TableBuilder(styleSet) {
             row {
                 cell {
-                    text = "Tekst pierwszy"
+                    value = "Tekst pierwszy"
                 }
                 cell {
                     center()
-                    text = BANK_ACCOUNT_TEXT
+                    value = BANK_ACCOUNT_TEXT
                 }
                 cell {
-                    text = "Text trzeci"
+                    value = "Text trzeci"
                 }
             }
 
             row {
                 cell {
                     center()
-                    text = "Dolny wiersz"
+                    value = "Dolny wiersz"
                 }
             }
         }.build()
@@ -561,36 +612,36 @@ class IntegrationTest {
             row {
                 cell {
                     id("left")
-                    text = "Tekst pierwszy"
+                    value = "Tekst pierwszy"
                 }
                 cell {
                     id("central")
                     center()
-                    text = BANK_ACCOUNT_TEXT
+                    value = BANK_ACCOUNT_TEXT
                 }
                 cell {
-                    text = "Text trzeci"
+                    value = "Text trzeci"
                 }
             }
 
             row {
                 cell {
                     id("left")
-                    text = "column A"
+                    value = "column A"
                 }
                 cell {
                     id("central")
-                    text = "column B"
+                    value = "column B"
                     center()
                 }
                 cell {
-                    text = "column C"
+                    value = "column C"
                 }
             }
 
             row {
                 cell {
-                    text = "Dolny wiersz"
+                    value = "Dolny wiersz"
                 }
             }
 
@@ -629,7 +680,7 @@ class IntegrationTest {
             row {
                 cell {
                     justify()
-                    text = LOREM_IPSUM_TEXT
+                    value = LOREM_IPSUM_TEXT
                 }
             }
 
@@ -641,14 +692,14 @@ class IntegrationTest {
                 }
                 cell {
                     id(2)
-                    text = "First option"
+                    value = "First option"
                 }
                 cell {
-                    text = ":"
+                    value = ":"
                 }
                 cell {
                     justify()
-                    text = OPTION1_DESCRIPTION_TEXT
+                    value = OPTION1_DESCRIPTION_TEXT
                 }
             }
 
@@ -658,13 +709,13 @@ class IntegrationTest {
                 }
                 cell {
                     id(2)
-                    text = "Some other option"
+                    value = "Some other option"
                 }
                 cell {
-                    text = ":"
+                    value = ":"
                 }
                 cell {
-                    text = OPTION2_DESCRIPTION_TEXT
+                    value = OPTION2_DESCRIPTION_TEXT
                 }
             }
 

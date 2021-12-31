@@ -57,6 +57,7 @@ class BoxTextStyleSet(
         put("━ ━│", '┯')
         put("━│ ┃", '┪')
         put("━┃━│", '╇')
+        put("━│━┃", '╈')
     }
 
     override fun resolveCrossSection(value: IntersectionMatrix): Char {
