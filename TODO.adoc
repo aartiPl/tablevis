@@ -5,5 +5,4 @@
 - More layout errors handling
 - Finish documentation
 - Add examples
-- Table should have type: Row | Border and Cell | Border
-- Better handling of borders (e.g. noBorder)
+- Better handling of borders (setting e.g. noBorder on some border)

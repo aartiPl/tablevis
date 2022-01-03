@@ -1,6 +1,5 @@
 package net.igsoft.tablevis.util
 
-
 object Utils {
 
     //TODO: merge below two functions

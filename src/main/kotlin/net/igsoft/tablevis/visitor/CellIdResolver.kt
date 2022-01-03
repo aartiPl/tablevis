@@ -6,7 +6,8 @@ import net.igsoft.tablevis.builder.RowProperties
 import net.igsoft.tablevis.builder.TableProperties
 import net.igsoft.tablevis.style.Style
 
-class CellIdResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowProperties<STYLE>, CellProperties<STYLE>> {
+class CellIdResolver<STYLE : Style> :
+    Visitor<STYLE, TableProperties<STYLE>, RowProperties<STYLE>, CellProperties<STYLE>> {
     private lateinit var cellsPerId: MutableMap<Any, MutableSet<CellProperties<STYLE>>>
 
     private var colCounter = 1

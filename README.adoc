@@ -22,7 +22,6 @@ Below you can find some examples of what is possible using this library.
 ┗━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┛
 ----
 
-
 .Table 2
 ----
 ┏━━━━━━━━━━┳━━━━━━━┳━━━━━━━┓
@@ -42,7 +41,6 @@ Below you can find some examples of what is possible using this library.
 |                 Row                 |
 +-------------------------------------+
 ----
-
 
 == How to start
 
@@ -66,26 +64,23 @@ dependencies {
 </dependency>
 ----
 
-
 == I can not see box drawing characters in IDE. What to do?
 
-To see box drawing characters in IDE you need to have Unicode enabled console. It is not the default in Windows, so you will have to enable it manually.
-
-
-
+To see box drawing characters in IDE you need to have Unicode enabled console.
+It is not the default in Windows, so you will have to enable it manually.
 
 sposób uzyskania UTF-8 w konsoli Eclipse: -Dfile.encoding=UTF-8 + czcionka
 http://paranoid-engineering.blogspot.com/2008/05/getting-unicode-output-in-eclipse.html
 
-
 == Concept and simple usage
 
-This library is meant to provide generic algorithm for laying out tables. It has implemented printer for text tables, but with simple changes it should be possible to extend it for printing e.g. on image.
+This library is meant to provide generic algorithm for laying out tables.
+It has implemented printer for text tables, but with simple changes it should be possible to extend it for printing e.g. on image.
 
-First step while creating table is its definition using Kotlin custom DSL. Let's have a look at simplest table.
+First step while creating table is its definition using Kotlin custom DSL.
+Let's have a look at simplest table.
 
-
-[source, kotlin]
+[source,kotlin]
 .TableExample.kt
 ----
 ifndef::env-github[]
@@ -110,11 +105,18 @@ endif::[]
 └──┘
 ----
 
-Table is defined using TableBuilder() which gets as an argument StyleSet. StyleSet defines different styles e.g. for header, for footer or for common rows. StyleSet is necessary also for defining common properties for Styles. For example border crossing characters are defined in StyleSet. Think about it - it is not that simple - in case of box drawing characters you have a lot of different combinations for crossing lines, depending on lines used for drawing boxes. For example if you cross vertical pipe ('│') with horizontal pipe ('─') you should get corner character either '┌', '┐', '└' or '┘'. If you take into consideration that lines can have a different styles, then the number of combinations is overwhelming. But you do not think about it - it is defined in StyleSet.
+Table is defined using TableBuilder() which gets as an argument StyleSet.
+StyleSet defines different styles e.g. for header, for footer or for common rows.
+StyleSet is necessary also for defining common properties for Styles.
+For example border crossing characters are defined in StyleSet.
+Think about it - it is not that simple - in case of box drawing characters you have a lot of different combinations for crossing lines, depending on lines used for drawing boxes.
+For example if you cross vertical pipe ('│') with horizontal pipe ('─') you should get corner character either '┌', '┐', '└' or '┘'.
+If you take into consideration that lines can have a different styles, then the number of combinations is overwhelming.
+But you do not think about it - it is defined in StyleSet.
 
 Let's create now something more complicated.
 
-[source, kotlin]
+[source,kotlin]
 .TableExample.kt
 ----
 ifndef::env-github[]
@@ -137,15 +139,22 @@ endif::[]
 └───┴─────────────────────────────┘
 ----
 
-Please notice that style set which is passed to the builder is exposed inside as a property 'styleSet'. We have used one of the styles defined inside style set - header - to define style of the first row.
+Please notice that style set which is passed to the builder is exposed inside as a property 'styleSet'.
+We have used one of the styles defined inside style set - header - to define style of the first row.
 
-Looks nice... but... Yes, in tables you would expect the first column to be aligned and to have same width. But this library do not create any assumptions about table layout at the start. So standard layout of table is based on best size of cells. "Best" in this case means fitting the whole text in it.
+Looks nice... but... Yes, in tables you would expect the first column to be aligned and to have same width.
+But this library do not create any assumptions about table layout at the start.
+So standard layout of table is based on best size of cells.
+"Best" in this case means fitting the whole text in it.
 
-Every cell in the table has pre-defined two identifiers: one for column number and one for row number, so that first column in first row has pre-defined following identifiers: 'col-1' and 'row-1'. Now we want to make first column to be same size for all rows.
+Every cell in the table has pre-defined two identifiers: one for column number and one for row number, so that first column in first row has pre-defined following identifiers: 'col-1' and 'row-1'.
+Now we want to make first column to be same size for all rows.
 
-Let's try to make all cells in column 1 to have same, minimal possible size. To do that we have to instruct layout engine that for 'col-1' identifiers the size of columns should be same. For brevity, I am just adding missing piece of code below last row definition:
+Let's try to make all cells in column 1 to have same, minimal possible size.
+To do that we have to instruct layout engine that for 'col-1' identifiers the size of columns should be same.
+For brevity, I am just adding missing piece of code below last row definition:
 
-[source, kotlin]
+[source,kotlin]
 ----
 // ....... 8< .......
 row {
@@ -172,9 +181,12 @@ forId("col-1").setMinimalWidth()
 └────────────────────┴────────────┘
 ----
 
-In similar way we can define identifiers on any cell in the table. Then we can apply modifications on that cells as a whole group. We define identifiers in the cell using "id(...)" function call. Identifier can be any type e.g. String or Int.
+In similar way we can define identifiers on any cell in the table.
+Then we can apply modifications on that cells as a whole group.
+We define identifiers in the cell using "id(...)" function call.
+Identifier can be any type e.g. String or Int.
 
-[source, kotlin]
+[source,kotlin]
 ----
 // ....... 8< .......
 cell {
@@ -184,11 +196,13 @@ cell {
 // ....... >8 .......
 ----
 
-Now the result looks a bit better - at least the size of the first column is same for all rows. But it still seems to big for the content.
+Now the result looks a bit better - at least the size of the first column is same for all rows.
+But it still seems to big for the content.
 
-Let's try to make first column narrower. We can do it by applying different transformation on first column:
+Let's try to make first column narrower.
+We can do it by applying different transformation on first column:
 
-[source, kotlin]
+[source,kotlin]
 ----
 // ....... 8< .......
 forId("col-1").setWidth(11)
@@ -212,14 +226,15 @@ Please notice how the text in first column was automatically split in such a way
 Texts in the cells are automatically split into rows based on some simple rules:
 1) Tabulators are replaced with spaces.
 2) Layout engine tries to preserve natural flow of the text, so new lines are kept as much as possible.
-3) Layout engine tries to split text by whitespace if it is possible
-4) If it is not possible layout engine splits text in the middle adding dash character at splitting point.
+3) Layout engine tries to split text by whitespace if it is possible 4) If it is not possible layout engine splits text in the middle adding dash character at splitting point.
 
-Now let's center first column and set its width to 6. Additionally, let's make the whole table wider. We can also add some numbers so that we can sum them and add to summary row. To keep correct layout of the table we will have to change widths for specific cells in rows, not for all of them based on column number.
+Now let's center first column and set its width to 6. Additionally, let's make the whole table wider.
+We can also add some numbers so that we can sum them and add to summary row.
+To keep correct layout of the table we will have to change widths for specific cells in rows, not for all of them based on column number.
 
 Please look at the below example:
 
-[source, kotlin]
+[source,kotlin]
 .TableExample.kt
 ----
 ifndef::env-github[]
@@ -266,9 +281,14 @@ endif::[]
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━┛
 ----
 
-In this case we have used property 'width' on the table builder. The same property can be used on rows and on cells. There are also different properties connected with style, which are inherited by child elements. For example if you enforce centering on table element level, that will be respected for the same style on other elements. Please notice that if you provide style for some specific row, that will effectively cancel inheritance, as it will be overwritten by new style. Let's see it on some fancy example:
+In this case we have used property 'width' on the table builder.
+The same property can be used on rows and on cells.
+There are also different properties connected with style, which are inherited by child elements.
+For example if you enforce centering on table element level, that will be respected for the same style on other elements.
+Please notice that if you provide style for some specific row, that will effectively cancel inheritance, as it will be overwritten by new style.
+Let's see it on some fancy example:
 
-[source, kotlin]
+[source,kotlin]
 .TableExample.kt
 ----
 ifndef::env-github[]

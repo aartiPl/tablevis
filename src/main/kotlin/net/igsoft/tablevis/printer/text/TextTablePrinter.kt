@@ -3,7 +3,6 @@ package net.igsoft.tablevis.printer.text
 import net.igsoft.tablevis.model.*
 import net.igsoft.tablevis.printer.Printer
 import net.igsoft.tablevis.style.Border
-import net.igsoft.tablevis.style.StyleSet
 import net.igsoft.tablevis.style.text.TextTableBorder
 import net.igsoft.tablevis.style.text.TextTableStyle
 import net.igsoft.tablevis.style.text.TextTableStyleSet
@@ -20,10 +19,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
         for (horizontalElement in table.horizontalElements) {
             @Suppress("UNCHECKED_CAST") when (horizontalElement) {
                 is Line -> drawLine(
-                    sb,
-                    horizontalElement,
-                    table.styleSet.lineSeparator,
-                    table.styleSet::resolveIntersection
+                    sb, horizontalElement, table.styleSet.lineSeparator, table.styleSet::resolveIntersection
                 )
                 is Row<*> -> drawRow(sb, horizontalElement as Row<TextTableStyle>, table.styleSet.lineSeparator)
             }
@@ -33,10 +29,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
     }
 
     private fun drawLine(
-        sb: StringBuilder,
-        line: Line,
-        lineSeparator: String,
-        resolveIntersection: (String) -> Char
+        sb: StringBuilder, line: Line, lineSeparator: String, resolveIntersection: (String) -> Char
     ) {
         if (line.maxSize == 0) {
             return
@@ -53,7 +46,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
                     val chars = element.matrix.joinToString(separator = "") { border ->
                         if (border == Border.empty || border == Border.noBorder) {
                             " "
-                        } else  {
+                        } else {
                             (border as TextTableBorder).line
                         }
                     }

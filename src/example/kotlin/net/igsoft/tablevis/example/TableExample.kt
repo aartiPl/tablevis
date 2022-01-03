@@ -137,7 +137,21 @@ fun main() {
     //------------------------------------------------------------------------------------------------------------------
 
     // tag::financial_table[]
-    val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+    val months =
+        listOf(
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        )
     val profits = listOf(12000, 40000, 29000, 18500, 41300, 21650, 30150, 29999, 24700, 22890, 51135, 49134)
 
     table = TableBuilder(BoxTextTableStyleSet()) {
@@ -157,7 +171,7 @@ fun main() {
             }
         }
 
-        for(i in 0 until 12) {
+        for (i in 0 until 12) {
             row {
                 cell {
                     id("#")

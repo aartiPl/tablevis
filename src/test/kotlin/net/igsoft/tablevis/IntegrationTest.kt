@@ -704,7 +704,7 @@ class IntegrationTest {
                 }
             }
 
-            row {  }
+            row { }
 
             row {
                 cell {

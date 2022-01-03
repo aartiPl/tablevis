@@ -8,20 +8,13 @@ import net.igsoft.tablevis.style.Style
 class CommonStyle<STYLE : Style>(
     var baseStyle: STYLE,
 
-    var leftMargin: Int,
-    var topMargin: Int,
-    var rightMargin: Int,
-    var bottomMargin: Int,
+    var leftMargin: Int, var topMargin: Int, var rightMargin: Int, var bottomMargin: Int,
 
-    var horizontalAlignment: HorizontalAlignment,
-    var verticalAlignment: VerticalAlignment,
+    var horizontalAlignment: HorizontalAlignment, var verticalAlignment: VerticalAlignment,
 
     var minimalTextWidth: Int,
 
-    var leftBorder: Border,
-    var topBorder: Border,
-    var rightBorder: Border,
-    var bottomBorder: Border
+    var leftBorder: Border, var topBorder: Border, var rightBorder: Border, var bottomBorder: Border
 ) {
     constructor(style: STYLE) : this(
         style,

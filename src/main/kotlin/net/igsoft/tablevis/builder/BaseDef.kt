@@ -1,8 +1,8 @@
 package net.igsoft.tablevis.builder
 
 import net.igsoft.tablevis.model.HorizontalAlignment
-import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.model.VerticalAlignment
+import net.igsoft.tablevis.style.Style
 
 open class BaseDef<STYLE : Style, PROPERTIES : CommonProperties<STYLE>>(val properties: PROPERTIES) {
     var width: Int?

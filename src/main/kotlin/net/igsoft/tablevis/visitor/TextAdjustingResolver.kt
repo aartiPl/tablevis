@@ -2,13 +2,14 @@ package net.igsoft.tablevis.visitor
 
 import net.igsoft.tablevis.builder.CellProperties
 import net.igsoft.tablevis.builder.RowProperties
-import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.builder.TableProperties
+import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.util.Text
 import net.igsoft.tablevis.util.Utils
 import kotlin.math.max
 
-class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowProperties<STYLE>, CellProperties<STYLE>> {
+class TextAdjustingResolver<STYLE : Style> :
+    Visitor<STYLE, TableProperties<STYLE>, RowProperties<STYLE>, CellProperties<STYLE>> {
     private var width = 0
 
     override fun visit(tableProperties: TableProperties<STYLE>): TableProperties<STYLE> {
@@ -54,14 +55,16 @@ class TextAdjustingResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYL
             calculatedWidth += cellProperties.width!! + cellProperties.commonStyle.rightBorder.size
         }
 
-        rowProperties.height = rowProperties.height?: maxHeight
+        rowProperties.height = rowProperties.height ?: maxHeight
         rowProperties.width = calculatedWidth
 
         return rowProperties
     }
 
     override fun visit(cellProperties: CellProperties<STYLE>): CellProperties<STYLE> {
-        cellProperties.textWidth = (cellProperties.width ?: cellProperties.minimalWidth) - cellProperties.commonStyle.leftMargin - cellProperties.commonStyle.rightMargin
+        cellProperties.textWidth =
+            (cellProperties.width
+                ?: cellProperties.minimalWidth) - cellProperties.commonStyle.leftMargin - cellProperties.commonStyle.rightMargin
 
         //Choose strategy of splitting text
         cellProperties.lines = if (cellProperties.textWidth < 5) {
