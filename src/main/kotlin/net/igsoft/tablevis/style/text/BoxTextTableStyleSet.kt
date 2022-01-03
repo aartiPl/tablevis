@@ -1,8 +1,5 @@
 package net.igsoft.tablevis.style.text
 
-import net.igsoft.tablevis.model.Intersection
-import net.igsoft.tablevis.style.StyleSet
-
 class BoxTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
 
@@ -72,8 +69,8 @@ class BoxTextTableStyleSet(
         put("━│━┃", '╈')
     }
 
-    override fun resolveIntersection(chars: String): Char {
-        return intersections[chars] ?: '?'
+    override fun resolveIntersection(value: String): Char {
+        return intersections[value] ?: '?'
     }
 
     companion object {

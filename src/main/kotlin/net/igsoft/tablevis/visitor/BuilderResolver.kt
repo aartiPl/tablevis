@@ -18,11 +18,12 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
     override fun visit(tableProperties: TableProperties<STYLE>): Table<STYLE_SET> {
         val horizontalElements = mutableListOf<HorizontalElement>()
 
-        for (rowDef in tableProperties.rows) {
-            horizontalElements.addAll(rowDef.applyVisitor(this))
+        if (tableProperties.rows.isNotEmpty()) {
+            for (rowDef in tableProperties.rows) {
+                horizontalElements.addAll(rowDef.applyVisitor(this))
+            }
+            horizontalElements.add(toLine(upperLine))
         }
-
-        horizontalElements.add(toLine(upperLine))
 
         return Table(styleSet, tableProperties.width!!, tableProperties.height!!, horizontalElements)
     }
@@ -83,7 +84,11 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
     }
 
     private fun resolveIntersection(
-        upperLine: TreeMap<Int, Intersection>, lowerLine: TreeMap<Int, Intersection>, position: Int, leftBorderSize: Int, cell: Cell<STYLE>
+        upperLine: TreeMap<Int, Intersection>,
+        lowerLine: TreeMap<Int, Intersection>,
+        position: Int,
+        leftBorderSize: Int,
+        cell: Cell<STYLE>
     ) {
         var upperIntersection = upperLine.getOrPut(position) { Intersection() }
         upperIntersection.right = resolveStyle(upperIntersection.right, cell.style.topBorder)
@@ -112,7 +117,8 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
                 continue
             }
 
-            elements.add(Section(entry.key - lastEntry.key - lastEntry.value.right.size, lastEntry.value.right))
+            //TODO: what is intersection size? Is it really 1? Probably we should not calculate it here, but just copy from cell width
+            elements.add(Section(entry.key - lastEntry.key - 1, lastEntry.value.right))
             elements.add(entry.value)
             lastEntry = entry
         }
