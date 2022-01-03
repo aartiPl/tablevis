@@ -5,6 +5,7 @@ import net.igsoft.tablevis.builder.RowProperties
 import net.igsoft.tablevis.builder.TableProperties
 import net.igsoft.tablevis.model.*
 import net.igsoft.tablevis.style.Border
+import net.igsoft.tablevis.style.Border.Companion.empty
 import net.igsoft.tablevis.style.Style
 import net.igsoft.tablevis.style.StyleSet
 import java.util.*
@@ -32,7 +33,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
 
         val verticalElements = mutableListOf<VerticalElement>()
 
-        var lastBorder: Border = Border.empty
+        var lastBorder: Border = empty
         var lastCell: Cell<STYLE>? = null
         var leftSection: Section
 
@@ -56,6 +57,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
             vPosition += cell.height
         }
 
+        upperLine.lastEntry().value.right = empty //Last cell right intersection is always empty
         verticalElements.add(Section(lastCell!!.height, resolveStyle(lastBorder, lastCell.style.leftBorder)))
 
         val line = toLine(upperLine)
@@ -81,26 +83,38 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
     private fun resolveIntersection(
         upperLine: TreeMap<Int, Intersection>,
         lowerLine: TreeMap<Int, Intersection>,
-        position: Int,
+        cellStartPosition: Int,
         leftBorderSize: Int,
         cell: Cell<STYLE>
     ) {
-        //val lastUpperIntersectionBorder = if (upperLine.isNotEmpty()) upperLine.lastEntry().value.right else Border.empty
-        var upperIntersection = upperLine.getOrPut(position) { Intersection() }
-        upperIntersection.right = resolveStyle(upperIntersection.right, cell.style.topBorder)
-        upperIntersection.bottom = resolveStyle(upperIntersection.bottom, cell.style.leftBorder)
+        val cellEndPosition = cellStartPosition + leftBorderSize + cell.width
 
-        upperIntersection = upperLine.getOrPut(position + leftBorderSize + cell.width) { Intersection() }
-        upperIntersection.left = resolveStyle(upperIntersection.left, cell.style.topBorder)
-        upperIntersection.bottom = resolveStyle(upperIntersection.bottom, cell.style.rightBorder)
+        val leftTopIntersection = upperLine.getOrPut(cellStartPosition) { Intersection() }
+        leftTopIntersection.right = resolveStyle(leftTopIntersection.right, cell.style.topBorder)
+        leftTopIntersection.bottom = resolveStyle(leftTopIntersection.bottom, cell.style.leftBorder)
 
-        //val lastLowerIntersectionBorder = if (upperLine.isNotEmpty()) upperLine.lastEntry().value.right else Border.empty
-        var lowerIntersection = lowerLine.getOrPut(position) { Intersection() }
-        lowerIntersection.right = resolveStyle(lowerIntersection.right, cell.style.bottomBorder)
-        lowerIntersection.top = resolveStyle(lowerIntersection.top, cell.style.leftBorder)
-        lowerIntersection = lowerLine.getOrPut(position + leftBorderSize + cell.width) { Intersection() }
-        lowerIntersection.left = resolveStyle(lowerIntersection.left, cell.style.bottomBorder)
-        lowerIntersection.top = resolveStyle(lowerIntersection.top, cell.style.rightBorder)
+        val rightTopIntersection = upperLine.getOrPut(cellEndPosition) {
+            //We are splitting existing upper cell into parts - left and right border of intersection is same as it was in previous intersection.
+            //In case it is the last cell in row, right border will be replaced to empty later.
+            Intersection(matrix = arrayOf(leftTopIntersection.right, empty, leftTopIntersection.right, empty))
+        }
+
+        //We should also look if there were any other intersection and update its left/right values
+        upperLine.filter { it.key in (cellStartPosition + 1) until cellEndPosition }.forEach { entry ->
+            entry.value.left = leftTopIntersection.right
+            entry.value.right = leftTopIntersection.right
+        }
+
+        rightTopIntersection.left = resolveStyle(rightTopIntersection.left, cell.style.topBorder)
+        rightTopIntersection.bottom = resolveStyle(rightTopIntersection.bottom, cell.style.rightBorder)
+
+        val leftBottomIntersection = lowerLine.getOrPut(cellStartPosition) { Intersection() }
+        leftBottomIntersection.right = resolveStyle(leftBottomIntersection.right, cell.style.bottomBorder)
+        leftBottomIntersection.top = resolveStyle(leftBottomIntersection.top, cell.style.leftBorder)
+
+        val rightBottomIntersection = lowerLine.getOrPut(cellEndPosition) { Intersection() }
+        rightBottomIntersection.left = resolveStyle(rightBottomIntersection.left, cell.style.bottomBorder)
+        rightBottomIntersection.top = resolveStyle(rightBottomIntersection.top, cell.style.rightBorder)
     }
 
     private fun toLine(tree: TreeMap<Int, Intersection>): Line {
