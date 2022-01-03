@@ -1,6 +1,5 @@
 package net.igsoft.tablevis.visitor
 
-import net.igsoft.tablevis.builder.CellDef
 import net.igsoft.tablevis.builder.CellProperties
 import net.igsoft.tablevis.builder.RowProperties
 import net.igsoft.tablevis.builder.TableProperties
@@ -33,7 +32,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
 
         val verticalElements = mutableListOf<VerticalElement>()
 
-        var lastBorder: Border? = null
+        var lastBorder: Border = Border.empty
         var lastCell: Cell<STYLE>? = null
         var leftSection: Section
 
@@ -74,13 +73,9 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         )
     }
 
-    private fun resolveStyle(previousBorder: Border?, border: Border?): Border {
-        require(previousBorder != null || border != null)
-
-        if (previousBorder == null) return border!!
-        if (border == null) return previousBorder
-
-        return if (previousBorder.elevation > border.elevation) previousBorder else border
+    private fun resolveStyle(vararg borders: Border): Border {
+        require(borders.isNotEmpty())
+        return borders.maxByOrNull { it.elevation }!!
     }
 
     private fun resolveIntersection(
@@ -90,16 +85,17 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         leftBorderSize: Int,
         cell: Cell<STYLE>
     ) {
-        val lastUpperIntersectionBorder = if (upperLine.isNotEmpty()) upperLine.lastEntry().value.right else Border.empty
-        var upperIntersection = upperLine.getOrPut(position) { Intersection(matrix = arrayOf(lastUpperIntersectionBorder, Border.empty, lastUpperIntersectionBorder, Border.empty)) }
+        //val lastUpperIntersectionBorder = if (upperLine.isNotEmpty()) upperLine.lastEntry().value.right else Border.empty
+        var upperIntersection = upperLine.getOrPut(position) { Intersection() }
         upperIntersection.right = resolveStyle(upperIntersection.right, cell.style.topBorder)
         upperIntersection.bottom = resolveStyle(upperIntersection.bottom, cell.style.leftBorder)
+
         upperIntersection = upperLine.getOrPut(position + leftBorderSize + cell.width) { Intersection() }
         upperIntersection.left = resolveStyle(upperIntersection.left, cell.style.topBorder)
         upperIntersection.bottom = resolveStyle(upperIntersection.bottom, cell.style.rightBorder)
 
-        val lastLowerIntersectionBorder = if (upperLine.isNotEmpty()) upperLine.lastEntry().value.right else Border.empty
-        var lowerIntersection = lowerLine.getOrPut(position) { Intersection(matrix = arrayOf(lastLowerIntersectionBorder, Border.empty, lastLowerIntersectionBorder, Border.empty)) }
+        //val lastLowerIntersectionBorder = if (upperLine.isNotEmpty()) upperLine.lastEntry().value.right else Border.empty
+        var lowerIntersection = lowerLine.getOrPut(position) { Intersection() }
         lowerIntersection.right = resolveStyle(lowerIntersection.right, cell.style.bottomBorder)
         lowerIntersection.top = resolveStyle(lowerIntersection.top, cell.style.leftBorder)
         lowerIntersection = lowerLine.getOrPut(position + leftBorderSize + cell.width) { Intersection() }
