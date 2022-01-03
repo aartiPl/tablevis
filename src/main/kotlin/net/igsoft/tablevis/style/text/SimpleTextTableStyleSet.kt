@@ -1,5 +1,8 @@
 package net.igsoft.tablevis.style.text
 
+import net.igsoft.tablevis.model.Intersection
+import net.igsoft.tablevis.style.StyleSet
+
 class SimpleTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
     val header: TextTableStyle = TextTableStyle(
@@ -16,7 +19,7 @@ class SimpleTextTableStyleSet(
     ),
 ) : TextTableStyleSet<TextTableStyle> {
     override val baseStyle: TextTableStyle = row
-    override fun resolveCrossSection(value: IntersectionMatrix): Char = '+'
+    override fun resolveIntersection(value: String): Char = '+'
 
     companion object {
         val horizontalBoxBorder = TextTableBorder("-", 1, 50)
@@ -27,7 +30,5 @@ class SimpleTextTableStyleSet(
 
         val horizontalHeavyFooterBoxBorder = TextTableBorder("~", 1, 75)
         val verticalHeavyFooterBoxBorder = TextTableBorder("|", 1, 75)
-
-        val noBorder = TextTableBorder("", 0, 500)
     }
 }

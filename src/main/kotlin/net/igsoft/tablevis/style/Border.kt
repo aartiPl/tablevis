@@ -1,6 +1,6 @@
 package net.igsoft.tablevis.style
 
-interface Border {
-    val size: Int
-    val elevation: Int
+abstract class Border {
+    abstract val size: Int
+    abstract val elevation: Int
 }

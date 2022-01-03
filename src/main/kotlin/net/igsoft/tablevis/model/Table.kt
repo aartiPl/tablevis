@@ -7,5 +7,5 @@ class Table<STYLE_SET : StyleSet<out Style>> internal constructor(
     val styleSet: STYLE_SET,
     val width: Int,
     val height: Int,
-    val rows: List<Row>
+    val horizontalElements: List<HorizontalElement>
 )
