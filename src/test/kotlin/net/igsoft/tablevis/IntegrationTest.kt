@@ -6,6 +6,7 @@ import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.igsoft.tablevis.printer.text.TextTablePrinter
 import net.igsoft.tablevis.style.text.BoxTextTableStyleSet
+import net.igsoft.tablevis.style.text.NoBorderTextTableStyleSet
 import net.igsoft.tablevis.style.text.SimpleTextTableStyleSet
 import org.junit.jupiter.api.Test
 
@@ -675,7 +676,7 @@ class IntegrationTest {
         //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
 
         //TODO: no-borders style
-        val table = TableBuilder(styleSet) {
+        val table = TableBuilder(NoBorderTextTableStyleSet()) {
             width = 110
             row {
                 cell {

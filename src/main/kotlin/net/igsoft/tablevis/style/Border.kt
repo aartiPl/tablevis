@@ -1,6 +1,18 @@
 package net.igsoft.tablevis.style
 
-abstract class Border {
-    abstract val size: Int
-    abstract val elevation: Int
+interface Border {
+    val size: Int
+    val elevation: Int
+
+    companion object {
+        val noBorder = object : Border {
+            override val size: Int = 0
+            override val elevation: Int = 500
+        }
+
+        val empty = object : Border {
+            override val size: Int = 0
+            override val elevation: Int = 0
+        }
+    }
 }

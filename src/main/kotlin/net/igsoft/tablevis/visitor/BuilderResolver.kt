@@ -90,14 +90,16 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         leftBorderSize: Int,
         cell: Cell<STYLE>
     ) {
-        var upperIntersection = upperLine.getOrPut(position) { Intersection() }
+        val lastUpperIntersectionBorder = if (upperLine.isNotEmpty()) upperLine.lastEntry().value.right else Border.empty
+        var upperIntersection = upperLine.getOrPut(position) { Intersection(matrix = arrayOf(lastUpperIntersectionBorder, Border.empty, lastUpperIntersectionBorder, Border.empty)) }
         upperIntersection.right = resolveStyle(upperIntersection.right, cell.style.topBorder)
         upperIntersection.bottom = resolveStyle(upperIntersection.bottom, cell.style.leftBorder)
         upperIntersection = upperLine.getOrPut(position + leftBorderSize + cell.width) { Intersection() }
         upperIntersection.left = resolveStyle(upperIntersection.left, cell.style.topBorder)
         upperIntersection.bottom = resolveStyle(upperIntersection.bottom, cell.style.rightBorder)
 
-        var lowerIntersection = lowerLine.getOrPut(position) { Intersection() }
+        val lastLowerIntersectionBorder = if (upperLine.isNotEmpty()) upperLine.lastEntry().value.right else Border.empty
+        var lowerIntersection = lowerLine.getOrPut(position) { Intersection(matrix = arrayOf(lastLowerIntersectionBorder, Border.empty, lastLowerIntersectionBorder, Border.empty)) }
         lowerIntersection.right = resolveStyle(lowerIntersection.right, cell.style.bottomBorder)
         lowerIntersection.top = resolveStyle(lowerIntersection.top, cell.style.leftBorder)
         lowerIntersection = lowerLine.getOrPut(position + leftBorderSize + cell.width) { Intersection() }

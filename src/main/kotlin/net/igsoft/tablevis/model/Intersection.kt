@@ -1,7 +1,7 @@
 package net.igsoft.tablevis.model
 
 import net.igsoft.tablevis.style.Border
-import net.igsoft.tablevis.style.StyleSet.Companion.empty
+import net.igsoft.tablevis.style.Border.Companion.empty
 
 data class Intersection(val matrix: Array<Border> = arrayOf(empty, empty, empty, empty)) : LineElement {
     var left: Border
