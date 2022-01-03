@@ -1,8 +1,5 @@
 package net.igsoft.tablevis.style.text
 
-import net.igsoft.tablevis.model.Intersection
-import net.igsoft.tablevis.style.StyleSet
-
 class SimpleTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
     val header: TextTableStyle = TextTableStyle(

@@ -32,7 +32,7 @@ class WidthResolver<STYLE : Style> : Visitor<STYLE, TableProperties<STYLE>, RowP
         }
 
         if (tableProperties.width!! < minimalWidth) {
-            throw IllegalArgumentException("Constraint violation: table width [$tableProperties.width] is less than minimal table width [$minimalWidth]")
+            throw IllegalArgumentException("Constraint violation: table width [${tableProperties.width}] is less than minimal table width [$minimalWidth]")
         }
 
         return tableProperties

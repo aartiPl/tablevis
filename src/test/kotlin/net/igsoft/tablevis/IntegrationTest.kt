@@ -253,9 +253,9 @@ class IntegrationTest {
 
         assertThat(printer.print(table)).isEqualTo(
             //@formatter:off
-            "+~==~==~==~==~==~==~==~==~==~==~==~==~+\r\n" +
+            "+=~==~==~==~==~==~==~==~==~==~==~==~==+\r\n" +
             "*              Header 1               *\r\n" +
-            "+~==~==~==~==~==~==~==~==~==~==~==~==~+\r\n"
+            "+=~==~==~==~==~==~==~==~==~==~==~==~==+\r\n"
             //@formatter:on
         )
     }
@@ -335,9 +335,9 @@ class IntegrationTest {
         println(printer.print(table))
 
         assertThat(printer.print(table)).isEqualTo(
-            """|+~==~==~==~==~==~==+==~==~==~==~==~==~+
+            """|+=~==~==~==~==~==~=+=~==~==~==~==~==~=+
                |*         Header 1 * Header 2         *
-               |+~==~==~==~==~==~==+==~==~==~==~==~==~+
+               |+=~==~==~==~==~==~=+=~==~==~==~==~==~=+
                ||                 Row                 |
                |+------------------+------------------+
                ||           Cell 1 | Cell 2           |
@@ -672,11 +672,101 @@ class IntegrationTest {
     }
 
     @Test
-    fun `Program options formatting`() {
-        //http://en.wikipedia.org/wiki/Box-drawing_character#Unicode
+    fun `Program options formatting - no borders`() {
+        val table = TableBuilder(NoBorderTextTableStyleSet(lineSeparator = "\n")) {
+            width = 110
+            leftMargin = 0
+            rightMargin = 0
 
-        //TODO: no-borders style
-        val table = TableBuilder(NoBorderTextTableStyleSet()) {
+            row {
+                cell {
+                    justify()
+                    value = LOREM_IPSUM_TEXT
+                }
+            }
+
+            row { }
+
+            row {
+                cell {
+                    id(1)
+                }
+                cell {
+                    id(2)
+                    value = "First option"
+                }
+                cell {
+                    id(3)
+                }
+                cell {
+                    justify()
+                    value = OPTION1_DESCRIPTION_TEXT
+                }
+            }
+
+            row {  }
+
+            row {
+                cell {
+                    id(1)
+                }
+                cell {
+                    id(2)
+                    value = "Some other option"
+                }
+                cell {
+                    id(3)
+                }
+                cell {
+                    value = OPTION2_DESCRIPTION_TEXT
+                }
+            }
+
+            row { }
+
+            forId(1).setWidth(2)
+            forId(3).setWidth(4)
+            forId(2).setMinimalWidth()
+        }.build()
+
+        println(printer.print(table))
+
+        @Suppress("SpellCheckingInspection") assertThat(printer.print(table)).isEqualTo(
+            """|Lorem Ipsum is simply dummy text of the printing and typesetting industry.                                    
+               |                                                                                                              
+               |    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took
+               |a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but  
+               |also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s   
+               |with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
+               |software like Aldus PageMaker including versions of Lorem Ipsum.                                              
+               |                                                                                                              
+               |  First option             Option description - It is a long established     *fact*    that a reader will be  
+               |                       distracted by the readable content of a page when looking at its layout. The point of  
+               |                       using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as     
+               |                       opposed to using 'Content here, content here', making it look like readable English.   
+               |                       Many desktop publishing packages and web page editors now use Lorem Ipsum as their     
+               |                       default model text, and a search for 'lorem ipsum' will uncover many web sites still in
+               |                       their infancy. Various versions have evolved over the years, sometimes by accident,    
+               |                       sometimes on purpose (injected humour and the like).                                   
+               |                                                                                                              
+               |  Some other option        Some other option description - contrary to popular belief, Lorem Ipsum is not     
+               |                       simply random text. It has roots in a piece of classical Latin literature from 45 BC,  
+               |                       making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney 
+               |                       College in Virginia, looked up one of the more obscure Latin words, consectetur, from a
+               |                       Lorem Ipsum passage, and going through the cites of the word in classical literature,  
+               |                       discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 
+               |                       of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 
+               |                       45 BC. This book is a treatise on the theory of ethics, very popular during the        
+               |                       Renaissance. The first line of Lorem Ipsum, Lorem ipsum dolor sit amet.., comes from a 
+               |                       line in section 1.10.32.                                                               
+               |                                                                                                              
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Program options formatting - with borders`() {
+        val table = TableBuilder(styleSet) {
             width = 110
             row {
                 cell {
