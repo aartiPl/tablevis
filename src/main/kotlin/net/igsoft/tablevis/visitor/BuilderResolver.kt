@@ -78,9 +78,8 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         )
     }
 
-    private fun resolveStyle(vararg borders: Border): Border {
-        require(borders.isNotEmpty())
-        return borders.maxByOrNull { it.elevation }!!
+    private fun resolveStyle(border: Border, vararg borders: Border): Border {
+        return listOf(border, *borders).maxByOrNull { it.elevation }!!
     }
 
     private fun resolveIntersection(

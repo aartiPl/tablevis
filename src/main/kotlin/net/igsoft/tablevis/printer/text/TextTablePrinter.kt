@@ -103,7 +103,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
     }
 
     private fun resolveBorder(border: Border): String {
-        return if (border == Border.empty || border == Border.noBorder) {
+        return if (border == Border.empty) {
             " "
         } else {
             (border as TextTableBorder).line

@@ -5,10 +5,10 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.igsoft.tablevis.printer.text.TextTablePrinter
-import net.igsoft.tablevis.style.Border
 import net.igsoft.tablevis.style.text.BoxTextTableStyleSet
 import net.igsoft.tablevis.style.text.NoBorderTextTableStyleSet
 import net.igsoft.tablevis.style.text.SimpleTextTableStyleSet
+import net.igsoft.tablevis.style.text.TextTableBorder
 import org.junit.jupiter.api.Test
 
 class IntegrationTest {
@@ -866,16 +866,16 @@ class IntegrationTest {
 
             row {
                 cell {
+                    bottomBorder = TextTableBorder.noBorder
                     value = 1
-                    bottomBorder = Border.noBorder
                 }
                 cell {
+                    rightBorder = TextTableBorder.noBorder
                     value = 2
-                    rightBorder = Border.noBorder
                 }
                 cell {
+                    bottomBorder = TextTableBorder.noBorder
                     value = 3
-                    bottomBorder = Border.noBorder
                 }
             }
             row {
@@ -894,8 +894,8 @@ class IntegrationTest {
                     value = 7
                 }
                 cell {
+                    rightBorder = TextTableBorder.noBorder
                     value = 8
-                    rightBorder = Border.noBorder
                 }
                 cell {
                     value = 9
