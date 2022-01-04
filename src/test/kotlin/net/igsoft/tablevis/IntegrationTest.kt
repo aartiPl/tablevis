@@ -5,6 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.igsoft.tablevis.printer.text.TextTablePrinter
+import net.igsoft.tablevis.style.Border
 import net.igsoft.tablevis.style.text.BoxTextTableStyleSet
 import net.igsoft.tablevis.style.text.NoBorderTextTableStyleSet
 import net.igsoft.tablevis.style.text.SimpleTextTableStyleSet
@@ -854,6 +855,65 @@ class IntegrationTest {
                |├──┴───────────────────┴───┴─────────────────────────────────────────────────────────────────────────────────┤
                |│                                                                                                            │
                |└────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Cells without borders`() {
+        val table = TableBuilder(styleSet) {
+            center()
+
+            row {
+                cell {
+                    value = 1
+                    bottomBorder = Border.noBorder
+                }
+                cell {
+                    value = 2
+                    rightBorder = Border.noBorder
+                }
+                cell {
+                    value = 3
+                    bottomBorder = Border.noBorder
+                }
+            }
+            row {
+                cell {
+                    value = 4
+                }
+                cell {
+                    value = 5
+                }
+                cell {
+                    value = 6
+                }
+            }
+            row {
+                cell {
+                    value = 7
+                }
+                cell {
+                    value = 8
+                    rightBorder = Border.noBorder
+                }
+                cell {
+                    value = 9
+                }
+            }
+
+        }.build()
+
+        println(printer.print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌───┬───────┐
+               |│ 1 │ 2  3  │
+               |│   ├───┐   │
+               |│ 4 │ 5 │ 6 │
+               |├───┼───┴───┤
+               |│ 7 │ 8  9  │
+               |└───┴───────┘
                |""".trimMargin()
         )
     }

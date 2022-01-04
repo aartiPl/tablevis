@@ -38,18 +38,12 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
         for (element in line.elements) {
             when (element) {
                 is Section -> {
-                    val border = element.border as TextTableBorder
-                    sb.append(border.line.repeat(element.size).substring(0, element.size))
+                    val line = borderToString(element.border)
+                    sb.append(line.repeat(element.size).substring(0, element.size))
                 }
 
                 is Intersection -> {
-                    val chars = element.matrix.joinToString(separator = "") { border ->
-                        if (border == Border.empty || border == Border.noBorder) {
-                            " "
-                        } else {
-                            (border as TextTableBorder).line
-                        }
-                    }
+                    val chars = element.matrix.joinToString(separator = "") { borderToString(it) }
                     sb.append(resolveIntersection(chars))
                 }
             }
@@ -64,9 +58,8 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
             for (verticalElement in row.verticalElements) {
                 when (verticalElement) {
                     is Section -> {
-                        val textTableBorder = verticalElement.border as TextTableBorder
-                        if (textTableBorder.size > 0) {
-                            sb.append(textTableBorder.line)
+                        if (verticalElement.border.size > 0) {
+                            sb.append(borderToString(verticalElement.border))
                         }
                     }
                     is Cell<*> -> {
@@ -93,6 +86,14 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
             HorizontalAlignment.Center -> StringUtils.center(text, width)
             HorizontalAlignment.Right -> StringUtils.leftPad(text, width)
             else -> StringUtils.rightPad(text, width)
+        }
+    }
+
+    private fun borderToString(border: Border): String {
+        return if (border == Border.empty || border == Border.noBorder) {
+            " "
+        } else {
+            (border as TextTableBorder).line
         }
     }
 }

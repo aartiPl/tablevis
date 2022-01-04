@@ -2,6 +2,7 @@ package net.igsoft.tablevis.builder
 
 import net.igsoft.tablevis.model.HorizontalAlignment
 import net.igsoft.tablevis.model.VerticalAlignment
+import net.igsoft.tablevis.style.Border
 import net.igsoft.tablevis.style.Style
 
 open class BaseDef<STYLE : Style, PROPERTIES : CommonProperties<STYLE>>(val properties: PROPERTIES) {
@@ -39,6 +40,30 @@ open class BaseDef<STYLE : Style, PROPERTIES : CommonProperties<STYLE>>(val prop
         get() = properties.commonStyle.bottomMargin
         set(value) {
             properties.commonStyle.bottomMargin = value
+        }
+
+    var leftBorder: Border
+        get() = properties.commonStyle.leftBorder
+        set(value) {
+            properties.commonStyle.leftBorder = value
+        }
+
+    var topBorder: Border
+        get() = properties.commonStyle.topBorder
+        set(value) {
+            properties.commonStyle.topBorder = value
+        }
+
+    var rightBorder: Border
+        get() = properties.commonStyle.rightBorder
+        set(value) {
+            properties.commonStyle.rightBorder = value
+        }
+
+    var bottomBorder: Border
+        get() = properties.commonStyle.bottomBorder
+        set(value) {
+            properties.commonStyle.bottomBorder = value
         }
 
     fun center() = apply {

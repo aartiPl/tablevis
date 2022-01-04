@@ -34,6 +34,8 @@ class BoxTextTableStyleSet(
         put("─│─│", '┼')
         put("─│  ", '┘')
         put(" │─ ", '└')
+        put("─ ─ ", '─')
+        put(" │ │", '│')
 
         put("  ━┃", '┏')
         put("━  ┃", '┓')

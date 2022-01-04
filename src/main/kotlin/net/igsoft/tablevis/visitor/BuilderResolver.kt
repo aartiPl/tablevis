@@ -101,8 +101,8 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
 
         //We should also look if there were any other intersection and update its left/right values
         upperLine.filter { it.key in (cellStartPosition + 1) until cellEndPosition }.forEach { entry ->
-            entry.value.left = leftTopIntersection.right
-            entry.value.right = leftTopIntersection.right
+            entry.value.left = resolveStyle(entry.value.left, leftTopIntersection.right)
+            entry.value.right = resolveStyle(entry.value.right, leftTopIntersection.right)
         }
 
         rightTopIntersection.left = resolveStyle(rightTopIntersection.left, cell.style.topBorder)

@@ -7,7 +7,7 @@ interface Border {
     companion object {
         val noBorder = object : Border {
             override val size: Int = 0
-            override val elevation: Int = 500
+            override val elevation: Int = Int.MAX_VALUE
         }
 
         val empty = object : Border {
