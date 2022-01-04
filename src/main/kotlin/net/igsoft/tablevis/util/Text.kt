@@ -95,29 +95,23 @@ object Text {
         val spacesPerGap = missing / gaps
         var additionalSpaces = missing % gaps
 
-        if (spacesPerGap > 0) {
-            //Distribute spaces evenly...
-            for (i in 1 until wordsAndDelimiters.size) {
-                if (i % 2 != 0) {
-                    wordsAndDelimiters[i] += " ".repeat(spacesPerGap)
-                }
-            }
-        }
+        if (spacesPerGap > 0 || additionalSpaces > 0) {
+            val everyNthGap = gaps / additionalSpaces
 
-        if (additionalSpaces > 0) {
-            //Distribute remaining spaces randomly
+            //Distribute spaces evenly...
+            var counter = 0
             for (i in 1 until wordsAndDelimiters.size) {
                 if (i % 2 != 0) {
                     var additionalSpace = 0
 
-                    if (additionalSpaces > 0) {
+                    if (counter % everyNthGap == 0 && additionalSpaces > 0) {
                         additionalSpace = 1
-                        additionalSpaces -= 1
+                        additionalSpaces--
                     }
 
-                    val spaces = additionalSpace
-
+                    val spaces = spacesPerGap + additionalSpace
                     wordsAndDelimiters[i] += " ".repeat(spaces)
+                    counter++
                 }
             }
         }
