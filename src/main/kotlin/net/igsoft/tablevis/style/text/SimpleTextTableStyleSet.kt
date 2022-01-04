@@ -2,6 +2,8 @@ package net.igsoft.tablevis.style.text
 
 class SimpleTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
+    override val skipTransparentBorders: Boolean = false,
+
     val header: TextTableStyle = TextTableStyle(
         verticalBorder = verticalHeavyBoxBorder,
         horizontalBorder = horizontalHeavyBoxBorder,

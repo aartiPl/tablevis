@@ -2,6 +2,7 @@ package net.igsoft.tablevis.style.text
 
 class NoBorderTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
+    override val skipTransparentBorders: Boolean = true,
 
     val row: TextTableStyle = TextTableStyle(
         verticalBorder = verticalNoBorder,

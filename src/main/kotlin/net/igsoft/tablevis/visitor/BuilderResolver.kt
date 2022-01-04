@@ -12,8 +12,8 @@ import java.util.*
 
 class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val styleSet: STYLE_SET) :
     Visitor<STYLE, Table<STYLE_SET>, List<HorizontalElement>, Cell<STYLE>> {
-
     private var upperLine = TreeMap<Int, Intersection>()
+    private var lowerLine = TreeMap<Int, Intersection>()
 
     override fun visit(tableProperties: TableProperties<STYLE>): Table<STYLE_SET> {
         val horizontalElements = mutableListOf<HorizontalElement>()
@@ -29,8 +29,6 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
     }
 
     override fun visit(rowProperties: RowProperties<STYLE>): List<HorizontalElement> {
-        val lowerLine = TreeMap<Int, Intersection>()
-
         val verticalElements = mutableListOf<VerticalElement>()
 
         var lastBorder: Border = empty
@@ -61,7 +59,12 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         verticalElements.add(Section(lastCell!!.height, resolveStyle(lastBorder, lastCell.style.leftBorder)))
 
         val line = toLine(upperLine)
+
+        //Switch upperLine and lowerLine
+        val helper = upperLine
         upperLine = lowerLine
+        lowerLine = helper
+        lowerLine.clear()
 
         return listOf(
             line,
