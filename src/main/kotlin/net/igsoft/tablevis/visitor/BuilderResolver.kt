@@ -131,8 +131,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
                 continue
             }
 
-            //TODO: what is intersection size? Is it really 1? Probably we should not calculate it here, but just copy from cell width
-            elements.add(Section(entry.key - lastEntry.key - 1, lastEntry.value.right))
+            elements.add(Section(entry.key - lastEntry.key - lastEntry.value.right.size, lastEntry.value.right))
             elements.add(entry.value)
             lastEntry = entry
         }
