@@ -1,5 +1,6 @@
 package net.igsoft.tablevis.util
 
+import java.util.regex.Pattern
 import kotlin.math.max
 
 object Text {
@@ -55,4 +56,94 @@ object Text {
     }
 
     fun resolveTabs(text: String, tabSize: Int = 4): String = text.replace("\t", " ".repeat(tabSize))
+
+    fun justifyLine(line: String, width: Int, threshold: Int = width * 4 / 5): String {
+        if (line.length < threshold) {
+            return line
+        }
+
+        var wordsAndDelimiters = mutableListOf<String>()
+        wordsAndDelimiters.addAll(splitPreservingWhitespaces(line))
+
+        var justified = ""
+
+        //Skip whitespaces at beginning (whitespaces are preserved)
+        if (Character.isWhitespace(wordsAndDelimiters.first().codePointAt(0))) {
+            justified = wordsAndDelimiters.first()
+            wordsAndDelimiters = wordsAndDelimiters.drop(1).toMutableList()
+        }
+
+        //Remove whitespaces at end
+        if (Character.isWhitespace(wordsAndDelimiters.last().codePointAt(0))) {
+            wordsAndDelimiters = wordsAndDelimiters.dropLast(1).toMutableList()
+        }
+
+        if (wordsAndDelimiters.isEmpty()) {
+            return justified
+        }
+
+        //Calculate missing spaces
+        val missing = width - line.length
+        val gaps = wordsAndDelimiters.size / 2
+
+        if (gaps == 0) {
+            //Add gaps at the beginning
+            justified += " ".repeat(missing) + wordsAndDelimiters.first()
+            return justified
+        }
+
+        val spacesPerGap = missing / gaps
+        var additionalSpaces = missing % gaps
+
+        if (spacesPerGap > 0) {
+            //Distribute spaces evenly...
+            for (i in 1 until wordsAndDelimiters.size) {
+                if (i % 2 != 0) {
+                    wordsAndDelimiters[i] += " ".repeat(spacesPerGap)
+                }
+            }
+        }
+
+        if (additionalSpaces > 0) {
+            //Distribute remaining spaces randomly
+            for (i in 1 until wordsAndDelimiters.size) {
+                if (i % 2 != 0) {
+                    var additionalSpace = 0
+
+                    if (additionalSpaces > 0) {
+                        additionalSpace = 1
+                        additionalSpaces -= 1
+                    }
+
+                    val spaces = additionalSpace
+
+                    wordsAndDelimiters[i] += " ".repeat(spaces)
+                }
+            }
+        }
+
+        return justified + wordsAndDelimiters.joinToString("")
+    }
+
+    private val whitespacesOrWord = Pattern.compile("\\s+|\\S+")
+
+    fun splitPreservingWhitespaces(text: String): List<String> {
+        val result = mutableListOf<String>()
+
+        var tail = text
+
+        while (tail.isNotEmpty()) {
+            val matcher = whitespacesOrWord.matcher(tail)
+
+            //NOTE: it will always match - non-empty string has either
+            //whitespace or not whitespace characters at the beginning
+            matcher.lookingAt()
+
+            val matched = matcher.group()
+            result += matched
+            tail = tail.substring(matched.length)
+        }
+
+        return result
+    }
 }

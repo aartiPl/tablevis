@@ -719,6 +719,7 @@ class IntegrationTest {
                     id(3)
                 }
                 cell {
+                    justify()
                     value = OPTION2_DESCRIPTION_TEXT
                 }
             }

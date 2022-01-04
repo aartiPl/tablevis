@@ -6,6 +6,7 @@ import net.igsoft.tablevis.style.Border
 import net.igsoft.tablevis.style.text.TextTableBorder
 import net.igsoft.tablevis.style.text.TextTableStyle
 import net.igsoft.tablevis.style.text.TextTableStyleSet
+import net.igsoft.tablevis.util.Text
 import org.apache.commons.lang3.StringUtils
 
 class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
@@ -98,6 +99,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
         return when (horizontalAlignment) {
             HorizontalAlignment.Center -> StringUtils.center(text, width)
             HorizontalAlignment.Right -> StringUtils.leftPad(text, width)
+            HorizontalAlignment.Justified -> StringUtils.rightPad(Text.justifyLine(text, width), width)
             else -> StringUtils.rightPad(text, width)
         }
     }
