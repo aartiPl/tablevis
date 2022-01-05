@@ -1,8 +1,4 @@
 = TODO
 
-- Justify text (both sides)
 - Height resolver
 - More layout errors handling
-- Finish documentation
-- Add examples
-- Better handling of borders (setting e.g. noBorder on some border)
