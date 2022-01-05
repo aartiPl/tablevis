@@ -1,1 +1,580 @@
+:tablevis-version: 0.5.0
+
 = Table visualisation library
+
+Table visualisation library (tablevis) allows creating (custom DSL) and lay outing the complicated tables.
+It's design aims to be universal library for drawing tables on any canvas (e.g. simple text, screen, html).
+
+Currently, it has implemented printer for box drawing characters and for simple Ascii Characters.
+
+Below you can find some examples of what is possible using this library.
+
+.Table 1
+----
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                Header                ┃
+┡━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━┩
+│ Row 1 Cell 1     │      Row 1 Cell 2 │
+├──────────────────┼───────────────────┤
+│ Row 2 Cell 1     │      Row 2 Cell 2 │
+┢━━━━━━━━━━━━━━━━━━┷━━━┳━━━━━━━━━━━━━━━┪
+┃        Footer        ┃   page 1/1    ┃
+┗━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┛
+----
+
+.Table 2
+----
+┏━━━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃ Col 1    ┃ Col 2 ┃ Col 3 ┃
+┡━━━━━━━━━━╇━━━━━━━┻━━━━━━━┩
+│ 12       │ 12345678      │
+├──────────┼───────────────┤
+│ 12345678 │ 32            │
+└──────────┴───────────────┘
+----
+
+.Table 3
+----
++------------------+------------------+
+|     Header 1     |     Header 2     |
++------------------+------------------+
+|                 Row                 |
++-------------------------------------+
+----
+
+== How to start
+
+Add dependency to tablevis library in your build file:
+
+[source,groovy,subs="attributes+"]
+.Gradle
+----
+dependencies {
+    implementation("net.igsoft:tablevis:{tablevis-version}")
+}
+----
+
+[source,xml,subs="attributes+"]
+.Maven
+----
+<dependency>
+    <groupId>net.igsoft</groupId>
+    <artifactId>tablevis</artifactId>
+    <version>{tablevis-version}</version>
+</dependency>
+----
+
+== I can not see box drawing characters in IDE. What to do?
+
+To see box drawing characters in IDE you need to have Unicode enabled console.
+It is not the default in Windows, so you will have to enable it manually.
+
+To do it in IntelliJ IDE, go to:
+
+Help -> Edit Custom VM Options
+
+and add following lines to the existing options:
+
+----
+-Dconsole.encoding=UTF-8
+-Dfile.encoding=UTF-8
+----
+
+
+== Concept and simple usage
+
+This library is meant to provide generic algorithm for laying out tables.
+It has implemented printer for text tables, but with simple changes it should be possible to extend it for printing e.g. on image.
+
+First step while creating table is its definition using Kotlin custom DSL.
+Let's have a look at simplest table.
+
+[source,kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=simplest_table]
+endif::[]
+
+ifdef::env-github[]
+val printer = TextTablePrinter()
+
+var table = TableBuilder(BoxTextTableStyleSet()) {
+    row {}
+}.build()
+
+println(printer.print(table)
+endif::[]
+----
+
+.Result
+----
+┌──┐
+│  │
+└──┘
+----
+
+Table is defined using TableBuilder() which gets as an argument StyleSet.
+StyleSet defines different styles e.g. for header, for footer or for common rows.
+StyleSet is necessary also for defining common properties for Styles.
+For example border crossing characters are defined in StyleSet.
+Think about it - it is not that simple - in case of box drawing characters you have a lot of different combinations for crossing lines, depending on lines used for drawing boxes.
+For example if you cross vertical pipe ('│') with horizontal pipe ('─') you should get corner character either '┌', '┐', '└' or '┘'.
+If you take into consideration that lines can have a different styles, then the number of combinations is overwhelming.
+But you do not think about it - it is defined in StyleSet.
+
+== Making columns the same width (cell ids and setting width explicitly)
+
+
+Let's create now something more complicated.
+
+[source,kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=complicated_table]
+endif::[]
+
+ifdef::env-github[]
+table = TableBuilder(BoxTextTableStyleSet()) {
+    row(styleSet.header) {
+        cell {
+            value = "Consecutive number"
+        }
+
+        cell {
+            value = "Month name"
+        }
+    }
+
+    row {
+        cell {
+            value = "1"
+        }
+
+        cell {
+            value = "January"
+        }
+    }
+
+    row {
+        cell {
+            value = "2"
+        }
+
+        cell {
+            value = "February"
+        }
+    }
+}.build()
+
+println(printer.print(table))
+endif::[]
+----
+
+.Result
+----
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Consecutive number ┃ Month name ┃
+┡━━━┯━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━┩
+│ 1 │ January                     │
+├───┼─────────────────────────────┤
+│ 2 │ February                    │
+└───┴─────────────────────────────┘
+----
+
+Please notice that style set which is passed to the builder is exposed inside as a property 'styleSet'.
+We have used one of the styles defined inside style set - header - to define style of the first row.
+
+Looks nice... but... Yes, in tables you would expect the first column to be aligned and to have same width.
+But this library do not create any assumptions about table layout at the start.
+So standard layout of table is based on best size of cells.
+"Best" in this case means fitting the whole text in it.
+
+Every cell in the table has pre-defined two identifiers: one for column number and one for row number, so that first column in first row has pre-defined following identifiers: 'col-1' and 'row-1'.
+Now we want to make first column to be same size for all rows.
+
+Let's try to make all cells in column 1 to have same, minimal possible size.
+To do that we have to instruct layout engine that for 'col-1' identifiers the size of columns should be same.
+For brevity, I am just adding missing piece of code below last row definition:
+
+[source,kotlin]
+----
+// ....... 8< .......
+row {
+    cell {
+        text = "2"
+    }
+    cell {
+        text = "February"
+    }
+}
+
+forId("col-1").setMinimalWidth()
+// ....... >8 .......
+----
+
+.Result
+----
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Consecutive number ┃ Month name ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ 1                  │ January    │
+├────────────────────┼────────────┤
+│ 2                  │ February   │
+└────────────────────┴────────────┘
+----
+
+In similar way we can define identifiers on any cell in the table.
+Then we can apply modifications on that cells as a whole group.
+We define identifiers in the cell using "id(...)" function call.
+Identifier can be any type e.g. String or Int.
+
+[source,kotlin]
+----
+// ....... 8< .......
+cell {
+    id("first column", 42)
+    text = "2"
+}
+// ....... >8 .......
+----
+
+Now the result looks a bit better - at least the size of the first column is same for all rows.
+But it still seems to big for the content.
+
+Let's try to make first column narrower.
+We can do it by applying different transformation on first column:
+
+[source,kotlin]
+----
+// ....... 8< .......
+forId("col-1").setWidth(11)
+// ....... >8 .......
+----
+
+.Result
+----
+┏━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Consecutive ┃ Month name ┃
+┃ number      ┃            ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ 1           │ January    │
+├─────────────┼────────────┤
+│ 2           │ February   │
+└─────────────┴────────────┘
+----
+
+== Texts rendering
+
+Please notice how the text in first column was automatically split in such a way that it fits into the cell.
+
+Texts in the cells are automatically split into rows based on some simple rules:
+
+. Tabulators are replaced with spaces.
+. Layout engine tries to preserve natural flow of the text, so new lines are kept as much as possible.
+. Layout engine tries to split text by whitespace if it is possible
+. If it is not possible layout engine splits text in the middle adding dash character at splitting point.
+. Text can be positioned in cells with different algorithms: it can be centered, left or right padded or justified.
+
+Now let's center first column and set its width to 6. Additionally, let's make the whole table wider. We can also add some numbers so that we can sum them and add to summary row. To keep correct layout of the table we will have to change widths for specific cells in rows, not for all of them based on column number.
+
+Please look at the below example:
+
+[source,kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=financial_table]
+endif::[]
+
+ifdef::env-github[]
+val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", September", "October", "November", "December")
+
+val profits = listOf(12000, 40000, 29000, 18500, 41300, 21650, 30150, 29999, 24700, 22890, 51135, 49134)
+
+table = TableBuilder(BoxTextTableStyleSet()) {
+    width = 60
+
+    row(styleSet.header) {
+        cell {
+            id("#")
+            value = "Consecutive number"
+        }
+        cell {
+            value = "Month name"
+        }
+        cell {
+            id("profit")
+            value = "Profit"
+        }
+    }
+
+    for (i in 0 until 12) {
+        row {
+            cell {
+                id("#")
+                value = i + 1
+            }
+            cell {
+                value = months[i]
+            }
+            cell {
+                id("profit")
+                value = String.format("%,d $", profits[i])
+            }
+        }
+    }
+
+    row(styleSet.footer) {
+        cell {
+            value = "Sum"
+        }
+        cell {
+            id("profit")
+            value = String.format("%,d $", profits.sum())
+        }
+    }
+
+    forId("#").setWidth(6).center()
+    forId("profit").setWidth(12).center()
+}.build()
+
+println(printer.print(table))
+endif::[]
+----
+
+.Result
+----
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Conse- ┃ Month name                       ┃    Profit    ┃
+┃ cutive ┃                                  ┃              ┃
+┃ number ┃                                  ┃              ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│   1    │ January                          │   12 000 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   2    │ February                         │   40 000 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   3    │ March                            │   29 000 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   4    │ April                            │   18 500 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   5    │ May                              │   41 300 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   6    │ June                             │   21 650 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   7    │ July                             │   30 150 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   8    │ August                           │   29 999 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   9    │ September                        │   24 700 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   10   │ October                          │   22 890 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   11   │ November                         │   51 135 $   │
+├────────┼──────────────────────────────────┼──────────────┤
+│   12   │ December                         │   49 134 $   │
+┢━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╈━━━━━━━━━━━━━━┪
+┃ Sum                                       ┃  370 458 $   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━┛
+----
+
+Here you can find example which justify text in a cell.
+
+[source,kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=justifying_text_table]
+endif::[]
+
+ifdef::env-github[]
+val text = """
+    Kotlin is a modern but already mature programming language aimed to make developers happier. It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse code between multiple platforms for productive programming.
+
+    Pick it up to start building powerful applications!
+""".trimIndent()
+
+val justifyingTextTable = TableBuilder(BoxTextTableStyleSet()) {
+    width = 80
+
+    row {
+        cell {
+            value = text
+        }
+        cell {
+            justify()
+            value = text
+        }
+    }
+}.build()
+
+println(printer.print(justifyingTextTable))
+endif::[]
+----
+
+.Result
+----
+┌──────────────────────────────────────┬───────────────────────────────────────┐
+│ Kotlin is a modern but already       │ Kotlin is a modern but already mature │
+│ mature programming language aimed to │ programming  language  aimed  to make │
+│ make developers happier. It’s        │ developers   happier.  It’s  concise, │
+│ concise, safe, interoperable with    │ safe,  interoperable  with  Java  and │
+│ Java and other languages, and        │ other  languages,  and  provides many │
+│ provides many ways to reuse code     │ ways  to reuse  code between multiple │
+│ between multiple platforms for       │ platforms for productive programming. │
+│ productive programming.              │                                       │
+│                                      │ Pick it up to start building powerful │
+│ Pick it up to start building         │ applications!                         │
+│ powerful applications!               │                                       │
+└──────────────────────────────────────┴───────────────────────────────────────┘
+----
+
+
+== Properties inheritance
+
+In this case we have used property 'width' on the table builder. The same property can be used on rows and on cells.
+There are also different properties connected with style, which are inherited by child elements.
+For example if you enforce centering on table element level, that will be respected for the same style on other elements. Please notice that if you provide style for some specific row, that will effectively cancel inheritance, as it will be overwritten by new style.
+
+Let's see it on some fancy example:
+
+[source,kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=simple_text_table]
+endif::[]
+
+ifdef::env-github[]
+val simpleTextTable = TableBuilder(SimpleTextTableStyleSet(lineSeparator = "\n")) {
+    center() //Everything centered by default
+    width = 39
+
+    row(styleSet.header) {
+        //New style cancels top level alignment (no inheritance here)
+        cell {
+            right()
+            value = "Header 1"
+        }
+        cell {
+            value = "Header 2"
+        }
+    }
+
+    row {
+        //Inherited center property
+        cell {
+            value = "Row"
+        }
+    }
+
+    row {
+        right() //this row is right aligned
+        cell {
+            value = "Cell 1"
+        }
+        cell {
+            left() //but this cell is left aligned
+            value = "Cell 2"
+        }
+    }
+}.build()
+
+println(printer.print(simpleTextTable))
+endif::[]
+----
+
+.Result
+----
++=~==~==~==~==~==~=+=~==~==~==~==~==~=+
+*         Header 1 * Header 2         *
++=~==~==~==~==~==~=+=~==~==~==~==~==~=+
+|                 Row                 |
++------------------+------------------+
+|           Cell 1 | Cell 2           |
++------------------+------------------+
+----
+
+Although 'center()' is defined on top level, it is overridden on lower levels, either on row level or cell level.
+
+== Borders
+
+It is possible to change specific borders in table and make them e.g. invisible. Below you can have example how to do it.
+
+[source,kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=fancy_borders_table]
+endif::[]
+
+ifdef::env-github[]
+val fancyBordersTextTable = TableBuilder(BoxTextTableStyleSet()) {
+    center()
+
+    row {
+        cell {
+            bottomBorder = TextTableBorder.noBorder
+            value = 1
+        }
+        cell {
+            rightBorder = TextTableBorder.noBorder
+            value = 2
+        }
+        cell {
+            bottomBorder = TextTableBorder.noBorder
+            value = 3
+        }
+    }
+    row {
+        cell {
+            value = 4
+        }
+        cell {
+            value = 5
+        }
+        cell {
+            value = 6
+        }
+    }
+    row {
+        cell {
+            value = 7
+        }
+        cell {
+            rightBorder = TextTableBorder.noBorder
+            value = 8
+        }
+        cell {
+            value = 9
+        }
+    }
+}.build()
+
+println(printer.print(fancyBordersTextTable))
+endif::[]
+----
+
+.Result
+----
+┌───┬───────┐
+│ 1 │ 2   3 │
+│   ├───┐   │
+│ 4 │ 5 │ 6 │
+├───┼───┴───┤
+│ 7 │ 8   9 │
+└───┴───────┘
+----
+
+
+There are many more options, which you can discover by looking on unit tests.
+
+Have fun with tables!
+
+== Properties of 'tablevis' in a glance
+
+* Simple and intuitive way of defining tables
+* Automatic text handling
+* Constrained definition of tables
+* Properties are inherited by children elements
