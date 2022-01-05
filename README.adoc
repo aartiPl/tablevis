@@ -5,7 +5,7 @@
 Table visualisation library (tablevis) allows creating (custom DSL) and lay outing the complicated tables.
 It's design aims to be universal library for drawing tables on any canvas (e.g. simple text, screen, html).
 
-Currently, it has implemented printer for box drawing characters or simple Ascii Characters.
+Currently, it has implemented printer for box drawing characters and for simple Ascii Characters.
 
 Below you can find some examples of what is possible using this library.
 
@@ -69,8 +69,17 @@ dependencies {
 To see box drawing characters in IDE you need to have Unicode enabled console.
 It is not the default in Windows, so you will have to enable it manually.
 
-sposób uzyskania UTF-8 w konsoli Eclipse: -Dfile.encoding=UTF-8 + czcionka
-http://paranoid-engineering.blogspot.com/2008/05/getting-unicode-output-in-eclipse.html
+To do it in IntelliJ IDE, go to:
+
+Help -> Edit Custom VM Options
+
+and add following lines to the existing options:
+
+----
+-Dconsole.encoding=UTF-8
+-Dfile.encoding=UTF-8
+----
+
 
 == Concept and simple usage
 
@@ -88,13 +97,7 @@ include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=sim
 endif::[]
 
 ifdef::env-github[]
-    val printer = TextTablePrinter()
 
-    val table = TableBuilder(BoxTextStyleSet()) {
-        row {}
-    }.build()
-
-    println(printer.print(table))
 endif::[]
 ----
 
@@ -113,6 +116,9 @@ Think about it - it is not that simple - in case of box drawing characters you h
 For example if you cross vertical pipe ('│') with horizontal pipe ('─') you should get corner character either '┌', '┐', '└' or '┘'.
 If you take into consideration that lines can have a different styles, then the number of combinations is overwhelming.
 But you do not think about it - it is defined in StyleSet.
+
+== Making columns the same width (cell ids and setting width explicitly)
+
 
 Let's create now something more complicated.
 
@@ -221,16 +227,19 @@ forId("col-1").setWidth(11)
 └─────────────┴────────────┘
 ----
 
+== Texts rendering
+
 Please notice how the text in first column was automatically split in such a way that it fits into the cell.
 
 Texts in the cells are automatically split into rows based on some simple rules:
-1) Tabulators are replaced with spaces.
-2) Layout engine tries to preserve natural flow of the text, so new lines are kept as much as possible.
-3) Layout engine tries to split text by whitespace if it is possible 4) If it is not possible layout engine splits text in the middle adding dash character at splitting point.
 
-Now let's center first column and set its width to 6. Additionally, let's make the whole table wider.
-We can also add some numbers so that we can sum them and add to summary row.
-To keep correct layout of the table we will have to change widths for specific cells in rows, not for all of them based on column number.
+. Tabulators are replaced with spaces.
+. Layout engine tries to preserve natural flow of the text, so new lines are kept as much as possible.
+. Layout engine tries to split text by whitespace if it is possible
+. If it is not possible layout engine splits text in the middle adding dash character at splitting point.
+. Text can be positioned in cells with different algorithms: it can be centered, left or right padded or justified.
+
+Now let's center first column and set its width to 6. Additionally, let's make the whole table wider. We can also add some numbers so that we can sum them and add to summary row. To keep correct layout of the table we will have to change widths for specific cells in rows, not for all of them based on column number.
 
 Please look at the below example:
 
@@ -281,11 +290,44 @@ endif::[]
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━┛
 ----
 
-In this case we have used property 'width' on the table builder.
-The same property can be used on rows and on cells.
+Here you can find example which justify text in a cell.
+
+[source,kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=justifying_text_table]
+endif::[]
+
+ifdef::env-github[]
+
+endif::[]
+----
+
+.Result
+----
+┌──────────────────────────────────────┬───────────────────────────────────────┐
+│ Kotlin is a modern but already       │ Kotlin is a modern but already mature │
+│ mature programming language aimed to │ programming  language  aimed  to make │
+│ make developers happier. It’s        │ developers   happier.  It’s  concise, │
+│ concise, safe, interoperable with    │ safe,  interoperable  with  Java  and │
+│ Java and other languages, and        │ other  languages,  and  provides many │
+│ provides many ways to reuse code     │ ways  to reuse  code between multiple │
+│ between multiple platforms for       │ platforms for productive programming. │
+│ productive programming.              │                                       │
+│                                      │ Pick it up to start building powerful │
+│ Pick it up to start building         │ applications!                         │
+│ powerful applications!               │                                       │
+└──────────────────────────────────────┴───────────────────────────────────────┘
+----
+
+
+== Properties inheritance
+
+In this case we have used property 'width' on the table builder. The same property can be used on rows and on cells.
 There are also different properties connected with style, which are inherited by child elements.
-For example if you enforce centering on table element level, that will be respected for the same style on other elements.
-Please notice that if you provide style for some specific row, that will effectively cancel inheritance, as it will be overwritten by new style.
+For example if you enforce centering on table element level, that will be respected for the same style on other elements. Please notice that if you provide style for some specific row, that will effectively cancel inheritance, as it will be overwritten by new style.
+
 Let's see it on some fancy example:
 
 [source,kotlin]
@@ -302,9 +344,9 @@ endif::[]
 
 .Result
 ----
-+~==~==~==~==~==~==+==~==~==~==~==~==~+
++=~==~==~==~==~==~=+=~==~==~==~==~==~=+
 *         Header 1 * Header 2         *
-+~==~==~==~==~==~==+==~==~==~==~==~==~+
++=~==~==~==~==~==~=+=~==~==~==~==~==~=+
 |                 Row                 |
 +------------------+------------------+
 |           Cell 1 | Cell 2           |
@@ -312,6 +354,34 @@ endif::[]
 ----
 
 Although 'center()' is defined on top level, it is overridden on lower levels, either on row level or cell level.
+
+== Borders
+
+It is possible to change specific borders in table and make them e.g. invisible. Below you can have example how to do it.
+
+[source,kotlin]
+.TableExample.kt
+----
+ifndef::env-github[]
+include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=fancy_borders_table]
+endif::[]
+
+ifdef::env-github[]
+
+endif::[]
+----
+
+.Result
+----
+┌───┬───────┐
+│ 1 │ 2   3 │
+│   ├───┐   │
+│ 4 │ 5 │ 6 │
+├───┼───┴───┤
+│ 7 │ 8   9 │
+└───┴───────┘
+----
+
 
 There are many more options, which you can discover by looking on unit tests.
 

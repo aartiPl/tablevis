@@ -4,6 +4,7 @@ import net.igsoft.tablevis.TableBuilder
 import net.igsoft.tablevis.printer.text.TextTablePrinter
 import net.igsoft.tablevis.style.text.BoxTextTableStyleSet
 import net.igsoft.tablevis.style.text.SimpleTextTableStyleSet
+import net.igsoft.tablevis.style.text.TextTableBorder
 
 fun main() {
     println("Let's print some tables...")
@@ -244,6 +245,83 @@ fun main() {
     println(printer.print(simpleTextTable))
 
     // end::simple_text_table[]
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    // tag::fancy_borders_table[]
+    val fancyBordersTextTable = TableBuilder(BoxTextTableStyleSet()) {
+        center()
+
+        row {
+            cell {
+                bottomBorder = TextTableBorder.noBorder
+                value = 1
+            }
+            cell {
+                rightBorder = TextTableBorder.noBorder
+                value = 2
+            }
+            cell {
+                bottomBorder = TextTableBorder.noBorder
+                value = 3
+            }
+        }
+        row {
+            cell {
+                value = 4
+            }
+            cell {
+                value = 5
+            }
+            cell {
+                value = 6
+            }
+        }
+        row {
+            cell {
+                value = 7
+            }
+            cell {
+                rightBorder = TextTableBorder.noBorder
+                value = 8
+            }
+            cell {
+                value = 9
+            }
+        }
+    }.build()
+
+    println(printer.print(fancyBordersTextTable))
+
+    // end::fancy_borders_table[]
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    // tag::justifying_text_table[]
+
+    val text = """
+        Kotlin is a modern but already mature programming language aimed to make developers happier. It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse code between multiple platforms for productive programming.
+
+        Pick it up to start building powerful applications!
+    """.trimIndent()
+
+    val justifyingTextTable = TableBuilder(BoxTextTableStyleSet()) {
+        width =80
+
+        row {
+            cell {
+                value = text
+            }
+            cell {
+                justify()
+                value = text
+            }
+        }
+    }.build()
+
+    println(printer.print(justifyingTextTable))
+
+    // end::justifying_text_table[]
 
     //------------------------------------------------------------------------------------------------------------------
 

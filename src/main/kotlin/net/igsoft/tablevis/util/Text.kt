@@ -96,7 +96,11 @@ object Text {
         var additionalSpaces = missing % gaps
 
         if (spacesPerGap > 0 || additionalSpaces > 0) {
-            val everyNthGap = gaps / additionalSpaces
+
+            var everyNthGap = 0
+            if (additionalSpaces > 0) {
+                everyNthGap = gaps / additionalSpaces
+            }
 
             //Distribute spaces evenly...
             var counter = 0
@@ -104,7 +108,7 @@ object Text {
                 if (i % 2 != 0) {
                     var additionalSpace = 0
 
-                    if (counter % everyNthGap == 0 && additionalSpaces > 0) {
+                    if (additionalSpaces > 0 && counter % everyNthGap == 0) {
                         additionalSpace = 1
                         additionalSpaces--
                     }
