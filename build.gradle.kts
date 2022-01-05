@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.igsoft"
-version = "0.5"
+version = "0.5.0"
 
 repositories {
     mavenCentral()
