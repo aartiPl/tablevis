@@ -15,6 +15,6 @@ class UtilsTest {
 
     @Test
     fun `Assert that justify() properly justify text`() {
-        assertThat(Text.justifyLine("\tAla i Maciek", 20)).isEqualTo("\tAla     i    Maciek")
+        assertThat(Text.justifyLine("\tAla i Maciek", 15)).isEqualTo("\tAla  i  Maciek")
     }
 }

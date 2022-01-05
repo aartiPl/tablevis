@@ -138,21 +138,20 @@ fun main() {
     //------------------------------------------------------------------------------------------------------------------
 
     // tag::financial_table[]
-    val months =
-        listOf(
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-        )
+    val months = listOf(
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    )
     val profits = listOf(12000, 40000, 29000, 18500, 41300, 21650, 30150, 29999, 24700, 22890, 51135, 49134)
 
     table = TableBuilder(BoxTextTableStyleSet()) {
@@ -243,7 +242,6 @@ fun main() {
     }.build()
 
     println(printer.print(simpleTextTable))
-
     // end::simple_text_table[]
 
     //------------------------------------------------------------------------------------------------------------------
@@ -292,13 +290,11 @@ fun main() {
     }.build()
 
     println(printer.print(fancyBordersTextTable))
-
     // end::fancy_borders_table[]
 
     //------------------------------------------------------------------------------------------------------------------
 
     // tag::justifying_text_table[]
-
     val text = """
         Kotlin is a modern but already mature programming language aimed to make developers happier. It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse code between multiple platforms for productive programming.
 
@@ -306,7 +302,7 @@ fun main() {
     """.trimIndent()
 
     val justifyingTextTable = TableBuilder(BoxTextTableStyleSet()) {
-        width =80
+        width = 80
 
         row {
             cell {
@@ -320,7 +316,6 @@ fun main() {
     }.build()
 
     println(printer.print(justifyingTextTable))
-
     // end::justifying_text_table[]
 
     //------------------------------------------------------------------------------------------------------------------

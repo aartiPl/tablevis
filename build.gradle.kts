@@ -1,14 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.6.10"
     `java-library`
     `maven-publish`
     signing
 }
 
 group = "net.igsoft"
-version = "0.5-SNAPSHOT"
+version = "0.5"
 
 repositories {
     mavenCentral()
@@ -101,7 +101,7 @@ signing {
 
 
 dependencies {
-    implementation("com.google.guava:guava:31.0.1-jre")
+    //implementation("com.google.guava:guava:31.0.1-jre")
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
     testImplementation(kotlin("test"))
