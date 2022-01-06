@@ -3,6 +3,7 @@ package net.igsoft.tablevis.style.text
 class BoxTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
     override val skipTransparentBorders: Boolean = false,
+    private val roundCorners: Boolean = false,
 
     val header: TextTableStyle = TextTableStyle(
         verticalBorder = verticalHeavyBoxBorder,
@@ -26,10 +27,21 @@ class BoxTextTableStyleSet(
     //Intersections are encoded as follows: LTRB -> I
     private val intersections = buildMap<String, Char> {
         //   LTRB    I
-        put("  ─│", '┌'); put("─  │", '┐'); put(" │─│", '├'); put("─│ │", '┤'); put("─ ─│", '┬'); put("─│─ ", '┴')
-        put("─│─│", '┼'); put("─│  ", '┘'); put(" │─ ", '└'); put("─ ─ ", '─'); put(" │ │", '│'); put("│   ", ' ')
-        put(" │  ", ' '); put("  │ ", ' '); put("   │", ' '); put("─   ", ' '); put(" ─  ", ' '); put("  ─ ", ' ')
-        put("   ─", ' '); put("    ", ' ')
+        if (roundCorners) {
+            put(" │─ ", '╰');
+            put("─  │", '╮');
+            put("  ─│", '╭');
+            put("─│  ", '╯');
+        } else {
+            put(" │─ ", '└');
+            put("─  │", '┐');
+            put("  ─│", '┌');
+            put("─│  ", '┘');
+        }
+
+        put(" │─│", '├'); put("─│ │", '┤'); put("─ ─│", '┬'); put("─│─ ", '┴'); put("─│─│", '┼'); put("─ ─ ", '─')
+        put(" │ │", '│'); put("│   ", ' '); put(" │  ", ' '); put("  │ ", ' '); put("   │", ' '); put("─   ", ' ')
+        put(" ─  ", ' '); put("  ─ ", ' '); put("   ─", ' '); put("    ", ' ')
 
         put("  ━┃", '┏'); put("━  ┃", '┓'); put(" ┃━┃", '┣'); put("━┃ ┃", '┫'); put("━ ━┃", '┳'); put("━┃━ ", '┻')
         put("━┃━┃", '╋'); put("━┃  ", '┛'); put(" ┃━ ", '┗')
@@ -63,6 +75,12 @@ class BoxTextTableStyleSet(
         put("─┃━ ", '┺')
         put("━┃─│", '╃')
         put("━│─┃", '╅')
+        put("━ ─ ", '╾')
+        put("─ ━ ", '╼')
+        put(" ┃ │", '╿')
+        put(" │ ┃", '╽')
+        put(" ┃─ ", '┖')
+        put("─┃  ", '┚')
     }
 
     override fun resolveIntersection(value: String): Char {

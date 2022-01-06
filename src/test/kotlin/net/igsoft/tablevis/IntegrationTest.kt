@@ -868,15 +868,15 @@ class IntegrationTest {
 
             row {
                 cell {
-                    bottomBorder = TextTableBorder.noBorder
+                    bottomBorder = TextTableBorder.none
                     value = 1
                 }
                 cell {
-                    rightBorder = TextTableBorder.noBorder
+                    rightBorder = TextTableBorder.none
                     value = 2
                 }
                 cell {
-                    bottomBorder = TextTableBorder.noBorder
+                    bottomBorder = TextTableBorder.none
                     value = 3
                 }
             }
@@ -896,7 +896,7 @@ class IntegrationTest {
                     value = 7
                 }
                 cell {
-                    rightBorder = TextTableBorder.noBorder
+                    rightBorder = TextTableBorder.none
                     value = 8
                 }
                 cell {
@@ -941,6 +941,60 @@ class IntegrationTest {
     }
 
     @Test
+    fun `Header in last col and round corners`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n", roundCorners = true)) {
+            row {
+                cell { value = "Cell 1" }
+                cell { value = "Cell 2" }
+                cell(styleSet.header) { value = "Cell 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|╭────────┬────────┲━━━━━━━━┓
+               |│ Cell 1 │ Cell 2 ┃ Cell 3 ┃
+               |╰────────┴────────┺━━━━━━━━┛
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Line type changed`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell(styleSet.header) { value = "Cell 1"; rightBorder = TextTableBorder.none}
+                cell { value = "Cell 2" }
+                cell(styleSet.header) { value = "Cell 3"; leftBorder = TextTableBorder.none }
+            }
+            row {
+                cell(styleSet.header) { value = "Cell 1"; bottomBorder = TextTableBorder.none}
+                cell { value = "Cell 2" }
+                cell(styleSet.header) { value = "Cell 3"; bottomBorder = TextTableBorder.none }
+            }
+            row {
+                cell { value = "Cell 1"; rightBorder = TextTableBorder.none}
+                cell { value = "Cell 2" }
+                cell { value = "Cell 3"; leftBorder = TextTableBorder.none }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏━━━━━━━━╾────────╼━━━━━━━━┓
+               |┃ Cell 1   Cell 2   Cell 3 ┃
+               |┣━━━━━━━━┱────────┲━━━━━━━━┫
+               |┃ Cell 1 ┃ Cell 2 ┃ Cell 3 ┃
+               |╿        ┖────────┚        ╿
+               |│ Cell 1   Cell 2   Cell 3 │
+               |└──────────────────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
     fun `Rows and footer cells in edges`() {
         val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
             row {
@@ -970,6 +1024,40 @@ class IntegrationTest {
                |┢━━━━━━━━━━━━━━━━╅────────────────╆━━━━━━━━━━━━━━━━┪
                |┃ Row 3 - Cell 1 ┃ Row 3 - Cell 2 ┃ Row 3 - Cell 3 ┃
                |┗━━━━━━━━━━━━━━━━┹────────────────┺━━━━━━━━━━━━━━━━┛
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Header cell in the centre`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell { value = "Row 1 - Cell 1" }
+                cell { value = "Row 1 - Cell 2" }
+                cell { value = "Row 1 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 2 - Cell 1" }
+                cell(styleSet.header) { value = "Row 2 - Cell 2" }
+                cell { value = "Row 2 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 3 - Cell 1" }
+                cell { value = "Row 3 - Cell 2" }
+                cell { value = "Row 3 - Cell 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌────────────────┬────────────────┬────────────────┐
+               |│ Row 1 - Cell 1 │ Row 1 - Cell 2 │ Row 1 - Cell 3 │
+               |├────────────────╆━━━━━━━━━━━━━━━━╅────────────────┤
+               |│ Row 2 - Cell 1 ┃ Row 2 - Cell 2 ┃ Row 2 - Cell 3 │
+               |├────────────────╄━━━━━━━━━━━━━━━━╃────────────────┤
+               |│ Row 3 - Cell 1 │ Row 3 - Cell 2 │ Row 3 - Cell 3 │
+               |└────────────────┴────────────────┴────────────────┘
                |""".trimMargin()
         )
     }

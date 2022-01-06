@@ -6,3 +6,4 @@
 - HTML printer
 - Border type should be typed in builder (not just Border)
 - Spanned cells
+- Rounded corners, dotted & dashed lines

@@ -252,15 +252,15 @@ fun main() {
 
         row {
             cell {
-                bottomBorder = TextTableBorder.noBorder
+                bottomBorder = TextTableBorder.none
                 value = 1
             }
             cell {
-                rightBorder = TextTableBorder.noBorder
+                rightBorder = TextTableBorder.none
                 value = 2
             }
             cell {
-                bottomBorder = TextTableBorder.noBorder
+                bottomBorder = TextTableBorder.none
                 value = 3
             }
         }
@@ -280,7 +280,7 @@ fun main() {
                 value = 7
             }
             cell {
-                rightBorder = TextTableBorder.noBorder
+                rightBorder = TextTableBorder.none
                 value = 8
             }
             cell {
