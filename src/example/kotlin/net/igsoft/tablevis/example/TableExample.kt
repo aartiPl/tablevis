@@ -295,14 +295,15 @@ fun main() {
     //------------------------------------------------------------------------------------------------------------------
 
     // tag::justifying_text_table[]
-    val text = """
-        Kotlin is a modern but already mature programming language aimed to make developers happier. It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse code between multiple platforms for productive programming.
-
-        Pick it up to start building powerful applications!
-    """.trimIndent()
+    //@formatter:off
+    val text = "\tKotlin is a modern but already mature programming language aimed to make developers happier. " +
+               "It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse " +
+               "code between multiple platforms for productive programming.\n\n\tPick it up to start building " +
+               "powerful applications!"
+    //@formatter:on
 
     val justifyingTextTable = TableBuilder(BoxTextTableStyleSet()) {
-        width = 80
+        width = 81
 
         row {
             cell {

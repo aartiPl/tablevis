@@ -82,6 +82,9 @@ class BoxTextTableStyleSet(
         put(" ┃─│", '┞')
         put("━ ─│", '┭')
         put("─┃ │", '┦')
+        put("━┃─ ", '┹')
+        put("━  │", '┑')
+        put("━ ─┃", '┱')
     }
 
     override fun resolveIntersection(value: String): Char {

@@ -920,6 +920,26 @@ class IntegrationTest {
         )
     }
 
+    @Test
+    fun `Header in first col`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell(styleSet.header) { value = "Nice title 1" }
+                cell { value = "Nice title 2" }
+                cell { value = "Nice title 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏━━━━━━━━━━━━━━┱──────────────┬──────────────┐
+               |┃ Nice title 1 ┃ Nice title 2 │ Nice title 3 │
+               |┗━━━━━━━━━━━━━━┹──────────────┴──────────────┘
+               |""".trimMargin()
+        )
+    }
+
     @Suppress("SpellCheckingInspection")
     companion object {
         //@formatter:off

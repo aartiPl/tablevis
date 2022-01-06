@@ -203,10 +203,10 @@ For brevity, I am just adding missing piece of code below last row definition:
 // ....... 8< .......
 row {
     cell {
-        text = "2"
+        value = 2
     }
     cell {
-        text = "February"
+        value = "February"
     }
 }
 
@@ -235,7 +235,7 @@ Identifier can be any type e.g. String or Int.
 // ....... 8< .......
 cell {
     id("first column", 42)
-    text = "2"
+    value = 2
 }
 // ....... >8 .......
 ----
@@ -389,14 +389,15 @@ include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=jus
 endif::[]
 
 ifdef::env-github[]
-val text = """
-    Kotlin is a modern but already mature programming language aimed to make developers happier. It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse code between multiple platforms for productive programming.
-
-    Pick it up to start building powerful applications!
-""".trimIndent()
+//@formatter:off
+val text = "\tKotlin is a modern but already mature programming language aimed to make developers happier. " +
+           "It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse " +
+           "code between multiple platforms for productive programming.\n\n\tPick it up to start building " +
+           "powerful applications!"
+//@formatter:on
 
 val justifyingTextTable = TableBuilder(BoxTextTableStyleSet()) {
-    width = 80
+    width = 81
 
     row {
         cell {
@@ -415,19 +416,19 @@ endif::[]
 
 .Result
 ----
-┌──────────────────────────────────────┬───────────────────────────────────────┐
-│ Kotlin is a modern but already       │ Kotlin is a modern but already mature │
-│ mature programming language aimed to │ programming  language  aimed  to make │
-│ make developers happier. It’s        │ developers   happier.  It’s  concise, │
-│ concise, safe, interoperable with    │ safe,  interoperable  with  Java  and │
-│ Java and other languages, and        │ other  languages,  and  provides many │
-│ provides many ways to reuse code     │ ways  to reuse  code between multiple │
-│ between multiple platforms for       │ platforms for productive programming. │
-│ productive programming.              │                                       │
-│                                      │ Pick it up to start building powerful │
-│ Pick it up to start building         │ applications!                         │
-│ powerful applications!               │                                       │
-└──────────────────────────────────────┴───────────────────────────────────────┘
+┌───────────────────────────────────────┬───────────────────────────────────────┐
+│     Kotlin is a modern but already    │     Kotlin  is  a  modern but already │
+│ mature programming language aimed to  │ mature  programming language aimed to │
+│ make developers happier. It’s         │ make    developers    happier.   It’s │
+│ concise, safe, interoperable with     │ concise,   safe,  interoperable  with │
+│ Java and other languages, and         │ Java   and   other   languages,   and │
+│ provides many ways to reuse code      │ provides  many  ways  to  reuse  code │
+│ between multiple platforms for        │ between    multiple   platforms   for │
+│ productive programming.               │ productive programming.               │
+│                                       │                                       │
+│     Pick it up to start building      │     Pick  it  up  to  start  building │
+│ powerful applications!                │ powerful applications!                │
+└───────────────────────────────────────┴───────────────────────────────────────┘
 ----
 
 

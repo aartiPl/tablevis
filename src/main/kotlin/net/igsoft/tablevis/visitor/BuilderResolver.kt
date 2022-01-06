@@ -14,6 +14,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
     Visitor<STYLE, Table<STYLE_SET>, List<HorizontalElement>, Cell<STYLE>> {
     private var upperLine = TreeMap<Int, Intersection>()
     private var lowerLine = TreeMap<Int, Intersection>()
+    private var firstLine = true
 
     override fun visit(tableProperties: TableProperties<STYLE>): Table<STYLE_SET> {
         val horizontalElements = mutableListOf<HorizontalElement>()
@@ -21,6 +22,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         if (tableProperties.rows.isNotEmpty()) {
             for (rowDef in tableProperties.rows) {
                 horizontalElements.addAll(rowDef.applyVisitor(this))
+                firstLine = false
             }
             horizontalElements.add(toLine(upperLine))
         }
@@ -38,6 +40,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         var hPosition = 0
         var vPosition = 0
 
+
         for (cellDef in rowProperties.cells) {
             val cell = cellDef.applyVisitor(this)
 
@@ -46,7 +49,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
             lastCell = cell
 
             val leftBorderSize = leftSection.border.size
-            resolveIntersection(upperLine, lowerLine, hPosition, leftBorderSize, cell)
+            resolveIntersection(upperLine, lowerLine, hPosition, leftBorderSize, cell, firstLine)
 
             verticalElements.add(leftSection)
             verticalElements.add(cell)
@@ -87,7 +90,8 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         lowerLine: TreeMap<Int, Intersection>,
         cellStartPosition: Int,
         leftBorderSize: Int,
-        cell: Cell<STYLE>
+        cell: Cell<STYLE>,
+        firstLine: Boolean
     ) {
         val cellEndPosition = cellStartPosition + leftBorderSize + cell.width
 
@@ -96,9 +100,15 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         leftTopIntersection.bottom = resolveStyle(leftTopIntersection.bottom, cell.style.leftBorder)
 
         val rightTopIntersection = upperLine.getOrPut(cellEndPosition) {
-            //We are splitting existing upper cell into parts - left and right border of intersection is same as it was in previous intersection.
-            //In case it is the last cell in row, right border will be replaced to empty later.
-            Intersection(matrix = arrayOf(leftTopIntersection.right, empty, leftTopIntersection.right, empty))
+            if (firstLine) {
+                //This is first upper line - just leave right intersection empty
+                Intersection(matrix = arrayOf(leftTopIntersection.right, empty, empty, empty))
+            } else {
+                //We are splitting existing upper cell into parts - left and right border of intersection is same as it was in previous intersection.
+                //In case it is the last cell in row, right border will be replaced to empty later.
+                val continuation = resolveStyle(leftTopIntersection.right, cell.style.topBorder)
+                Intersection(matrix = arrayOf(leftTopIntersection.right, empty, continuation, empty))
+            }
         }
 
         //We should also look if there were any other intersection and update its left/right values
