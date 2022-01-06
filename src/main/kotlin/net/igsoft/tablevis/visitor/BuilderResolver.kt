@@ -101,11 +101,12 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
 
         val rightTopIntersection = upperLine.getOrPut(cellEndPosition) {
             if (firstLine) {
-                //This is first upper line - just leave right intersection empty
+                //This is first upper line - just leave right intersection empty it will be filled with the next cell
                 Intersection(matrix = arrayOf(leftTopIntersection.right, empty, empty, empty))
             } else {
-                //We are splitting existing upper cell into parts - left and right border of intersection is same as it was in previous intersection.
-                //In case it is the last cell in row, right border will be replaced to empty later.
+                //We are splitting existing upper cell into parts - left and right border of intersection are same
+                //as they were in previous intersection.
+                //In case it is the last cell in row, right border will be replaced by empty Border later.
                 val continuation = resolveStyle(leftTopIntersection.right, cell.style.topBorder)
                 Intersection(matrix = arrayOf(leftTopIntersection.right, empty, continuation, empty))
             }

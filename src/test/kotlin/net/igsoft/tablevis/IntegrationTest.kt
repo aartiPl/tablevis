@@ -940,6 +940,40 @@ class IntegrationTest {
         )
     }
 
+    @Test
+    fun `Rows and footer cells in edges`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell(styleSet.footer) { value = "Row 1 - Cell 1" }
+                cell { value = "Row 1 - Cell 2" }
+                cell(styleSet.footer) { value = "Row 1 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 2 - Cell 1" }
+                cell { value = "Row 2 - Cell 2" }
+                cell { value = "Row 2 - Cell 3" }
+            }
+            row {
+                cell(styleSet.footer) { value = "Row 3 - Cell 1" }
+                cell { value = "Row 3 - Cell 2" }
+                cell(styleSet.footer) { value = "Row 3 - Cell 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏━━━━━━━━━━━━━━━━┱────────────────┲━━━━━━━━━━━━━━━━┓
+               |┃ Row 1 - Cell 1 ┃ Row 1 - Cell 2 ┃ Row 1 - Cell 3 ┃
+               |┡━━━━━━━━━━━━━━━━╃────────────────╄━━━━━━━━━━━━━━━━┩
+               |│ Row 2 - Cell 1 │ Row 2 - Cell 2 │ Row 2 - Cell 3 │
+               |┢━━━━━━━━━━━━━━━━╅────────────────╆━━━━━━━━━━━━━━━━┪
+               |┃ Row 3 - Cell 1 ┃ Row 3 - Cell 2 ┃ Row 3 - Cell 3 ┃
+               |┗━━━━━━━━━━━━━━━━┹────────────────┺━━━━━━━━━━━━━━━━┛
+               |""".trimMargin()
+        )
+    }
+
     @Suppress("SpellCheckingInspection")
     companion object {
         //@formatter:off
