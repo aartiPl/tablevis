@@ -22,6 +22,7 @@ open class PerformanceTest {
                 cell { value = "Nice title 1" }
                 cell { value = "Nice title 2" }
                 cell { value = "Nice title 3" }
+                syncColumns()
             }
         }.build()
         blackhole.consume(TextTablePrinter().print(table))

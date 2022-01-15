@@ -1062,6 +1062,43 @@ class IntegrationTest {
         )
     }
 
+    @Test
+    fun `Automatic synchronisation of headers`() {
+
+
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell { value = "11 - o" }
+                cell { value = "12 - oo" }
+                cell { value = "13 - ooo" }
+            }
+            row {
+                cell { value = "21 - oooo" }
+                cell { value = "22 - ooooo" }
+                cell { value = "23 - oooooo" }
+            }
+            row {
+                cell { value = "31 - ooooooo" }
+                cell { value = "32 - oooooooo" }
+                cell { value = "33 - ooooooooo" }
+            }
+            syncColumns()
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌──────────────┬───────────────┬────────────────┐
+               |│ 11 - o       │ 12 - oo       │ 13 - ooo       │
+               |├──────────────┼───────────────┼────────────────┤
+               |│ 21 - oooo    │ 22 - ooooo    │ 23 - oooooo    │
+               |├──────────────┼───────────────┼────────────────┤
+               |│ 31 - ooooooo │ 32 - oooooooo │ 33 - ooooooooo │
+               |└──────────────┴───────────────┴────────────────┘
+               |""".trimMargin()
+        )
+    }
+
     @Suppress("SpellCheckingInspection")
     companion object {
         //@formatter:off

@@ -27,7 +27,7 @@ class IdOperation<STYLE : Style>(
         }
     }
 
-    fun center() {
+    fun center() = apply {
         set { cells ->
             cells.forEach {
                 it.commonStyle.horizontalAlignment = HorizontalAlignment.Center
@@ -35,7 +35,7 @@ class IdOperation<STYLE : Style>(
         }
     }
 
-    fun left() {
+    fun left() = apply {
         set { cells ->
             cells.forEach {
                 it.commonStyle.horizontalAlignment = HorizontalAlignment.Left
@@ -43,7 +43,7 @@ class IdOperation<STYLE : Style>(
         }
     }
 
-    fun right() {
+    fun right() = apply {
         set { cells ->
             cells.forEach {
                 it.commonStyle.horizontalAlignment = HorizontalAlignment.Right
@@ -51,7 +51,7 @@ class IdOperation<STYLE : Style>(
         }
     }
 
-    fun justify() {
+    fun justify() = apply {
         set { cells ->
             cells.forEach {
                 it.commonStyle.horizontalAlignment = HorizontalAlignment.Justified
@@ -59,7 +59,7 @@ class IdOperation<STYLE : Style>(
         }
     }
 
-    fun top() {
+    fun top() = apply {
         set { cells ->
             cells.forEach {
                 it.commonStyle.verticalAlignment = VerticalAlignment.Top
@@ -67,7 +67,7 @@ class IdOperation<STYLE : Style>(
         }
     }
 
-    fun middle() {
+    fun middle() = apply {
         set { cells ->
             cells.forEach {
                 it.commonStyle.verticalAlignment = VerticalAlignment.Middle
@@ -75,7 +75,7 @@ class IdOperation<STYLE : Style>(
         }
     }
 
-    fun bottom() {
+    fun bottom() = apply {
         set { cells ->
             cells.forEach {
                 it.commonStyle.verticalAlignment = VerticalAlignment.Bottom
