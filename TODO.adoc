@@ -2,8 +2,9 @@
 
 - Height resolver
 - Better layout errors handling
-- 'width' should always refer to content width, border calculations should be done in printer, not earlier
+- 'width' should always refer to content width, border calculations should be done in printer, not earlier (additional property on table 'overallWidth' for width with borders)
 - HTML printer
 - Border type should be typed in builder (not just Border)
-- Spanned cells
+- Spanned cells (just split content to given cell ids)
 - Rounded corners, dotted & dashed lines
+- Simplification of col syncing: syncColumns() - automatically applies same width to all columns

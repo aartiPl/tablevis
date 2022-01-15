@@ -9,8 +9,6 @@ import net.igsoft.tablevis.style.Style
 class CellIdResolver<STYLE : Style> :
     Visitor<STYLE, TableProperties<STYLE>, RowProperties<STYLE>, CellProperties<STYLE>> {
     private lateinit var cellsPerId: MutableMap<Any, MutableSet<CellProperties<STYLE>>>
-
-    private var colCounter = 1
     private var rowCounter = 1
 
     override fun visit(tableProperties: TableProperties<STYLE>): TableProperties<STYLE> {
@@ -32,7 +30,7 @@ class CellIdResolver<STYLE : Style> :
 
         val rowCellSet = cellsPerId.getOrPut("row-$rowCounter") { mutableSetOf() }
 
-        colCounter = 1
+        var colCounter = 1
         rowProperties.cells.forEach {
             val cellProperties = it.applyVisitor(this)
 

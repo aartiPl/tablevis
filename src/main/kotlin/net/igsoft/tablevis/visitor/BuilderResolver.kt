@@ -59,7 +59,7 @@ class BuilderResolver<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(private val st
         }
 
         upperLine.lastEntry().value.right = empty //Last cell right intersection is always empty
-        verticalElements.add(Section(lastCell!!.height,lastBorder))
+        verticalElements.add(Section(lastCell!!.height, lastBorder))
 
         val line = toLine(upperLine)
 

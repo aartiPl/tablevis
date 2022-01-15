@@ -8,8 +8,8 @@ class TableDef<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(val styleSet: STYLE_S
     BaseDef<STYLE, TableProperties<STYLE>>(TableProperties(CommonStyle(styleSet.baseStyle))) {
 
     fun row(rowStyle: STYLE? = null, block: RowDef<STYLE>.() -> Unit = {}) {
-        val commonStyle = if (rowStyle == null) properties.commonStyle else CommonStyle(rowStyle)
-        properties.rows.add(RowDef(commonStyle).apply(block))
+        val calculatedStyle = if (rowStyle == null) properties.commonStyle else CommonStyle(rowStyle)
+        properties.rows.add(RowDef(calculatedStyle).apply(block))
     }
 
     fun forId(vararg id: Any): IdOperation<STYLE> = IdOperation(id.toList(), properties.functions)
