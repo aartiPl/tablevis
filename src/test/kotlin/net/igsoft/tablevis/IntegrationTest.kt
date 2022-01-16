@@ -5,10 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.igsoft.tablevis.printer.text.TextTablePrinter
-import net.igsoft.tablevis.style.text.BoxTextTableStyleSet
-import net.igsoft.tablevis.style.text.NoBorderTextTableStyleSet
-import net.igsoft.tablevis.style.text.SimpleTextTableStyleSet
-import net.igsoft.tablevis.style.text.TextTableBorder
+import net.igsoft.tablevis.style.text.*
 import org.junit.jupiter.api.Test
 
 class IntegrationTest {
@@ -95,9 +92,9 @@ class IntegrationTest {
                |│ Row 1 Cell 1     │      Row 1 Cell 2 │
                |├──────────────────┼───────────────────┤
                |│ Row 2 Cell 1     │      Row 2 Cell 2 │
-               |┢━━━━━━━━━━━━━━━━━━┷━━━┳━━━━━━━━━━━━━━━┪
-               |┃        Footer        ┃   page 1/1    ┃
-               |┗━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┛
+               |┢┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┷┉┉┉┳┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┪
+               |┋        Footer        ┋   page 1/1    ┋
+               |┗┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┻┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┛
                |""".trimMargin()
         )
     }
@@ -177,14 +174,14 @@ class IntegrationTest {
                |├─────────┼─────────┤
                |│ Row 3   │ Row 3   │
                |│ Cell 1  │ Cell 2  │
-               |┢━━━┳━━━━━┷━━━━━━━━━┪
-               |┃ F ┃   page 1/1    ┃
-               |┃ o ┃               ┃
-               |┃ o ┃               ┃
-               |┃ t ┃               ┃
-               |┃ e ┃               ┃
-               |┃ r ┃               ┃
-               |┗━━━┻━━━━━━━━━━━━━━━┛
+               |┢┉┉┉┳┉┉┉┉┉┷┉┉┉┉┉┉┉┉┉┪
+               |┋ F ┋   page 1/1    ┋
+               |┋ o ┋               ┋
+               |┋ o ┋               ┋
+               |┋ t ┋               ┋
+               |┋ e ┋               ┋
+               |┋ r ┋               ┋
+               |┗┉┉┉┻┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┛
                |""".trimMargin()
         )
     }
@@ -868,15 +865,15 @@ class IntegrationTest {
 
             row {
                 cell {
-                    bottomBorder = TextTableBorder.noBorder
+                    bottomBorder = TextTableBorder.none
                     value = 1
                 }
                 cell {
-                    rightBorder = TextTableBorder.noBorder
+                    rightBorder = TextTableBorder.none
                     value = 2
                 }
                 cell {
-                    bottomBorder = TextTableBorder.noBorder
+                    bottomBorder = TextTableBorder.none
                     value = 3
                 }
             }
@@ -896,7 +893,7 @@ class IntegrationTest {
                     value = 7
                 }
                 cell {
-                    rightBorder = TextTableBorder.noBorder
+                    rightBorder = TextTableBorder.none
                     value = 8
                 }
                 cell {
@@ -916,6 +913,225 @@ class IntegrationTest {
                |├───┼───┴───┤
                |│ 7 │ 8   9 │
                |└───┴───────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Header in first col`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell(styleSet.header) { value = "Nice title 1" }
+                cell { value = "Nice title 2" }
+                cell { value = "Nice title 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏━━━━━━━━━━━━━━┱──────────────┬──────────────┐
+               |┃ Nice title 1 ┃ Nice title 2 │ Nice title 3 │
+               |┗━━━━━━━━━━━━━━┹──────────────┴──────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Header in last col and round corners`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n", roundCorners = true)) {
+            row {
+                cell { value = "Cell 1" }
+                cell { value = "Cell 2" }
+                cell(styleSet.header) { value = "Cell 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|╭────────┬────────┲━━━━━━━━┓
+               |│ Cell 1 │ Cell 2 ┃ Cell 3 ┃
+               |╰────────┴────────┺━━━━━━━━┛
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Line type changed`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell(styleSet.header) { value = "Cell 1"; rightBorder = TextTableBorder.none}
+                cell { value = "Cell 2" }
+                cell(styleSet.header) { value = "Cell 3"; leftBorder = TextTableBorder.none }
+            }
+            row {
+                cell(styleSet.header) { value = "Cell 1"; bottomBorder = TextTableBorder.none}
+                cell { value = "Cell 2" }
+                cell(styleSet.header) { value = "Cell 3"; bottomBorder = TextTableBorder.none }
+            }
+            row {
+                cell { value = "Cell 1"; rightBorder = TextTableBorder.none}
+                cell { value = "Cell 2" }
+                cell { value = "Cell 3"; leftBorder = TextTableBorder.none }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏━━━━━━━━╾────────╼━━━━━━━━┓
+               |┃ Cell 1   Cell 2   Cell 3 ┃
+               |┣━━━━━━━━┱────────┲━━━━━━━━┫
+               |┃ Cell 1 ┃ Cell 2 ┃ Cell 3 ┃
+               |╿        ┖────────┚        ╿
+               |│ Cell 1   Cell 2   Cell 3 │
+               |└──────────────────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Rows and footer cells in edges`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell(styleSet.footer) { value = "Row 1 - Cell 1" }
+                cell { value = "Row 1 - Cell 2" }
+                cell(styleSet.footer) { value = "Row 1 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 2 - Cell 1" }
+                cell { value = "Row 2 - Cell 2" }
+                cell { value = "Row 2 - Cell 3" }
+            }
+            row {
+                cell(styleSet.footer) { value = "Row 3 - Cell 1" }
+                cell { value = "Row 3 - Cell 2" }
+                cell(styleSet.footer) { value = "Row 3 - Cell 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┏┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┱────────────────┲┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┓
+               |┋ Row 1 - Cell 1 ┋ Row 1 - Cell 2 ┋ Row 1 - Cell 3 ┋
+               |┡┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉╃────────────────╄┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┩
+               |│ Row 2 - Cell 1 │ Row 2 - Cell 2 │ Row 2 - Cell 3 │
+               |┢┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉╅────────────────╆┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┪
+               |┋ Row 3 - Cell 1 ┋ Row 3 - Cell 2 ┋ Row 3 - Cell 3 ┋
+               |┗┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┹────────────────┺┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┛
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Header cell in the centre`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell { value = "Row 1 - Cell 1" }
+                cell { value = "Row 1 - Cell 2" }
+                cell { value = "Row 1 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 2 - Cell 1" }
+                cell(styleSet.header) { value = "Row 2 - Cell 2" }
+                cell { value = "Row 2 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 3 - Cell 1" }
+                cell { value = "Row 3 - Cell 2" }
+                cell { value = "Row 3 - Cell 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌────────────────┬────────────────┬────────────────┐
+               |│ Row 1 - Cell 1 │ Row 1 - Cell 2 │ Row 1 - Cell 3 │
+               |├────────────────╆━━━━━━━━━━━━━━━━╅────────────────┤
+               |│ Row 2 - Cell 1 ┃ Row 2 - Cell 2 ┃ Row 2 - Cell 3 │
+               |├────────────────╄━━━━━━━━━━━━━━━━╃────────────────┤
+               |│ Row 3 - Cell 1 │ Row 3 - Cell 2 │ Row 3 - Cell 3 │
+               |└────────────────┴────────────────┴────────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Automatic synchronisation of headers`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            row {
+                cell { value = "11 - o" }
+                cell { value = "12 - oo" }
+                cell { value = "13 - ooo" }
+            }
+            row {
+                cell { value = "21 - oooo" }
+                cell { value = "22 - ooooo" }
+                cell { value = "23 - oooooo" }
+            }
+            row {
+                cell { value = "31 - ooooooo" }
+                cell { value = "32 - oooooooo" }
+                cell { value = "33 - ooooooooo" }
+            }
+            syncColumns()
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌──────────────┬───────────────┬────────────────┐
+               |│ 11 - o       │ 12 - oo       │ 13 - ooo       │
+               |├──────────────┼───────────────┼────────────────┤
+               |│ 21 - oooo    │ 22 - ooooo    │ 23 - oooooo    │
+               |├──────────────┼───────────────┼────────────────┤
+               |│ 31 - ooooooo │ 32 - oooooooo │ 33 - ooooooooo │
+               |└──────────────┴───────────────┴────────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Dashed lines set with baseStyle`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            baseStyle = TextTableStyle(
+                horizontalBorder = BoxTextTableStyleSet.horizontalDoubleBorder,
+                verticalBorder = BoxTextTableStyleSet.verticalDoubleHeavyDashedBorder,
+            )
+
+            row {
+                cell { value = "Row 1 - Cell 1" }
+                cell { value = "Row 1 - Cell 2" }
+                cell { value = "Row 1 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 2 - Cell 1" }
+                cell(TextTableStyle(
+                    horizontalBorder = BoxTextTableStyleSet.horizontalDoubleHeavyDashedBorder,
+                    verticalBorder = BoxTextTableStyleSet.verticalDoubleBorder,
+                )) { value = "Row 2 - Cell 2" }
+                cell { value = "Row 2 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 3 - Cell 1" }
+                cell { value = "Row 3 - Cell 2" }
+                cell { value = "Row 3 - Cell 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|╒════════════════╤════════════════╤════════════════╕
+               |╏ Row 1 - Cell 1 ╏ Row 1 - Cell 2 ╏ Row 1 - Cell 3 ╏
+               |╞════════════════╬════════════════╬════════════════╡
+               |╏ Row 2 - Cell 1 ║ Row 2 - Cell 2 ║ Row 2 - Cell 3 ╏
+               |╞════════════════╬════════════════╬════════════════╡
+               |╏ Row 3 - Cell 1 ╏ Row 3 - Cell 2 ╏ Row 3 - Cell 3 ╏
+               |╘════════════════╧════════════════╧════════════════╛
                |""".trimMargin()
         )
     }

@@ -5,10 +5,11 @@ plugins {
     `java-library`
     `maven-publish`
     signing
+    id("me.champeau.jmh") version "0.6.6"
 }
 
 group = "net.igsoft"
-version = "0.5.0"
+version = "0.6.0"
 
 repositories {
     mavenCentral()
@@ -99,13 +100,20 @@ signing {
     sign(publishing.publications["mavenJava"])
 }
 
+jmh {
+    warmupIterations.set(1)
+    iterations.set(5)
+    fork.set(2)
+}
 
 dependencies {
-    //implementation("com.google.guava:guava:31.0.1-jre")
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
     testImplementation(kotlin("test"))
-
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+
+    jmh("io.github.copper-leaf:krow-core:1.0.0")
+    jmh("org.openjdk.jmh:jmh-core:1.34")
+    jmh("org.openjdk.jmh:jmh-generator-annprocess:1.34")
 }

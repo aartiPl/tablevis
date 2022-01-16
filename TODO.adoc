@@ -1,4 +1,9 @@
 = TODO
 
 - Height resolver
-- More layout errors handling
+- Better layout errors handling
+- 'width' should always refer to content width, border calculations should be done in printer, not earlier (additional property on table 'overallWidth' for width with borders)
+- HTML printer
+- Border type should be typed in builder (not just Border)
+- Spanned cells (just split content to given cell ids)
+- Round corners should be property of style, not styleSet

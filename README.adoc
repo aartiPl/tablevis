@@ -1,4 +1,4 @@
-:tablevis-version: 0.5.0
+:tablevis-version: 0.6.0
 
 = Table visualisation library
 
@@ -203,10 +203,10 @@ For brevity, I am just adding missing piece of code below last row definition:
 // ....... 8< .......
 row {
     cell {
-        text = "2"
+        value = 2
     }
     cell {
-        text = "February"
+        value = "February"
     }
 }
 
@@ -235,7 +235,7 @@ Identifier can be any type e.g. String or Int.
 // ....... 8< .......
 cell {
     id("first column", 42)
-    text = "2"
+    value = 2
 }
 // ....... >8 .......
 ----
@@ -265,7 +265,20 @@ forId("col-1").setWidth(11)
 └─────────────┴────────────┘
 ----
 
-== Texts rendering
+Okay, it works but for plain, column aligned tables it looks like too much hassle... As programmers are a bit lazy (me included :-) ), I have implemented shortcut which can be applied to make all the columns the same, minimal for column, width.
+
+Here is how it can be achieved:
+[source,kotlin]
+----
+// ....... 8< .......
+syncColumns()
+// ....... >8 .......
+----
+
+So it is enough to instruct the layout engine to synchronize all columns, and their sizes will be aligned. Under the hood it just uses columns identifiers (col-n) to make columns minimal width. Because of that it probably won't work correctly for more complex table layouts. But in such a case you can achieve what you want by just using the methods described above.
+
+
+== Text rendering
 
 Please notice how the text in first column was automatically split in such a way that it fits into the cell.
 
@@ -389,14 +402,15 @@ include::src/example/kotlin/net/igsoft/tablevis/example/TableExample.kt[tags=jus
 endif::[]
 
 ifdef::env-github[]
-val text = """
-    Kotlin is a modern but already mature programming language aimed to make developers happier. It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse code between multiple platforms for productive programming.
-
-    Pick it up to start building powerful applications!
-""".trimIndent()
+//@formatter:off
+val text = "\tKotlin is a modern but already mature programming language aimed to make developers happier. " +
+           "It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse " +
+           "code between multiple platforms for productive programming.\n\n\tPick it up to start building " +
+           "powerful applications!"
+//@formatter:on
 
 val justifyingTextTable = TableBuilder(BoxTextTableStyleSet()) {
-    width = 80
+    width = 81
 
     row {
         cell {
@@ -415,19 +429,19 @@ endif::[]
 
 .Result
 ----
-┌──────────────────────────────────────┬───────────────────────────────────────┐
-│ Kotlin is a modern but already       │ Kotlin is a modern but already mature │
-│ mature programming language aimed to │ programming  language  aimed  to make │
-│ make developers happier. It’s        │ developers   happier.  It’s  concise, │
-│ concise, safe, interoperable with    │ safe,  interoperable  with  Java  and │
-│ Java and other languages, and        │ other  languages,  and  provides many │
-│ provides many ways to reuse code     │ ways  to reuse  code between multiple │
-│ between multiple platforms for       │ platforms for productive programming. │
-│ productive programming.              │                                       │
-│                                      │ Pick it up to start building powerful │
-│ Pick it up to start building         │ applications!                         │
-│ powerful applications!               │                                       │
-└──────────────────────────────────────┴───────────────────────────────────────┘
+┌───────────────────────────────────────┬───────────────────────────────────────┐
+│     Kotlin is a modern but already    │     Kotlin  is  a  modern but already │
+│ mature programming language aimed to  │ mature  programming language aimed to │
+│ make developers happier. It’s         │ make    developers    happier.   It’s │
+│ concise, safe, interoperable with     │ concise,   safe,  interoperable  with │
+│ Java and other languages, and         │ Java   and   other   languages,   and │
+│ provides many ways to reuse code      │ provides  many  ways  to  reuse  code │
+│ between multiple platforms for        │ between    multiple   platforms   for │
+│ productive programming.               │ productive programming.               │
+│                                       │                                       │
+│     Pick it up to start building      │     Pick  it  up  to  start  building │
+│ powerful applications!                │ powerful applications!                │
+└───────────────────────────────────────┴───────────────────────────────────────┘
 ----
 
 
@@ -572,9 +586,32 @@ There are many more options, which you can discover by looking on unit tests.
 
 Have fun with tables!
 
+== Performance
+
+There is probably no similar library available in Open Source world with similar capabilities as tablevis. If you know such a library, then please let me know. Despite for that it is very performant. I have compared tablevis using JMH micro benchmark with another, most feature rich library - krow. Although there is much more features in tablevis than in krow, the performance of tablevis is more than twice time faster.
+
+----
+Benchmark                        Mode  Cnt      Score     Error  Units
+PerformanceTest.krowLibrary      avgt   10  33400,250 ± 433,004  ns/op
+PerformanceTest.tablevisLibrary  avgt   10  14475,415 ±  74,282  ns/op
+
+Result "PerformanceTest.krowLibrary":
+33400,250 ±(99.9%) 433,004 ns/op [Average]
+(min, avg, max) = (33028,038, 33400,250, 33789,105), stdev = 286,405
+CI (99.9%): [32967,246, 33833,253] (assumes normal distribution)
+
+Result "PerformanceTest.tablevisLibrary":
+14475,415 ±(99.9%) 74,282 ns/op [Average]
+(min, avg, max) = (14404,995, 14475,415, 14564,742), stdev = 49,133
+CI (99.9%): [14401,133, 14549,697] (assumes normal distribution)
+----
+
+
+
 == Properties of 'tablevis' in a glance
 
 * Simple and intuitive way of defining tables
 * Automatic text handling
 * Constrained definition of tables
 * Properties are inherited by children elements
+* Very performant

@@ -252,15 +252,15 @@ fun main() {
 
         row {
             cell {
-                bottomBorder = TextTableBorder.noBorder
+                bottomBorder = TextTableBorder.none
                 value = 1
             }
             cell {
-                rightBorder = TextTableBorder.noBorder
+                rightBorder = TextTableBorder.none
                 value = 2
             }
             cell {
-                bottomBorder = TextTableBorder.noBorder
+                bottomBorder = TextTableBorder.none
                 value = 3
             }
         }
@@ -280,7 +280,7 @@ fun main() {
                 value = 7
             }
             cell {
-                rightBorder = TextTableBorder.noBorder
+                rightBorder = TextTableBorder.none
                 value = 8
             }
             cell {
@@ -295,14 +295,15 @@ fun main() {
     //------------------------------------------------------------------------------------------------------------------
 
     // tag::justifying_text_table[]
-    val text = """
-        Kotlin is a modern but already mature programming language aimed to make developers happier. It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse code between multiple platforms for productive programming.
-
-        Pick it up to start building powerful applications!
-    """.trimIndent()
+    //@formatter:off
+    val text = "\tKotlin is a modern but already mature programming language aimed to make developers happier. " +
+               "It’s concise, safe, interoperable with Java and other languages, and provides many ways to reuse " +
+               "code between multiple platforms for productive programming.\n\n\tPick it up to start building " +
+               "powerful applications!"
+    //@formatter:on
 
     val justifyingTextTable = TableBuilder(BoxTextTableStyleSet()) {
-        width = 80
+        width = 81
 
         row {
             cell {
