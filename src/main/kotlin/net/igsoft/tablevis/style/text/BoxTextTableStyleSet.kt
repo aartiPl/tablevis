@@ -1,5 +1,8 @@
 package net.igsoft.tablevis.style.text
 
+import net.igsoft.tablevis.model.Intersection
+import net.igsoft.tablevis.style.Border
+
 class BoxTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
     override val skipTransparentBorders: Boolean = false,
@@ -20,10 +23,20 @@ class BoxTextTableStyleSet(
 ) : TextTableStyleSet<TextTableStyle> {
     override val baseStyle = row
 
-    override fun resolveIntersection(value: String): Char {
-        return BoxTextTableIntersection1.intersections[value]
-            ?: (if (roundCorners) BoxTextTableIntersection1.roundedLightCornerIntersection[value] else BoxTextTableIntersection1.straightLightCornerIntersection[value])
+    override fun resolveIntersection(intersection: Intersection): Char {
+        val chars = intersection.matrix.joinToString(separator = "") { resolveBorder(it) }
+
+        return BoxTextTableIntersection1.intersections[chars]
+            ?: (if (roundCorners) BoxTextTableIntersection1.roundedLightCornerIntersection[chars] else BoxTextTableIntersection1.straightLightCornerIntersection[chars])
             ?: '?'
+    }
+
+    private fun resolveBorder(border: Border): String {
+        return if (border == Border.empty) {
+            " "
+        } else {
+            (border as TextTableBorder).line
+        }
     }
 
     companion object {

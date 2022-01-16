@@ -43,7 +43,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
         line: Line,
         lineSeparator: String,
         skipTransparentBorders: Boolean,
-        resolveIntersection: (String) -> Char
+        resolveIntersection: (Intersection) -> Char
     ) {
         if (line.maxSize == 0 && skipTransparentBorders) {
             return
@@ -57,8 +57,7 @@ class TextTablePrinter : Printer<Table<out TextTableStyleSet<TextTableStyle>>> {
                 }
 
                 is Intersection -> {
-                    val chars = element.matrix.joinToString(separator = "") { resolveBorder(it) }
-                    sb.append(resolveIntersection(chars))
+                    sb.append(resolveIntersection(element))
                 }
             }
         }

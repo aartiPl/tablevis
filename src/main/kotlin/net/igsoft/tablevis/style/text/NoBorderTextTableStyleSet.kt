@@ -1,5 +1,7 @@
 package net.igsoft.tablevis.style.text
 
+import net.igsoft.tablevis.model.Intersection
+
 class NoBorderTextTableStyleSet(
     override val lineSeparator: String = System.lineSeparator(),
     override val skipTransparentBorders: Boolean = true,
@@ -11,7 +13,7 @@ class NoBorderTextTableStyleSet(
 ) : TextTableStyleSet<TextTableStyle> {
     override val baseStyle = row
 
-    override fun resolveIntersection(value: String): Char {
+    override fun resolveIntersection(intersection: Intersection): Char {
         return ' '
     }
 
