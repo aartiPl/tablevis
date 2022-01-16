@@ -1,0 +1,29 @@
+= Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+== [Unreleased]
+
+
+== [0.6.0] - 2022-01-16
+=== Added
+* Ability to override default style for table (baseStyle)
+* Ability to have rounded corners and dotted and dashed lines
+* syncColumns() - automatic synchronisation of columns in the table
+* Benchmark using JMH: krow vs. tablevis
+* More tests
+
+=== Changed
+* cell builder - instead of text there is a value property; content of cell can be anything (Any)
+* Improved README.adoc - more examples and description
+* Renamed TextTableBorder.noBorder to TextTableBorder.none
+
+=== Fixed
+* All id operations can be chained
+* Rendering problems
+
+== [0.5.0] - 2022-01-05
+=== Added
+- Initial commit of table visualisation library
