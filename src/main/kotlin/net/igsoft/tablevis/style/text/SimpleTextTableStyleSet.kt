@@ -23,13 +23,13 @@ class SimpleTextTableStyleSet(
     override fun resolveIntersection(intersection: Intersection): Char = '+'
 
     companion object {
-        val horizontalBoxBorder = TextTableBorder("-", 1, 50)
-        val verticalBoxBorder = TextTableBorder("|", 1, 50)
+        val horizontalBoxBorder = TextTableBorder("-", " ", 1, 50)
+        val verticalBoxBorder = TextTableBorder("|", " ", 1, 50)
 
-        val horizontalHeavyBoxBorder = TextTableBorder("=~=", 1, 100)
-        val verticalHeavyBoxBorder = TextTableBorder("*", 1, 100)
+        val horizontalHeavyBoxBorder = TextTableBorder("=~=", " ", 1, 100)
+        val verticalHeavyBoxBorder = TextTableBorder("*", " ", 1, 100)
 
-        val horizontalHeavyFooterBoxBorder = TextTableBorder("~", 1, 75)
-        val verticalHeavyFooterBoxBorder = TextTableBorder("|", 1, 75)
+        val horizontalHeavyFooterBoxBorder = TextTableBorder("~", " ", 1, 75)
+        val verticalHeavyFooterBoxBorder = TextTableBorder("|", " ", 1, 75)
     }
 }

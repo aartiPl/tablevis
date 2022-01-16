@@ -18,7 +18,7 @@ class NoBorderTextTableStyleSet(
     }
 
     companion object {
-        val horizontalNoBorder = TextTableBorder(" ", 0, 50)
-        val verticalNoBorder = TextTableBorder(" ", 0, 50)
+        val horizontalNoBorder = TextTableBorder(" ", " ", 0, 50)
+        val verticalNoBorder = TextTableBorder(" ", " ", 0, 50)
     }
 }
