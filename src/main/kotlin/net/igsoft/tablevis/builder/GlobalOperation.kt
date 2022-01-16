@@ -7,16 +7,12 @@ class GlobalOperation<STYLE : Style>(
     private val cellOperations: MutableMap<Any, MutableSet<(Set<CellProperties<STYLE>>) -> Unit>>
 ) {
     fun syncColumns() = apply {
-        set { tableProperties ->
+        globalOperations.add { tableProperties ->
             val maxCells = tableProperties.rows.maxOf { it.properties.cells.size }
             if (maxCells > 0) {
                 IdOperation(generateIds(maxCells), cellOperations).setMinimalWidth()
             }
         }
-    }
-
-    private fun set(fn: (TableProperties<STYLE>) -> Unit) {
-        globalOperations.add(fn)
     }
 
     companion object {

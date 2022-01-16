@@ -5,10 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import net.igsoft.tablevis.printer.text.TextTablePrinter
-import net.igsoft.tablevis.style.text.BoxTextTableStyleSet
-import net.igsoft.tablevis.style.text.NoBorderTextTableStyleSet
-import net.igsoft.tablevis.style.text.SimpleTextTableStyleSet
-import net.igsoft.tablevis.style.text.TextTableBorder
+import net.igsoft.tablevis.style.text.*
 import org.junit.jupiter.api.Test
 
 class IntegrationTest {
@@ -95,9 +92,9 @@ class IntegrationTest {
                |│ Row 1 Cell 1     │      Row 1 Cell 2 │
                |├──────────────────┼───────────────────┤
                |│ Row 2 Cell 1     │      Row 2 Cell 2 │
-               |┢━━━━━━━━━━━━━━━━━━┷━━━┳━━━━━━━━━━━━━━━┪
-               |┃        Footer        ┃   page 1/1    ┃
-               |┗━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┛
+               |┢┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┷┉┉┉┳┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┪
+               |┋        Footer        ┋   page 1/1    ┋
+               |┗┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┻┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┛
                |""".trimMargin()
         )
     }
@@ -177,14 +174,14 @@ class IntegrationTest {
                |├─────────┼─────────┤
                |│ Row 3   │ Row 3   │
                |│ Cell 1  │ Cell 2  │
-               |┢━━━┳━━━━━┷━━━━━━━━━┪
-               |┃ F ┃   page 1/1    ┃
-               |┃ o ┃               ┃
-               |┃ o ┃               ┃
-               |┃ t ┃               ┃
-               |┃ e ┃               ┃
-               |┃ r ┃               ┃
-               |┗━━━┻━━━━━━━━━━━━━━━┛
+               |┢┉┉┉┳┉┉┉┉┉┷┉┉┉┉┉┉┉┉┉┪
+               |┋ F ┋   page 1/1    ┋
+               |┋ o ┋               ┋
+               |┋ o ┋               ┋
+               |┋ t ┋               ┋
+               |┋ e ┋               ┋
+               |┋ r ┋               ┋
+               |┗┉┉┉┻┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┛
                |""".trimMargin()
         )
     }
@@ -1017,13 +1014,13 @@ class IntegrationTest {
         println(TextTablePrinter().print(table))
 
         assertThat(printer.print(table)).isEqualTo(
-            """|┏━━━━━━━━━━━━━━━━┱────────────────┲━━━━━━━━━━━━━━━━┓
-               |┃ Row 1 - Cell 1 ┃ Row 1 - Cell 2 ┃ Row 1 - Cell 3 ┃
-               |┡━━━━━━━━━━━━━━━━╃────────────────╄━━━━━━━━━━━━━━━━┩
+            """|┏┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┱────────────────┲┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┓
+               |┋ Row 1 - Cell 1 ┋ Row 1 - Cell 2 ┋ Row 1 - Cell 3 ┋
+               |┡┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉╃────────────────╄┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┩
                |│ Row 2 - Cell 1 │ Row 2 - Cell 2 │ Row 2 - Cell 3 │
-               |┢━━━━━━━━━━━━━━━━╅────────────────╆━━━━━━━━━━━━━━━━┪
-               |┃ Row 3 - Cell 1 ┃ Row 3 - Cell 2 ┃ Row 3 - Cell 3 ┃
-               |┗━━━━━━━━━━━━━━━━┹────────────────┺━━━━━━━━━━━━━━━━┛
+               |┢┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉╅────────────────╆┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┪
+               |┋ Row 3 - Cell 1 ┋ Row 3 - Cell 2 ┋ Row 3 - Cell 3 ┋
+               |┗┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┹────────────────┺┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┛
                |""".trimMargin()
         )
     }
@@ -1064,8 +1061,6 @@ class IntegrationTest {
 
     @Test
     fun `Automatic synchronisation of headers`() {
-
-
         val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
             row {
                 cell { value = "11 - o" }
@@ -1095,6 +1090,45 @@ class IntegrationTest {
                |├──────────────┼───────────────┼────────────────┤
                |│ 31 - ooooooo │ 32 - oooooooo │ 33 - ooooooooo │
                |└──────────────┴───────────────┴────────────────┘
+               |""".trimMargin()
+        )
+    }
+
+    @Test
+    fun `Dashed lines set with baseStyle`() {
+        val table = TableBuilder(BoxTextTableStyleSet(lineSeparator = "\n")) {
+            baseStyle = TextTableStyle(
+                horizontalBorder = BoxTextTableStyleSet.horizontalDoubleBorder,
+                verticalBorder = BoxTextTableStyleSet.verticalDoubleHeavyDashedBorder,
+            )
+
+            row {
+                cell { value = "Row 1 - Cell 1" }
+                cell { value = "Row 1 - Cell 2" }
+                cell { value = "Row 1 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 2 - Cell 1" }
+                cell { value = "Row 2 - Cell 2" }
+                cell { value = "Row 2 - Cell 3" }
+            }
+            row {
+                cell { value = "Row 3 - Cell 1" }
+                cell { value = "Row 3 - Cell 2" }
+                cell { value = "Row 3 - Cell 3" }
+            }
+        }.build()
+
+        println(TextTablePrinter().print(table))
+
+        assertThat(printer.print(table)).isEqualTo(
+            """|┌────────────────┬────────────────┬────────────────┐
+               |│ Row 1 - Cell 1 │ Row 1 - Cell 2 │ Row 1 - Cell 3 │
+               |├────────────────╆━━━━━━━━━━━━━━━━╅────────────────┤
+               |│ Row 2 - Cell 1 ┃ Row 2 - Cell 2 ┃ Row 2 - Cell 3 │
+               |├────────────────╄━━━━━━━━━━━━━━━━╃────────────────┤
+               |│ Row 3 - Cell 1 │ Row 3 - Cell 2 │ Row 3 - Cell 3 │
+               |└────────────────┴────────────────┴────────────────┘
                |""".trimMargin()
         )
     }

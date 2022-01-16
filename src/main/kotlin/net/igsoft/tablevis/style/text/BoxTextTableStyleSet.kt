@@ -6,95 +6,56 @@ class BoxTextTableStyleSet(
     private val roundCorners: Boolean = false,
 
     val header: TextTableStyle = TextTableStyle(
-        verticalBorder = verticalHeavyBoxBorder,
-        horizontalBorder = horizontalHeavyBoxBorder,
+        horizontalBorder = horizontalHeavyBorder,
+        verticalBorder = verticalHeavyBorder,
     ),
     val row: TextTableStyle = TextTableStyle(
-        verticalBorder = verticalBoxBorder,
-        horizontalBorder = horizontalBoxBorder,
+        horizontalBorder = horizontalLightBorder,
+        verticalBorder = verticalLightBorder,
     ),
     val footer: TextTableStyle = TextTableStyle(
-        verticalBorder = verticalHeavyFooterBoxBorder,
-        horizontalBorder = horizontalHeavyFooterBoxBorder,
+        horizontalBorder = horizontalQuadrupleHeavyDashedBorder,
+        verticalBorder = verticalQuadrupleHeavyDashedBorder,
     ),
 ) : TextTableStyleSet<TextTableStyle> {
     override val baseStyle = row
 
-    //Encoding of intersections:
-    //  .T.             T - Top Char
-    //  LIR             L - Left Char, I - Intersection Char, R - Right Char
-    //  .B.             B - Bottom Char
-    //Intersections are encoded as follows: LTRB -> I
-    private val intersections = buildMap<String, Char> {
-        //   LTRB    I
-        if (roundCorners) {
-            put(" │─ ", '╰');
-            put("─  │", '╮');
-            put("  ─│", '╭');
-            put("─│  ", '╯');
-        } else {
-            put(" │─ ", '└');
-            put("─  │", '┐');
-            put("  ─│", '┌');
-            put("─│  ", '┘');
-        }
-
-        put(" │─│", '├'); put("─│ │", '┤'); put("─ ─│", '┬'); put("─│─ ", '┴'); put("─│─│", '┼'); put("─ ─ ", '─')
-        put(" │ │", '│'); put("│   ", ' '); put(" │  ", ' '); put("  │ ", ' '); put("   │", ' '); put("─   ", ' ')
-        put(" ─  ", ' '); put("  ─ ", ' '); put("   ─", ' '); put("    ", ' ')
-
-        put("  ━┃", '┏'); put("━  ┃", '┓'); put(" ┃━┃", '┣'); put("━┃ ┃", '┫'); put("━ ━┃", '┳'); put("━┃━ ", '┻')
-        put("━┃━┃", '╋'); put("━┃  ", '┛'); put(" ┃━ ", '┗')
-
-        put("  ═║", '╔'); put("═  ║", '╗'); put(" ║═║", '╠'); put("═║ ║", '╣'); put("═ ═║", '╦'); put("═║═ ", '╩')
-        put("═║═║", '╬'); put("═║  ", '╝'); put(" ║═ ", '╚')
-
-        put(" ║═│", '╠')
-        put("═║ │", '╣')
-        put("═ ═│", '╤')
-
-        put(" │━┃", '┢')
-        put(" ┃━│", '┡')
-        put("━┃ │", '┩')
-        put("━│━ ", '┷')
-        put("━ ━│", '┯')
-        put("━│ ┃", '┪')
-        put("━┃━│", '╇')
-        put("━│━┃", '╈')
-        put(" ┃─│", '┞')
-        put("━ ─│", '┭')
-        put("─┃ │", '┦')
-        put("━┃─ ", '┹')
-        put("━  │", '┑')
-        put("━ ─┃", '┱')
-        put("─ ━┃", '┲')
-        put("━┃─┃", '╉')
-        put("─┃━┃", '╊')
-        put("─┃━│", '╄')
-        put("─│━┃", '╆')
-        put("─┃━ ", '┺')
-        put("━┃─│", '╃')
-        put("━│─┃", '╅')
-        put("━ ─ ", '╾')
-        put("─ ━ ", '╼')
-        put(" ┃ │", '╿')
-        put(" │ ┃", '╽')
-        put(" ┃─ ", '┖')
-        put("─┃  ", '┚')
-    }
-
     override fun resolveIntersection(value: String): Char {
-        return intersections[value] ?: '?'
+        return BoxTextTableIntersection1.intersections[value]
+            ?: (if (roundCorners) BoxTextTableIntersection1.roundedLightCornerIntersection[value] else BoxTextTableIntersection1.straightLightCornerIntersection[value])
+            ?: '?'
     }
 
     companion object {
-        val horizontalBoxBorder = TextTableBorder("─", 1, 50)
-        val verticalBoxBorder = TextTableBorder("│", 1, 50)
+        // Light borders...
+        val horizontalDoubleLightDashedBorder = TextTableBorder("╌", 1, 1000)
+        val verticalDoubleLightDashedBorder = TextTableBorder("╎", 1, 1000)
 
-        val horizontalHeavyBoxBorder = TextTableBorder("━", 1, 100)
-        val verticalHeavyBoxBorder = TextTableBorder("┃", 1, 100)
+        val horizontalTripleLightDashedBorder = TextTableBorder("┄", 1, 1100)
+        val verticalTripleLightDashedBorder = TextTableBorder("┆", 1, 1100)
 
-        val horizontalHeavyFooterBoxBorder = TextTableBorder("━", 1, 75)
-        val verticalHeavyFooterBoxBorder = TextTableBorder("┃", 1, 75)
+        val horizontalQuadrupleLightDashedBorder = TextTableBorder("┈", 1, 1200)
+        val verticalQuadrupleLightDashedBorder = TextTableBorder("┊", 1, 1200)
+
+        val horizontalLightBorder = TextTableBorder("─", 1, 1300)
+        val verticalLightBorder = TextTableBorder("│", 1, 1300)
+
+        // Heavy borders...
+        val horizontalDoubleHeavyDashedBorder = TextTableBorder("╍", 1, 1400)
+        val verticalDoubleHeavyDashedBorder = TextTableBorder("╏", 1, 1400)
+
+        val horizontalTripleHeavyDashedBorder = TextTableBorder("┅", 1, 1500)
+        val verticalTripleHeavyDashedBorder = TextTableBorder("┇", 1, 1500)
+
+        val horizontalQuadrupleHeavyDashedBorder = TextTableBorder("┉", 1, 1600)
+        val verticalQuadrupleHeavyDashedBorder = TextTableBorder("┋", 1, 1600)
+
+        val horizontalHeavyBorder = TextTableBorder("━", 1, 1700)
+        val verticalHeavyBorder = TextTableBorder("┃", 1, 1700)
+
+        val horizontalDoubleBorder = TextTableBorder("═", 1, 1800)
+        val verticalDoubleBorder = TextTableBorder("║", 1, 1800)
+
+
     }
 }

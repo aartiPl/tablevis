@@ -6,5 +6,4 @@
 - HTML printer
 - Border type should be typed in builder (not just Border)
 - Spanned cells (just split content to given cell ids)
-- Rounded corners, dotted & dashed lines
-- Simplification of col syncing: syncColumns() - automatically applies same width to all columns
+- Rounded corners, dotted & dashed lines (round corners should be property of style, not styleSet; current algorithm demands generation of thousands of definitions, but in fact it is possible to use styles: eg. for all light lines - letter L, for all heavy lines - letter H, for all double lines - letter D - it is enough as there is anyway not enough intersections in box characters, so for some line styles intersection have to be reused; e.g. LLLL=┼ while horizontal L might be e.g.: '─', '┈', '┄', '╌')

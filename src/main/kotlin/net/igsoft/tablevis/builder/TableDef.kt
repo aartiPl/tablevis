@@ -8,6 +8,12 @@ class TableDef<STYLE : Style, STYLE_SET : StyleSet<STYLE>>(val styleSet: STYLE_S
     BaseDef<STYLE, TableProperties<STYLE>>(TableProperties(CommonStyle(styleSet.baseStyle))) {
     private var globalOperation: GlobalOperation<STYLE>? = null
 
+    var baseStyle: STYLE
+        get() = properties.commonStyle.baseStyle
+        set(value) {
+            properties.commonStyle = CommonStyle(value)
+        }
+
     fun row(rowStyle: STYLE? = null, block: RowDef<STYLE>.() -> Unit = {}) {
         val calculatedStyle = if (rowStyle == null) properties.commonStyle else CommonStyle(rowStyle)
         properties.rows.add(RowDef(calculatedStyle).apply(block))
